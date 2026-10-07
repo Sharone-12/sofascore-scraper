@@ -148,11 +148,13 @@ export default function TeamCompareContent() {
           .from("matches")
           .select("event_id, league, season, home, away, status, home_goals, away_goals")
           .eq("season", season)
-          .eq("status", "finished"),
+          .eq("status", "finished")
+          .limit(1000),
         supabase
           .from("match_stats")
           .select("event_id, stat, home, away")
-          .in("stat", WANTED_STATS),
+          .in("stat", WANTED_STATS)
+          .limit(10000),
         supabase
           .from("players")
           .select("team, team_id")
