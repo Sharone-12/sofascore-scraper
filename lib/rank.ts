@@ -10,14 +10,33 @@ import { percentileRank } from "@/lib/stats"
 export type Weighted = { key: string; weight: number; invert?: boolean }
 
 /**
+ * Attacking impact — one profile for every outfield player, used to answer
+ * "best player" across roles. Measures what a player produces going forward:
+ * goals, creation, carrying. Defenders naturally score lower, and the prompt
+ * tells the model this is attacking production only.
+ *
+ * Kept separate from role profiles so a centre-back is never penalised for not
+ * creating chances when the question is "best centre-back", but IS ranked on
+ * output when the question is "best player".
+ */
+export const ATTACKING_IMPACT: Weighted[] = [
+  { key: "goals_p90", weight: 3 },
+  { key: "xg_p90", weight: 2 },
+  { key: "assists_p90", weight: 2 },
+  { key: "xa_p90", weight: 1.5 },
+  { key: "key_passes_p90", weight: 1.5 },
+  { key: "big_chances_created_p90", weight: 1 },
+  { key: "dribbles_p90", weight: 1 },
+  { key: "shots_on_target_p90", weight: 1 },
+]
+
+/**
  * What actually matters per role. Weights are relative within a profile;
  * `invert` marks a stat where less is better (being dispossessed, missing big
  * chances), scored as 100 - percentile.
  *
- * These are roles, not Sofascore's three broad buckets — those filed wingers
- * under midfield and holding mids under defence, so a winger was being judged
- * on central-midfield passing and a DM on clearances. Roles come from
- * /characteristics via ROLE_MAP in data_loader.py; keep the keys in sync.
+ * Roles come from /characteristics via ROLE_MAP in data_loader.py; keep the
+ * keys in sync.
  */
 export const ROLE_PROFILES: Record<string, Weighted[]> = {
   Striker: [
@@ -145,25 +164,28 @@ export function rankPlayers(rows: Row[], role: string, k?: number): Scored[] {
 }
 
 /**
- * Every player scored inside their own role, then ranked against each other.
+ * Every outfield player scored on the same attacking-impact profile.
  *
- * This is what answers "best player". Ranking everyone in one pool does not
- * work: roughly half an outfield cohort are defenders with no attacking output,
- * so one goal already beats most of the field and a quiet winger drifts up the
- * table. Scoring within role asks "how far above your own peers are you", which
- * is comparable across roles and is what people mean by best.
+ * This is what answers "best player" and "top N". Everyone is measured on the
+ * same metrics in one pool, so the scores ARE comparable across roles. The
+ * trade-off is that it only captures attacking production — a dominant
+ * centre-back who rarely scores will rank low, and the prompt tells the model
+ * to note that.
  *
- * One `k` for every role, from the whole cohort, so a role that happens to be
- * short of minutes isn't trusted more than the rest.
+ * Role scores (from `rankPlayers`) answer "best winger" and are NOT comparable
+ * across roles — different metrics, different pools.
  */
 export function rankAllRoles(rows: Row[]): Scored[] {
   if (rows.length === 0) return []
   const k = confidenceK(rows)
-  return Object.keys(ROLE_PROFILES)
-    .flatMap((role) =>
-      rankPlayers(rows.filter((r) => String(r.role ?? "") === role), role, k),
-    )
-    .sort((a, b) => b.score - a.score)
+  const outfield = rows.filter((r) => String(r.role ?? "") !== "Goalkeeper")
+  const slugToRole = new Map(
+    outfield.map((r) => [String(r.slug ?? ""), String(r.role ?? r.position ?? "")]),
+  )
+  return score(outfield, ATTACKING_IMPACT, "", k).map((s) => ({
+    ...s,
+    position: slugToRole.get(s.slug) ?? "",
+  }))
 }
 
 function score(
