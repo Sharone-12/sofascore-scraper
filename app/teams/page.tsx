@@ -208,6 +208,10 @@ type RankedTeam = {
   played: number
 }
 
+function displayRating(raw: number, max: number): number {
+  return 60 + (raw / max) * 39
+}
+
 function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
   const top = ranked.slice(0, 5)
   const maxScore = top[0]?.score ?? 1
@@ -252,7 +256,7 @@ function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
                 <div
                   className="h-[5px] rounded-full"
                   style={{
-                    width: `${(t.score / maxScore) * 100}%`,
+                    width: `${(displayRating(t.score, maxScore) / 99) * 100}%`,
                     background: POWER_COLORS[i],
                     opacity: 0.7,
                     minWidth: "1rem",
@@ -267,7 +271,7 @@ function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
                   className="stat-figure text-lg"
                   style={{ color: POWER_COLORS[i] }}
                 >
-                  {t.score.toFixed(1)}
+                  {displayRating(t.score, maxScore).toFixed(1)}
                 </div>
                 <div className="stat-label">rating</div>
               </div>
