@@ -13,8 +13,19 @@ const CURRENT_SEASON = "2026/27"
 // and correctly refused a question about a player absent from the data. The
 // larger nemotron-ultra and nemotron-lightning both leaked their chain of
 // thought into the answer; the gemma free tiers were rate-limited upstream.
-// Override with ASK_MODEL — any OpenAI-compatible id on OpenRouter works.
-const MODEL = process.env.ASK_MODEL ?? "nvidia/nemotron-3-super-120b-a12b:free"
+// Tried in order. Free tiers get rate-limited upstream and sometimes answer 200
+// with an empty body, so one model is a single point of failure; falling
+// through to the next costs nothing and keeps the feature up. Ordered by
+// measured quality: the ultra and lightning variants both leak their reasoning
+// into the answer, so they are a fallback, not a default.
+// ASK_MODEL overrides the whole chain with one id.
+const MODELS = process.env.ASK_MODEL
+  ? [process.env.ASK_MODEL]
+  : [
+      "nvidia/nemotron-3-super-120b-a12b:free",
+      "google/gemma-4-31b-it:free",
+      "nvidia/nemotron-3-ultra-550b-a55b:free",
+    ]
 const ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 
 const SYSTEM = `You are a football analyst for a stats site. You answer ONLY from the DATA block supplied with each question.
@@ -184,12 +195,13 @@ export async function POST(req: Request) {
 
     const prompt = `DATA:\n${sections.join("\n\n")}\n\nQUESTION: ${question}`
 
-    // The free tier intermittently returns 200 with empty content — seen in
-    // production. One retry turns that from a visible failure into a blip.
+    // Walk the chain: a rate-limited or empty-bodied model falls through to the
+    // next rather than failing the request. Both happen routinely on free tiers.
     let answer = ""
-    let failure: { msg: string; status: number } | null = null
+    let used = ""
+    let lastStatus = 0
 
-    for (let attempt = 0; attempt < 2 && !answer; attempt++) {
+    for (const model of MODELS) {
       const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: {
@@ -200,7 +212,7 @@ export async function POST(req: Request) {
           "X-Title": "footyy",
         },
         body: JSON.stringify({
-          model: MODEL,
+          model,
           temperature: 0.3,
           max_tokens: 700,
           messages: [
@@ -211,38 +223,32 @@ export async function POST(req: Request) {
       })
 
       if (!res.ok) {
-        const detail = await res.text()
-        // Free models get rate-limited upstream often enough that a bare
-        // status code would be baffling, so name the likely causes.
-        failure = {
-          status: 502,
-          msg:
-            res.status === 429
-              ? "The model is rate-limited right now. Try again in a moment."
-              : res.status === 402
-                ? "OpenRouter rejected the request: insufficient credits."
-                : `Model error ${res.status}: ${detail.slice(0, 200)}`,
-        }
-        break
+        lastStatus = res.status
+        // 402 means the account itself can't pay — no other model will help.
+        if (res.status === 402) break
+        continue
       }
 
       const json = await res.json()
       const raw = json?.choices?.[0]?.message?.content
       answer = raw ? clean(raw) : ""
+      if (answer) {
+        used = model
+        break
+      }
     }
 
-    if (failure) {
-      return NextResponse.json({ error: failure.msg }, { status: failure.status })
-    }
     if (!answer) {
-      return NextResponse.json(
-        { error: "The model returned an empty answer twice. Try again." },
-        { status: 502 },
-      )
+      const msg =
+        lastStatus === 402
+          ? "OpenRouter rejected the request: insufficient credits."
+          : "Every free model is rate-limited or returned nothing. Try again shortly."
+      return NextResponse.json({ error: msg }, { status: 502 })
     }
 
     return NextResponse.json({
       answer,
+      model: used,
       season,
       cited: cited.map((c) => ({
         player: c.player,
