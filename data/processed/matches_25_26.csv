@@ -763,3 +763,71 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 14083731,La Liga,2025/26,38,2026-05-23,Real Madrid,2829,Athletic Club,2825,finished,4.0,2.0
 14083739,La Liga,2025/26,38,2026-05-23,Valencia,2828,FC Barcelona,2817,finished,3.0,1.0
 14083735,La Liga,2025/26,38,2026-05-24,Villarreal,2819,Atlético Madrid,2836,finished,5.0,1.0
+14061185,Ligue 1,2025/26,1,2025-08-17,Nantes,1647,Paris Saint-Germain,1644,finished,0.0,1.0
+14065702,Ligue 1,2025/26,2,2025-08-22,Paris Saint-Germain,1644,Angers,1684,finished,1.0,0.0
+14065705,Ligue 1,2025/26,3,2025-08-30,Toulouse,1681,Paris Saint-Germain,1644,finished,3.0,6.0
+14065720,Ligue 1,2025/26,4,2025-09-14,Paris Saint-Germain,1644,RC Lens,1648,finished,2.0,0.0
+14065734,Ligue 1,2025/26,5,2025-09-22,Olympique de Marseille,1641,Paris Saint-Germain,1644,finished,1.0,0.0
+14167872,Ligue 1,2025/26,6,2025-09-27,Paris Saint-Germain,1644,Auxerre,1646,finished,2.0,0.0
+14167890,Ligue 1,2025/26,7,2025-10-05,Lille,1643,Paris Saint-Germain,1644,finished,1.0,1.0
+14167897,Ligue 1,2025/26,8,2025-10-17,Paris Saint-Germain,1644,RC Strasbourg,1659,finished,3.0,3.0
+14167927,Ligue 1,2025/26,9,2025-10-25,Stade Brestois,1715,Paris Saint-Germain,1644,finished,0.0,3.0
+14064505,Ligue 1,2025/26,10,2025-10-29,Lorient,1656,Paris Saint-Germain,1644,finished,1.0,1.0
+14674515,Ligue 1,2025/26,11,2025-11-01,Paris Saint-Germain,1644,Nice,1661,finished,1.0,0.0
+14064421,Ligue 1,2025/26,12,2025-11-09,Olympique Lyonnais,1649,Paris Saint-Germain,1644,finished,2.0,3.0
+14064416,Ligue 1,2025/26,13,2025-11-22,Paris Saint-Germain,1644,Le Havre,1662,finished,3.0,0.0
+14064418,Ligue 1,2025/26,14,2025-11-29,AS Monaco,1653,Paris Saint-Germain,1644,finished,1.0,0.0
+14064445,Ligue 1,2025/26,15,2025-12-06,Paris Saint-Germain,1644,Stade Rennais,1658,finished,5.0,0.0
+14064442,Ligue 1,2025/26,16,2025-12-13,Metz,1651,Paris Saint-Germain,1644,finished,2.0,3.0
+14064451,Ligue 1,2025/26,17,2026-01-04,Paris Saint-Germain,1644,Paris FC,6070,finished,2.0,1.0
+14064464,Ligue 1,2025/26,18,2026-01-16,Paris Saint-Germain,1644,Lille,1643,finished,3.0,0.0
+14064470,Ligue 1,2025/26,19,2026-01-23,Auxerre,1646,Paris Saint-Germain,1644,finished,0.0,1.0
+14064477,Ligue 1,2025/26,20,2026-02-01,RC Strasbourg,1659,Paris Saint-Germain,1644,finished,1.0,2.0
+14064485,Ligue 1,2025/26,21,2026-02-08,Paris Saint-Germain,1644,Olympique de Marseille,1641,finished,5.0,0.0
+14064499,Ligue 1,2025/26,22,2026-02-13,Stade Rennais,1658,Paris Saint-Germain,1644,finished,3.0,1.0
+14167865,Ligue 1,2025/26,23,2026-02-21,Paris Saint-Germain,1644,Metz,1651,finished,3.0,0.0
+14167877,Ligue 1,2025/26,24,2026-02-28,Le Havre,1662,Paris Saint-Germain,1644,finished,0.0,1.0
+14167912,Ligue 1,2025/26,25,2026-03-06,Paris Saint-Germain,1644,AS Monaco,1653,finished,1.0,3.0
+14167914,Ligue 1,2025/26,26,2026-04-22,Paris Saint-Germain,1644,Nantes,1647,finished,3.0,0.0
+14167944,Ligue 1,2025/26,27,2026-03-21,Nice,1661,Paris Saint-Germain,1644,finished,0.0,4.0
+14167955,Ligue 1,2025/26,28,2026-04-03,Paris Saint-Germain,1644,Toulouse,1681,finished,3.0,1.0
+15889331,Ligue 1,2025/26,29,2026-05-13,RC Lens,1648,Paris Saint-Germain,1644,finished,0.0,2.0
+14167974,Ligue 1,2025/26,30,2026-04-19,Paris Saint-Germain,1644,Olympique Lyonnais,1649,finished,1.0,2.0
+14167976,Ligue 1,2025/26,31,2026-04-25,Angers,1684,Paris Saint-Germain,1644,finished,0.0,3.0
+14167984,Ligue 1,2025/26,32,2026-05-02,Paris Saint-Germain,1644,Lorient,1656,finished,2.0,2.0
+14064510,Ligue 1,2025/26,33,2026-05-10,Paris Saint-Germain,1644,Stade Brestois,1715,finished,1.0,0.0
+14061910,Ligue 1,2025/26,34,2026-05-17,Paris FC,6070,Paris Saint-Germain,1644,finished,2.0,1.0
+14056037,Bundesliga,2025/26,1,2025-08-22,FC Bayern München,2672,RB Leipzig,36360,finished,6.0,0.0
+14065075,Bundesliga,2025/26,2,2025-08-30,FC Augsburg,2600,FC Bayern München,2672,finished,2.0,3.0
+14057801,Bundesliga,2025/26,3,2025-09-13,FC Bayern München,2672,Hamburger SV,2676,finished,5.0,0.0
+14065096,Bundesliga,2025/26,4,2025-09-20,TSG Hoffenheim,2569,FC Bayern München,2672,finished,1.0,4.0
+14065088,Bundesliga,2025/26,5,2025-09-26,FC Bayern München,2672,SV Werder Bremen,2534,finished,4.0,0.0
+14065100,Bundesliga,2025/26,6,2025-10-04,Eintracht Frankfurt,2674,FC Bayern München,2672,finished,0.0,3.0
+14065109,Bundesliga,2025/26,7,2025-10-18,FC Bayern München,2672,Borussia Dortmund,2673,finished,2.0,1.0
+14065125,Bundesliga,2025/26,8,2025-10-25,Borussia M'gladbach,2527,FC Bayern München,2672,finished,0.0,3.0
+14065128,Bundesliga,2025/26,9,2025-11-01,FC Bayern München,2672,Bayer 04 Leverkusen,2681,finished,3.0,0.0
+14065143,Bundesliga,2025/26,10,2025-11-08,1. FC Union Berlin,2547,FC Bayern München,2672,finished,2.0,2.0
+14065148,Bundesliga,2025/26,11,2025-11-22,FC Bayern München,2672,SC Freiburg,2538,finished,6.0,2.0
+14065156,Bundesliga,2025/26,12,2025-11-29,FC Bayern München,2672,FC St. Pauli,2526,finished,3.0,1.0
+14065168,Bundesliga,2025/26,13,2025-12-06,VfB Stuttgart,2677,FC Bayern München,2672,finished,0.0,5.0
+14065174,Bundesliga,2025/26,14,2025-12-14,FC Bayern München,2672,1. FSV Mainz 05,2556,finished,2.0,2.0
+14062150,Bundesliga,2025/26,15,2025-12-21,1. FC Heidenheim,5885,FC Bayern München,2672,finished,0.0,4.0
+14062145,Bundesliga,2025/26,16,2026-01-11,FC Bayern München,2672,VfL Wolfsburg,2524,finished,8.0,1.0
+14062167,Bundesliga,2025/26,17,2026-01-14,1. FC Köln,2671,FC Bayern München,2672,finished,1.0,3.0
+14062170,Bundesliga,2025/26,18,2026-01-17,RB Leipzig,36360,FC Bayern München,2672,finished,1.0,5.0
+14062179,Bundesliga,2025/26,19,2026-01-24,FC Bayern München,2672,FC Augsburg,2600,finished,1.0,2.0
+14062191,Bundesliga,2025/26,20,2026-01-31,Hamburger SV,2676,FC Bayern München,2672,finished,2.0,2.0
+14062188,Bundesliga,2025/26,21,2026-02-08,FC Bayern München,2672,TSG Hoffenheim,2569,finished,5.0,1.0
+14062207,Bundesliga,2025/26,22,2026-02-14,SV Werder Bremen,2534,FC Bayern München,2672,finished,0.0,3.0
+14062215,Bundesliga,2025/26,23,2026-02-21,FC Bayern München,2672,Eintracht Frankfurt,2674,finished,3.0,2.0
+14062225,Bundesliga,2025/26,24,2026-02-28,Borussia Dortmund,2673,FC Bayern München,2672,finished,2.0,3.0
+14062228,Bundesliga,2025/26,25,2026-03-06,FC Bayern München,2672,Borussia M'gladbach,2527,finished,4.0,1.0
+14065183,Bundesliga,2025/26,26,2026-03-14,Bayer 04 Leverkusen,2681,FC Bayern München,2672,finished,1.0,1.0
+14065193,Bundesliga,2025/26,27,2026-03-21,FC Bayern München,2672,1. FC Union Berlin,2547,finished,4.0,0.0
+14065206,Bundesliga,2025/26,28,2026-04-04,SC Freiburg,2538,FC Bayern München,2672,finished,2.0,3.0
+14065219,Bundesliga,2025/26,29,2026-04-11,FC St. Pauli,2526,FC Bayern München,2672,finished,0.0,5.0
+14065222,Bundesliga,2025/26,30,2026-04-19,FC Bayern München,2672,VfB Stuttgart,2677,finished,4.0,2.0
+14065235,Bundesliga,2025/26,31,2026-04-25,1. FSV Mainz 05,2556,FC Bayern München,2672,finished,3.0,4.0
+14065232,Bundesliga,2025/26,32,2026-05-02,FC Bayern München,2672,1. FC Heidenheim,5885,finished,3.0,3.0
+14065251,Bundesliga,2025/26,33,2026-05-09,VfL Wolfsburg,2524,FC Bayern München,2672,finished,0.0,1.0
+14065556,Bundesliga,2025/26,34,2026-05-16,FC Bayern München,2672,1. FC Köln,2671,finished,5.0,1.0

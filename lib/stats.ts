@@ -70,7 +70,7 @@ export const STAT_GROUPS = [
   },
 ]
 
-export const PLAYER_COLORS = ["#6366f1", "#f59e0b", "#10b981"]
+export const PLAYER_COLORS = ["#4ade80", "#60a5fa", "#fbbf24"]
 
 export function percentileRank(value: number, values: number[]): number {
   const valid = values.filter((v) => v != null && !isNaN(v))

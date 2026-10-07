@@ -17,6 +17,16 @@ import {
 } from "recharts"
 import { PLAYER_COLORS } from "@/lib/stats"
 
+const TOOLTIP_STYLE = {
+  backgroundColor: "oklch(0.19 0.042 257)",
+  border: "1px solid oklch(1 0 0 / 12%)",
+  borderRadius: "0.75rem",
+  color: "oklch(0.95 0 0)",
+  fontSize: 12,
+  padding: "8px 12px",
+  boxShadow: "0 8px 24px oklch(0 0 0 / 40%)",
+} as const
+
 export function PlayerRadar({
   data,
   players,
@@ -27,15 +37,15 @@ export function PlayerRadar({
   return (
     <ResponsiveContainer width="100%" height={350}>
       <RadarChart data={data} cx="50%" cy="50%" outerRadius="75%">
-        <PolarGrid stroke="hsl(var(--border))" />
+        <PolarGrid stroke="oklch(1 0 0 / 8%)" />
         <PolarAngleAxis
           dataKey="stat"
-          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+          tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
         />
         <PolarRadiusAxis
           angle={90}
           domain={[0, 100]}
-          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
+          tick={{ fill: "oklch(0.5 0 0)", fontSize: 10 }}
           tickCount={5}
         />
         {players.map((name, i) => (
@@ -71,31 +81,23 @@ export function StatBarChart({
       >
         <CartesianGrid
           strokeDasharray="3 3"
-          stroke="hsl(var(--border))"
+          stroke="oklch(1 0 0 / 6%)"
           horizontal={false}
         />
         <XAxis
           type="number"
-          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+          tick={{ fill: "oklch(0.65 0 0)", fontSize: 11 }}
           axisLine={false}
         />
         <YAxis
           type="category"
           dataKey="stat"
           width={130}
-          tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+          tick={{ fill: "oklch(0.65 0 0)", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
         />
-        <Tooltip
-          contentStyle={{
-            backgroundColor: "hsl(var(--popover))",
-            border: "1px solid hsl(var(--border))",
-            borderRadius: "0.5rem",
-            color: "hsl(var(--popover-foreground))",
-            fontSize: 12,
-          }}
-        />
+        <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "oklch(1 0 0 / 4%)" }} />
         {players.map((name, i) => (
           <Bar
             key={name}

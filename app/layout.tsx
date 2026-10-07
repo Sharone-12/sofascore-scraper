@@ -1,10 +1,19 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Archivo, Oswald } from "next/font/google"
 import Link from "next/link"
 import "./globals.css"
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] })
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
+const sans = Archivo({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+})
+
+const condensed = Oswald({
+  subsets: ["latin"],
+  variable: "--font-condensed",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "footyy — Football Stats & Player Comparison",
@@ -20,27 +29,37 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+      className={`${sans.variable} ${condensed.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <nav className="border-b border-border">
-          <div className="mx-auto max-w-6xl flex items-center justify-between px-4 h-14">
-            <Link href="/" className="text-lg font-bold tracking-tight">
-              footyy
+        <nav className="sticky top-0 z-40 border-b border-white/5 bg-background/75 backdrop-blur-xl">
+          <div className="mx-auto max-w-6xl flex items-center justify-between px-4 h-16">
+            <Link href="/" className="flex items-baseline gap-2 group">
+              <span
+                className="text-[1.6rem] font-bold tracking-[-0.03em] leading-none"
+                style={{ fontFamily: "var(--font-condensed)" }}
+              >
+                FOOTYY
+              </span>
+              <span
+                className="h-1.5 w-1.5 rounded-full transition-transform duration-200 group-hover:scale-125"
+                style={{ background: "var(--pitch)" }}
+              />
             </Link>
-            <div className="flex gap-4 text-sm">
-              <Link
-                href="/"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Players
-              </Link>
-              <Link
-                href="/compare"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Compare
-              </Link>
+            <div className="segment flex rounded-full p-1 gap-0.5">
+              {[
+                { href: "/", label: "Players" },
+                { href: "/teams", label: "Teams" },
+                { href: "/compare", label: "Compare" },
+              ].map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="px-3.5 sm:px-4 py-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors duration-200"
+                >
+                  {l.label}
+                </Link>
+              ))}
             </div>
           </div>
         </nav>

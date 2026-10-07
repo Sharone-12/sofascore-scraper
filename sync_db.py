@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 
 import psycopg2
+from psycopg2.extras import execute_values
 
 PROCESSED = Path(__file__).resolve().parent / "data" / "processed"
 
@@ -27,16 +28,24 @@ def _upsert_csv(cur, path: Path, table: str, conflict_cols: list[str]):
             rows.append(tuple(row[c] if row[c] != "" else None for c in cols))
     if not rows:
         return 0
+    conflict_idxs = [cols.index(c) for c in conflict_cols]
+    seen = set()
+    deduped = []
+    for r in rows:
+        key = tuple(r[i] for i in conflict_idxs)
+        if key not in seen:
+            seen.add(key)
+            deduped.append(r)
+    rows = deduped
     col_names = ",".join(cols)
-    placeholders = ",".join(["%s"] * len(cols))
     update_cols = [c for c in cols if c not in conflict_cols]
     on_conflict = ",".join(conflict_cols)
     set_clause = ",".join(f"{c}=EXCLUDED.{c}" for c in update_cols)
     q = (
-        f"INSERT INTO {table} ({col_names}) VALUES ({placeholders}) "
+        f"INSERT INTO {table} ({col_names}) VALUES %s "
         f"ON CONFLICT ({on_conflict}) DO UPDATE SET {set_clause}"
     )
-    cur.executemany(q, rows)
+    execute_values(cur, q, rows, page_size=500)
     return len(rows)
 
 

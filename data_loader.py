@@ -46,11 +46,41 @@ SOFASCORE = "https://www.sofascore.com"
 LEAGUES = {
     "Premier League": {"tournament": 17, "slug": "premier_league"},
     "La Liga": {"tournament": 8, "slug": "la_liga"},
+    # Single-club leagues: scraped league-wide, then trimmed to `teams`. The
+    # full scrape is what makes the 10% minutes cutoff correct — it needs the
+    # league's season-minutes ceiling, not one squad's.
+    # Names must match Sofascore exactly: 'Paris FC' is a different Ligue 1 club.
+    "Ligue 1": {"tournament": 34, "slug": "ligue_1", "teams": {"Paris Saint-Germain"}},
+    "Bundesliga": {"tournament": 35, "slug": "bundesliga", "teams": {"FC Bayern München"}},
 }
+
+
+def _trim_to_teams(df: pd.DataFrame, leagues: dict, cols: tuple[str, ...]) -> pd.DataFrame:
+    """Drop rows from restricted leagues that don't involve one of their teams.
+
+    `cols` is which columns name a team: ("team",) for players,
+    ("home", "away") for matches.
+    """
+    if df.empty:
+        return df
+    drop = pd.Series(False, index=df.index)
+    for league, cfg in leagues.items():
+        keep_teams = cfg.get("teams")
+        if not keep_teams:
+            continue
+        in_league = df["league"] == league
+        involved = pd.Series(False, index=df.index)
+        for col in cols:
+            involved |= df[col].isin(keep_teams)
+        drop |= in_league & ~involved
+    return df[~drop].copy()
 
 POSITIONS = {"D": "Defender", "M": "Midfielder", "F": "Forward"}
 
-MIN_MINUTES = 300
+# Keep a player if they logged at least this share of the minutes available in
+# their league so far. A fixed minute bar wipes out most of a squad five rounds
+# into a season; a share scales with it.
+MIN_SHARE = 0.10
 
 COUNTING_STATS = {
     "goals": "goals",
@@ -158,7 +188,9 @@ def _get(url: str, cache_path: Path, refresh: bool = False) -> dict:
         if status is None:
             break
         if status in (403, 429) or status >= 500:
-            wait = 5 * (attempt + 1)
+            # 403 here is Cloudflare rate limiting, not a permanent block, and it
+            # needs minutes not seconds — linear 5/10/15/20s never outlasts it.
+            wait = 15 * 2 ** attempt
             print(f"  got {status}, waiting {wait}s...")
             time.sleep(wait)
             continue
@@ -202,40 +234,62 @@ def get_season_ids(tournament: int, refresh: bool = False) -> dict[int, int]:
 
 # ── 1. Season aggregate player stats ──
 
+def _league_player_rows(
+    tournament: int, sid: int, league: str, fields: str, refresh: bool,
+) -> list[dict]:
+    """Every qualifying player row for one league-season, across all positions."""
+    rows: list[dict] = []
+    for code, position in POSITIONS.items():
+        page = 0
+        cutoff = 0.0
+        while True:
+            url = (
+                f"{SOFASCORE}/api/v1/unique-tournament/{tournament}/season/{sid}/statistics"
+                f"?limit=100&offset={page * 100}&order=-minutesPlayed&accumulation=total"
+                f"&fields={fields}&filters=position.in.{code}"
+            )
+            cache = RAW / f"stats_{tournament}_{sid}_{code}_{page}.json"
+            data = _get(url, cache, refresh)
+            for r in data.get("results", []):
+                row = {col: r.get(sf) for sf, col in ALL_FIELDS.items()}
+                row["player_id"] = r["player"]["id"]
+                row["player"] = r["player"]["name"]
+                row["slug"] = r["player"].get("slug", "")
+                row["team"] = r["team"]["name"]
+                row["team_id"] = r["team"]["id"]
+                row["league"] = league
+                row["position"] = position
+                rows.append(row)
+            page += 1
+            # Rows are minutes-descending, so page 0's leader is this position's
+            # season-minutes ceiling — enough to know the cutoff before the last
+            # page, and stop one page past it.
+            results = data.get("results") or []
+            if page == 1 and results:
+                cutoff = (results[0].get("minutesPlayed") or 0) * MIN_SHARE
+            last_mins = (results[-1].get("minutesPlayed") or 0) if results else 0
+            if page >= data.get("pages", 1) or last_mins < cutoff:
+                break
+    return rows
+
+
 def fetch_player_stats(start: int, leagues: dict | None = None, refresh: bool = False) -> pd.DataFrame:
     leagues = leagues or LEAGUES
     fields = ",".join(ALL_FIELDS.keys())
     rows = []
     for league, cfg in leagues.items():
         tournament = cfg["tournament"]
-        sid = get_season_ids(tournament, refresh).get(start)
-        if sid is None:
-            print(f"  no season {season_label(start)} for {league}")
+        try:
+            sid = get_season_ids(tournament, refresh).get(start)
+            if sid is None:
+                print(f"  no season {season_label(start)} for {league}")
+                continue
+            rows.extend(_league_player_rows(tournament, sid, league, fields, refresh))
+        except RuntimeError as e:
+            # One league being blocked must not sink the others — the daily job
+            # still has to get Premier League and La Liga into Supabase.
+            print(f"  SKIPPED {league} {season_label(start)}: {e}")
             continue
-        for code, position in POSITIONS.items():
-            page = 0
-            while True:
-                url = (
-                    f"{SOFASCORE}/api/v1/unique-tournament/{tournament}/season/{sid}/statistics"
-                    f"?limit=100&offset={page * 100}&order=-minutesPlayed&accumulation=total"
-                    f"&fields={fields}&filters=position.in.{code}"
-                )
-                cache = RAW / f"stats_{tournament}_{sid}_{code}_{page}.json"
-                data = _get(url, cache, refresh)
-                for r in data.get("results", []):
-                    row = {col: r.get(sf) for sf, col in ALL_FIELDS.items()}
-                    row["player_id"] = r["player"]["id"]
-                    row["player"] = r["player"]["name"]
-                    row["slug"] = r["player"].get("slug", "")
-                    row["team"] = r["team"]["name"]
-                    row["team_id"] = r["team"]["id"]
-                    row["league"] = league
-                    row["position"] = position
-                    rows.append(row)
-                page += 1
-                last_mins = data["results"][-1].get("minutesPlayed", 0) if data.get("results") else 0
-                if page >= data.get("pages", 1) or (last_mins or 0) < MIN_MINUTES:
-                    break
         print(f"  {league} {season_label(start)}: {sum(1 for r in rows if r['league'] == league)} players")
     df = pd.DataFrame(rows)
     if df.empty:
@@ -247,7 +301,13 @@ def fetch_player_stats(start: int, leagues: dict | None = None, refresh: bool = 
 
 
 def per_90(df: pd.DataFrame) -> pd.DataFrame:
-    out = df[df["minutes"] >= MIN_MINUTES].copy()
+    # Minutes available in a league's season ≈ the most any one player logged,
+    # since someone always plays nearly every minute (38*90 = 3420 for a full
+    # Premier League season, 450 after five rounds).
+    # ponytail: league-wide, so a team with a postponed fixture is held to a
+    # slightly high bar. Switch to a per-team max off `matches` if that bites.
+    avail = df.groupby("league")["minutes"].transform("max")
+    out = df[df["minutes"] >= (avail * MIN_SHARE).clip(lower=1)].copy()
     for col in FEATURES:
         out[f"{col}_p90"] = (out[col] / out["minutes"] * 90).round(4)
     out = out.sort_values("minutes", ascending=False).drop_duplicates(["player_id", "league"])
@@ -261,7 +321,11 @@ def fetch_matches(start: int, leagues: dict | None = None, refresh: bool = False
     rows = []
     for league, cfg in leagues.items():
         tournament = cfg["tournament"]
-        sid = get_season_ids(tournament, refresh).get(start)
+        try:
+            sid = get_season_ids(tournament, refresh).get(start)
+        except RuntimeError as e:
+            print(f"  SKIPPED {league} matches {season_label(start)}: {e}")
+            continue
         if sid is None:
             continue
         rnd = 1
@@ -467,9 +531,10 @@ def build(
                 print(f"  API error ({e}), falling back to cache")
                 players = fetch_player_stats(start, leagues, refresh=False)
             if not players.empty:
-                p90 = per_90(players)
+                # Trim after per_90 so the cutoff still sees the whole league.
+                p90 = _trim_to_teams(per_90(players), leagues, ("team",))
                 p90.to_csv(PROCESSED / f"players_{season_tag(start)}.csv", index=False)
-                print(f"  saved {len(p90)} players with {MIN_MINUTES}+ minutes")
+                print(f"  saved {len(p90)} players with {MIN_SHARE:.0%}+ of available minutes")
                 out[f"players_{tag}"] = p90
 
             print("Fetching matches...")
@@ -478,6 +543,7 @@ def build(
             except RuntimeError as e:
                 print(f"  API error ({e}), falling back to cache")
                 matches = fetch_matches(start, leagues, refresh=False)
+            matches = _trim_to_teams(matches, leagues, ("home", "away"))
             if not matches.empty:
                 matches.to_csv(PROCESSED / f"matches_{season_tag(start)}.csv", index=False)
                 finished = matches[matches["status"] == "finished"]

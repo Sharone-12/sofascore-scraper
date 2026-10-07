@@ -1,0 +1,414 @@
+"use client"
+
+import { useState, useEffect, useRef, useMemo, Fragment } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { supabase } from "@/lib/supabase"
+import { percentileRank } from "@/lib/stats"
+import {
+  CURRENT_SEASON,
+  FULL_LEAGUES,
+  SINGLE_CLUBS,
+  LEAGUE_ABBR,
+  TEAM_STAT_GROUPS,
+  TEAM_RADAR_STATS,
+  TEAM_COLORS,
+  statValue,
+  indexStats,
+  type SeasonStatRow,
+  type TeamTableRow,
+} from "@/lib/teams"
+import { PlayerRadar, StatBarChart } from "@/components/charts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+const MAX_TEAMS = 3
+
+const WANTED_STATS = Array.from(
+  new Set([
+    ...TEAM_RADAR_STATS.map((s) => s.stat),
+    ...TEAM_STAT_GROUPS.flatMap((g) => g.stats.map((s) => s.stat)),
+  ]),
+)
+
+function TeamPicker({
+  teams,
+  selected,
+  onPick,
+  disabled,
+}: {
+  teams: TeamTableRow[]
+  selected: string[]
+  onPick: (team: string) => void
+  disabled: boolean
+}) {
+  const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState("")
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", onClickOutside)
+    return () => document.removeEventListener("mousedown", onClickOutside)
+  }, [])
+
+  const matches = teams.filter(
+    (t) =>
+      !selected.includes(t.team) &&
+      t.team.toLowerCase().includes(query.toLowerCase()),
+  )
+
+  return (
+    <div ref={ref} className="relative w-full max-w-md">
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => setOpen((v) => !v)}
+        className="surface w-full rounded-xl bg-card px-4 py-3 text-left text-sm flex items-center justify-between disabled:opacity-45 disabled:cursor-not-allowed transition-colors hover:bg-white/[0.03]"
+      >
+        <span className={disabled ? "text-muted-foreground" : ""}>
+          {disabled ? `Maximum ${MAX_TEAMS} teams` : "Add a team…"}
+        </span>
+        <span className="text-muted-foreground text-xs">▾</span>
+      </button>
+
+      {open && !disabled && (
+        <div className="surface-raised absolute z-50 mt-2 w-full rounded-xl bg-popover text-popover-foreground overflow-hidden animate-slide-down">
+          <div className="p-2 border-b border-white/5">
+            <input
+              autoFocus
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Filter teams…"
+              className="w-full rounded-lg bg-white/[0.05] px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:bg-white/[0.08] transition-colors"
+            />
+          </div>
+          <div className="max-h-72 overflow-y-auto p-1">
+            {matches.length === 0 && (
+              <p className="px-3 py-4 text-sm text-muted-foreground">
+                No teams match.
+              </p>
+            )}
+            {matches.map((t) => (
+              <button
+                key={t.team}
+                type="button"
+                onClick={() => {
+                  onPick(t.team)
+                  setOpen(false)
+                  setQuery("")
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-colors text-left"
+              >
+                <span className="text-sm font-medium">{t.team}</span>
+                <span className="stat-label">
+                  {LEAGUE_ABBR[t.league] ?? t.league} · {t.points}pts
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function TeamCompareContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const teamsParam = searchParams.get("teams")
+
+  const selected = useMemo(
+    () => teamsParam?.split(",").filter(Boolean) ?? [],
+    [teamsParam],
+  )
+
+  const [table, setTable] = useState<TeamTableRow[]>([])
+  const [stats, setStats] = useState<SeasonStatRow[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // One fetch for the whole season: the standings and every stat we render.
+  // 40 teams x ~28 stats is small enough to filter in memory as selection changes.
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      const [{ data: tbl }, { data: st }] = await Promise.all([
+        // Only whole leagues plus the tracked single clubs. Every other team in
+        // a single-club league is a two-game fragment of its own season, since
+        // only PSG's and Bayern's fixtures are ingested.
+        supabase
+          .from("team_table")
+          .select("*")
+          .eq("season", CURRENT_SEASON)
+          .or(
+            `league.in.(${FULL_LEAGUES.map((l) => `"${l}"`).join(",")}),` +
+              `team.in.(${SINGLE_CLUBS.map((c) => `"${c.team}"`).join(",")})`,
+          )
+          .order("points", { ascending: false }),
+        supabase
+          .from("team_season_stats")
+          .select("team, stat, per_match, pct, matches")
+          .eq("season", CURRENT_SEASON)
+          .in("stat", WANTED_STATS),
+      ])
+      if (cancelled) return
+      setTable((tbl || []) as TeamTableRow[])
+      setStats((st || []) as SeasonStatRow[])
+      setLoading(false)
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  function setTeams(next: string[]) {
+    router.push(
+      next.length
+        ? `/teams/compare?teams=${next.map(encodeURIComponent).join(",")}`
+        : "/teams/compare",
+      { scroll: false },
+    )
+  }
+
+  const byKey = useMemo(() => indexStats(stats), [stats])
+
+  // Radar axes are percentile ranks against all 40 teams, so possession (%)
+  // and shot counts share one 0-100 scale.
+  const radarData = useMemo(() => {
+    if (selected.length === 0) return []
+    return TEAM_RADAR_STATS.map((spec) => {
+      const population = table.map((t) =>
+        statValue(byKey.get(`${t.team}|${spec.stat}`), spec),
+      )
+      const row: Record<string, string | number> = { stat: spec.label }
+      for (const team of selected) {
+        row[team] = percentileRank(
+          statValue(byKey.get(`${team}|${spec.stat}`), spec),
+          population,
+        )
+      }
+      return row
+    })
+  }, [selected, table, byKey])
+
+  const barGroups = useMemo(
+    () =>
+      TEAM_STAT_GROUPS.map((group) => ({
+        label: group.label,
+        data: group.stats.map((spec) => {
+          const row: Record<string, string | number> = { stat: spec.label }
+          for (const team of selected) {
+            row[team] = statValue(byKey.get(`${team}|${spec.stat}`), spec)
+          }
+          return row
+        }),
+      })),
+    [selected, byKey],
+  )
+
+  const standings = selected
+    .map((name) => table.find((t) => t.team === name))
+    .filter(Boolean) as TeamTableRow[]
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-14">
+      <div className="mb-8 animate-fade-in">
+        <h1
+          className="text-5xl sm:text-6xl tracking-[-0.035em] leading-none mb-3"
+          style={{ fontFamily: "var(--font-condensed)" }}
+        >
+          <span className="font-bold">Club</span>
+          <span className="font-normal text-muted-foreground"> vs </span>
+          <span className="font-bold">club.</span>
+        </h1>
+        <p className="text-muted-foreground text-base">
+          Per-match averages across {CURRENT_SEASON}. Add up to {MAX_TEAMS}.
+        </p>
+      </div>
+
+      <div className="mb-6">
+        <TeamPicker
+          teams={table}
+          selected={selected}
+          onPick={(t) => setTeams([...selected, t])}
+          disabled={selected.length >= MAX_TEAMS}
+        />
+      </div>
+
+      {standings.length > 0 && (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8 stagger">
+          {standings.map((t, i) => (
+            <div
+              key={t.team}
+              className="surface-raised rounded-2xl bg-card px-5 py-4"
+              style={{ borderTop: `2px solid ${TEAM_COLORS[i]}` }}
+            >
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="min-w-0">
+                  <p className="font-semibold truncate">{t.team}</p>
+                  <p className="stat-label mt-0.5">
+                    {t.league}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  aria-label={`Remove ${t.team}`}
+                  onClick={() => setTeams(selected.filter((s) => s !== t.team))}
+                  className="text-muted-foreground hover:text-foreground transition-colors text-sm leading-none shrink-0"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { k: "Pts", v: t.points },
+                  { k: "P", v: t.played },
+                  { k: "GD", v: `${t.goal_diff > 0 ? "+" : ""}${t.goal_diff}` },
+                  { k: "GF", v: t.goals_for },
+                ].map((s) => (
+                  <div key={s.k}>
+                    <p
+                      className="stat-figure text-2xl"
+                      style={{ color: TEAM_COLORS[i] }}
+                    >
+                      {s.v}
+                    </p>
+                    <p className="stat-label mt-0.5">{s.k}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {loading && (
+        <p className="text-muted-foreground animate-fade-in">Loading teams…</p>
+      )}
+
+      {!loading && selected.length === 0 && (
+        <div className="surface rounded-2xl bg-card py-20 text-center animate-fade-in">
+          <p
+            className="text-3xl font-bold tracking-tight mb-2"
+            style={{ fontFamily: "var(--font-condensed)" }}
+          >
+            Pick two clubs
+          </p>
+          <p className="text-muted-foreground text-sm">
+            Style profiles, per-match stat breakdowns and head-to-head numbers.
+          </p>
+        </div>
+      )}
+
+      {selected.length > 0 && (
+        <Card className="surface border-0 mb-6 animate-slide-up">
+          <CardHeader>
+            <CardTitle className="stat-label text-sm">Style Profile</CardTitle>
+            <p className="text-xs text-muted-foreground/60">
+              Percentile rank against all 40 clubs
+            </p>
+          </CardHeader>
+          <CardContent>
+            <PlayerRadar data={radarData} players={selected} />
+          </CardContent>
+        </Card>
+      )}
+
+      {selected.length > 0 && (
+        <>
+          <div className="grid md:grid-cols-2 gap-5 mb-6 stagger">
+            {barGroups.map((group) => (
+              <Card key={group.label} className="surface border-0">
+                <CardHeader>
+                  <CardTitle className="stat-label text-sm">
+                    {group.label}
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground/60">per match</p>
+                </CardHeader>
+                <CardContent>
+                  <StatBarChart data={group.data} players={selected} />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="surface border-0 animate-slide-up">
+            <CardHeader>
+              <CardTitle className="stat-label text-sm">All Stats</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="stat-label text-left py-2.5 pr-4">Stat</th>
+                      {selected.map((team, i) => (
+                        <th
+                          key={team}
+                          className="stat-label text-right py-2.5 px-2"
+                          style={{ color: TEAM_COLORS[i] }}
+                        >
+                          {team}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {TEAM_STAT_GROUPS.map((group) => (
+                      <Fragment key={group.label}>
+                        <tr>
+                          <td
+                            colSpan={selected.length + 1}
+                            className="stat-label pt-5 pb-1.5"
+                            style={{ color: "var(--pitch)" }}
+                          >
+                            {group.label}
+                          </td>
+                        </tr>
+                        {group.stats.map((spec) => {
+                          const vals = selected.map((team) =>
+                            statValue(byKey.get(`${team}|${spec.stat}`), spec),
+                          )
+                          const max = Math.max(...vals)
+                          return (
+                            <tr
+                              key={spec.stat}
+                              className="border-b border-white/[0.06]"
+                            >
+                              <td className="py-2 pr-4 text-muted-foreground">
+                                {spec.label}
+                              </td>
+                              {selected.map((team, i) => {
+                                const v = vals[i]
+                                const best =
+                                  vals.length > 1 && v === max && v > 0
+                                return (
+                                  <td
+                                    key={team}
+                                    className="stat-figure text-right py-2 px-2 text-[0.95rem]"
+                                    style={{
+                                      color: best
+                                        ? TEAM_COLORS[i]
+                                        : "var(--muted-foreground)",
+                                    }}
+                                  >
+                                    {v.toFixed(spec.pct ? 1 : 2)}
+                                  </td>
+                                )
+                              })}
+                            </tr>
+                          )
+                        })}
+                      </Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      )}
+    </div>
+  )
+}

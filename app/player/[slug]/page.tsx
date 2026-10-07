@@ -15,15 +15,15 @@ import Link from "next/link"
 
 function Loading() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <Skeleton className="h-8 w-64 mb-2" />
-      <Skeleton className="h-4 w-40 mb-8" />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div className="mx-auto max-w-6xl px-4 py-10">
+      <Skeleton className="h-10 w-72 mb-3" />
+      <Skeleton className="h-4 w-48 mb-10" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-20" />
+          <Skeleton key={i} className="h-28 rounded-xl" />
         ))}
       </div>
-      <Skeleton className="h-[400px] mb-8" />
+      <Skeleton className="h-[400px] rounded-xl" />
     </div>
   )
 }
@@ -73,64 +73,85 @@ async function PlayerContent({
     {
       label: "Goals",
       value: String(player.goals),
-      sub: `${Number(player.goals_p90).toFixed(2)}/90`,
+      sub: `${Number(player.goals_p90).toFixed(2)} per 90`,
     },
     {
       label: "Assists",
       value: String(player.assists),
-      sub: `${Number(player.assists_p90).toFixed(2)}/90`,
+      sub: `${Number(player.assists_p90).toFixed(2)} per 90`,
     },
     {
       label: "xG",
       value: Number(player.xg).toFixed(1),
-      sub: `${Number(player.xg_p90).toFixed(2)}/90`,
+      sub: `${Number(player.xg_p90).toFixed(2)} per 90`,
     },
     {
       label: "Minutes",
       value: String(player.minutes),
-      sub: `${player.appearances} apps`,
+      sub: `${player.appearances} appearances`,
     },
   ]
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-8">
+    <div className="mx-auto max-w-6xl px-4 py-10">
+      <div className="mb-10 animate-fade-in">
         <div className="flex items-center gap-3 mb-2 flex-wrap">
-          <h1 className="text-3xl font-bold">{name}</h1>
-          <Badge variant="outline">{player.position as string}</Badge>
+          <h1
+            className="text-5xl font-bold tracking-[-0.035em] leading-none"
+            style={{ fontFamily: "var(--font-condensed)" }}
+          >
+            {name}
+          </h1>
+          <Badge
+            variant="outline"
+            className="stat-label border-white/15 bg-white/5"
+          >
+            {player.position as string}
+          </Badge>
         </div>
-        <p className="text-muted-foreground">
-          {player.team as string} · {player.league as string} ·{" "}
+        <p className="text-muted-foreground text-base">
+          {player.team as string}
+          <span className="mx-2 opacity-40">·</span>
+          {player.league as string}
+          <span className="mx-2 opacity-40">·</span>
           {player.season as string}
         </p>
-        <div className="mt-3">
+        <div className="mt-4">
           <Link
             href={`/compare?players=${player.slug}`}
-            className="text-sm text-primary hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline transition-colors"
+            style={{ color: "var(--brand)" }}
           >
-            Compare with another player →
+            Compare with another player
+            <span className="text-xs">→</span>
           </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 stagger">
         {keyStats.map((s) => (
-          <Card key={s.label}>
-            <CardContent className="pt-4 pb-3 text-center">
-              <div className="text-2xl font-bold font-mono">{s.value}</div>
-              <div className="text-xs text-muted-foreground">{s.label}</div>
-              <div className="text-xs text-muted-foreground mt-0.5">
-                {s.sub}
-              </div>
-            </CardContent>
-          </Card>
+          <div
+            key={s.label}
+            className="surface rounded-2xl bg-card px-4 py-5 text-center"
+          >
+            <div
+              className="stat-figure text-4xl"
+              style={{ color: "var(--pitch)" }}
+            >
+              {s.value}
+            </div>
+            <div className="stat-label mt-2">{s.label}</div>
+            <div className="text-xs text-muted-foreground/60 mt-1">{s.sub}</div>
+          </div>
         ))}
       </div>
 
-      <Card className="mb-8">
+      <Card className="surface mb-10 animate-slide-up border-0">
         <CardHeader>
-          <CardTitle className="text-lg">Percentile Ranks</CardTitle>
-          <p className="text-xs text-muted-foreground">
+          <CardTitle className="stat-label text-sm">
+            Percentile Ranks
+          </CardTitle>
+          <p className="text-xs text-muted-foreground/70">
             vs. all {player.position as string}s in{" "}
             {player.league as string} · {player.season as string}
           </p>
@@ -140,12 +161,14 @@ async function PlayerContent({
         </CardContent>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 stagger">
         {barData.map((group) => (
-          <Card key={group.label}>
+          <Card key={group.label} className="surface border-0">
             <CardHeader>
-              <CardTitle className="text-lg">{group.label}</CardTitle>
-              <p className="text-xs text-muted-foreground">per 90 minutes</p>
+              <CardTitle className="stat-label text-sm">
+                {group.label}
+              </CardTitle>
+              <p className="text-xs text-muted-foreground/60">per 90 minutes</p>
             </CardHeader>
             <CardContent>
               <StatBarChart data={group.data} players={[name]} />
