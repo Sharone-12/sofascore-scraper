@@ -303,13 +303,20 @@ function computePowerRankings(
   stats: SeasonStatRow[],
 ): RankedTeam[] {
   const byKey = indexStats(stats)
-  const maxPlayed = Math.max(...table.map((t) => t.played), 1)
-  const minGames = Math.max(3, Math.floor(maxPlayed * 0.4))
-  const teams = table.filter((t) => t.played >= minGames)
+  const teams = table.filter((t) => t.played >= 3)
   if (teams.length === 0) return []
 
-  const ppgVals = teams.map((t) => t.points / t.played)
-  const gdVals = teams.map((t) => t.goal_diff / t.played)
+  const PRIOR_PPG = 1.3
+  const PRIOR_GDPG = 0
+  const K = 4
+
+  const adjPpg = (t: TeamTableRow) =>
+    (t.points + PRIOR_PPG * K) / (t.played + K)
+  const adjGdpg = (t: TeamTableRow) =>
+    (t.goal_diff + PRIOR_GDPG * K) / (t.played + K)
+
+  const ppgVals = teams.map(adjPpg)
+  const gdVals = teams.map(adjGdpg)
   const xgVals = teams.map((t) =>
     statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT),
   )
@@ -320,8 +327,8 @@ function computePowerRankings(
 
   return teams
     .map((t) => {
-      const ppg = t.points / t.played
-      const gdpg = t.goal_diff / t.played
+      const ppg = adjPpg(t)
+      const gdpg = adjGdpg(t)
       const xg = statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT)
       const score =
         normalize(ppg, ppgMin, ppgMax) * 60 +
@@ -331,7 +338,7 @@ function computePowerRankings(
         team: t.team,
         league: t.league,
         score,
-        ppg,
+        ppg: t.points / t.played,
         gd: t.goal_diff,
         played: t.played,
       }
