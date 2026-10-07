@@ -1,7 +1,6 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
-import { percentileRank } from "@/lib/stats"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   FULL_LEAGUES,
@@ -295,29 +294,37 @@ function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
   )
 }
 
+function normalize(v: number, min: number, max: number): number {
+  return max === min ? 0.5 : (v - min) / (max - min)
+}
+
 function computePowerRankings(
   table: TeamTableRow[],
   stats: SeasonStatRow[],
 ): RankedTeam[] {
   const byKey = indexStats(stats)
   const teams = table.filter((t) => t.played >= 3)
+  if (teams.length === 0) return []
 
   const ppgVals = teams.map((t) => t.points / t.played)
-  const gdPerGame = teams.map((t) => t.goal_diff / t.played)
+  const gdVals = teams.map((t) => t.goal_diff / t.played)
   const xgVals = teams.map((t) =>
     statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT),
   )
 
-  // 50% PPG, 30% GD per game, 20% xG
+  const ppgMin = Math.min(...ppgVals), ppgMax = Math.max(...ppgVals)
+  const gdMin = Math.min(...gdVals), gdMax = Math.max(...gdVals)
+  const xgMin = Math.min(...xgVals), xgMax = Math.max(...xgVals)
+
   return teams
     .map((t) => {
       const ppg = t.points / t.played
       const gdpg = t.goal_diff / t.played
       const xg = statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT)
       const score =
-        percentileRank(ppg, ppgVals) * 0.5 +
-        percentileRank(gdpg, gdPerGame) * 0.3 +
-        percentileRank(xg, xgVals) * 0.2
+        normalize(ppg, ppgMin, ppgMax) * 50 +
+        normalize(gdpg, gdMin, gdMax) * 30 +
+        normalize(xg, xgMin, xgMax) * 20
       return {
         team: t.team,
         league: t.league,
