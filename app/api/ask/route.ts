@@ -182,48 +182,61 @@ export async function POST(req: Request) {
       })
     }
 
-    const res = await fetch(ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${key}`,
-        // Optional on OpenRouter, but it attributes usage to this app.
-        "HTTP-Referer": "https://footyy-three.vercel.app",
-        "X-Title": "footyy",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.3,
-        max_tokens: 700,
-        messages: [
-          { role: "system", content: SYSTEM },
-          {
-            role: "user",
-            content: `DATA:\n${sections.join("\n\n")}\n\nQUESTION: ${question}`,
-          },
-        ],
-      }),
-    })
+    const prompt = `DATA:\n${sections.join("\n\n")}\n\nQUESTION: ${question}`
 
-    if (!res.ok) {
-      const detail = await res.text()
-      // Free models get rate-limited upstream often enough that a bare status
-      // code would be baffling, so name the likely causes.
-      const msg =
-        res.status === 429
-          ? "The model is rate-limited right now. Try again in a moment."
-          : res.status === 402
-            ? "OpenRouter rejected the request: insufficient credits."
-            : `Model error ${res.status}: ${detail.slice(0, 200)}`
-      return NextResponse.json({ error: msg }, { status: 502 })
+    // The free tier intermittently returns 200 with empty content — seen in
+    // production. One retry turns that from a visible failure into a blip.
+    let answer = ""
+    let failure: { msg: string; status: number } | null = null
+
+    for (let attempt = 0; attempt < 2 && !answer; attempt++) {
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${key}`,
+          // Optional on OpenRouter, but it attributes usage to this app.
+          "HTTP-Referer": "https://footyy-three.vercel.app",
+          "X-Title": "footyy",
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          temperature: 0.3,
+          max_tokens: 700,
+          messages: [
+            { role: "system", content: SYSTEM },
+            { role: "user", content: prompt },
+          ],
+        }),
+      })
+
+      if (!res.ok) {
+        const detail = await res.text()
+        // Free models get rate-limited upstream often enough that a bare
+        // status code would be baffling, so name the likely causes.
+        failure = {
+          status: 502,
+          msg:
+            res.status === 429
+              ? "The model is rate-limited right now. Try again in a moment."
+              : res.status === 402
+                ? "OpenRouter rejected the request: insufficient credits."
+                : `Model error ${res.status}: ${detail.slice(0, 200)}`,
+        }
+        break
+      }
+
+      const json = await res.json()
+      const raw = json?.choices?.[0]?.message?.content
+      answer = raw ? clean(raw) : ""
     }
 
-    const json = await res.json()
-    const raw = json?.choices?.[0]?.message?.content
-    const answer = raw ? clean(raw) : ""
+    if (failure) {
+      return NextResponse.json({ error: failure.msg }, { status: failure.status })
+    }
     if (!answer) {
       return NextResponse.json(
-        { error: "DeepSeek returned an empty answer." },
+        { error: "The model returned an empty answer twice. Try again." },
         { status: 502 },
       )
     }
