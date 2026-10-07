@@ -1,0 +1,765 @@
+event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,away_goals
+14025013,Premier League,2025/26,1,2025-08-15,Liverpool FC,44,Bournemouth,60,finished,4.0,2.0
+14025016,Premier League,2025/26,1,2025-08-16,Aston Villa,40,Newcastle United,39,finished,0.0,0.0
+14025020,Premier League,2025/26,1,2025-08-16,Brighton & Hove Albion,30,Fulham,43,finished,1.0,1.0
+14025038,Premier League,2025/26,1,2025-08-16,Sunderland,41,West Ham United,37,finished,3.0,0.0
+14025047,Premier League,2025/26,1,2025-08-16,Tottenham Hotspur,33,Burnley,6,finished,3.0,0.0
+14025050,Premier League,2025/26,1,2025-08-16,Wolverhampton,3,Manchester City,17,finished,0.0,4.0
+14025053,Premier League,2025/26,1,2025-08-17,Chelsea,38,Crystal Palace,7,finished,0.0,0.0
+14025028,Premier League,2025/26,1,2025-08-17,Nottingham Forest,14,Brentford,50,finished,3.0,1.0
+14025056,Premier League,2025/26,1,2025-08-17,Manchester United,35,Arsenal,42,finished,0.0,1.0
+14025059,Premier League,2025/26,1,2025-08-18,Leeds United,34,Everton,48,finished,1.0,0.0
+14025088,Premier League,2025/26,2,2025-08-22,West Ham United,37,Chelsea,38,finished,1.0,5.0
+14025083,Premier League,2025/26,2,2025-08-23,Manchester City,17,Tottenham Hotspur,33,finished,0.0,2.0
+14025062,Premier League,2025/26,2,2025-08-23,Bournemouth,60,Wolverhampton,3,finished,1.0,0.0
+14025068,Premier League,2025/26,2,2025-08-23,Brentford,50,Aston Villa,40,finished,1.0,0.0
+14025071,Premier League,2025/26,2,2025-08-23,Burnley,6,Sunderland,41,finished,2.0,0.0
+14025065,Premier League,2025/26,2,2025-08-23,Arsenal,42,Leeds United,34,finished,5.0,0.0
+14025074,Premier League,2025/26,2,2025-08-24,Crystal Palace,7,Nottingham Forest,14,finished,1.0,1.0
+14025077,Premier League,2025/26,2,2025-08-24,Everton,48,Brighton & Hove Albion,30,finished,2.0,0.0
+14025080,Premier League,2025/26,2,2025-08-24,Fulham,43,Manchester United,35,finished,1.0,1.0
+14147154,Premier League,2025/26,2,2025-08-25,Newcastle United,39,Liverpool FC,44,finished,2.0,3.0
+14025097,Premier League,2025/26,3,2025-08-30,Chelsea,38,Fulham,43,finished,2.0,0.0
+14025106,Premier League,2025/26,3,2025-08-30,Manchester United,35,Burnley,6,finished,3.0,2.0
+14025112,Premier League,2025/26,3,2025-08-30,Sunderland,41,Brentford,50,finished,2.0,1.0
+14025115,Premier League,2025/26,3,2025-08-30,Tottenham Hotspur,33,Bournemouth,60,finished,0.0,1.0
+14025118,Premier League,2025/26,3,2025-08-30,Wolverhampton,3,Everton,48,finished,2.0,3.0
+14025100,Premier League,2025/26,3,2025-08-30,Leeds United,34,Newcastle United,39,finished,0.0,0.0
+14025094,Premier League,2025/26,3,2025-08-31,Brighton & Hove Albion,30,Manchester City,17,finished,2.0,1.0
+14025109,Premier League,2025/26,3,2025-08-31,Nottingham Forest,14,West Ham United,37,finished,0.0,3.0
+14025103,Premier League,2025/26,3,2025-08-31,Liverpool FC,44,Arsenal,42,finished,1.0,0.0
+14025091,Premier League,2025/26,3,2025-08-31,Aston Villa,40,Crystal Palace,7,finished,0.0,3.0
+14025124,Premier League,2025/26,4,2025-09-13,Arsenal,42,Nottingham Forest,14,finished,3.0,0.0
+14025121,Premier League,2025/26,4,2025-09-13,Bournemouth,60,Brighton & Hove Albion,30,finished,2.0,1.0
+14025133,Premier League,2025/26,4,2025-09-13,Crystal Palace,7,Sunderland,41,finished,0.0,0.0
+14025136,Premier League,2025/26,4,2025-09-13,Everton,48,Aston Villa,40,finished,0.0,0.0
+14025139,Premier League,2025/26,4,2025-09-13,Fulham,43,Leeds United,34,finished,1.0,0.0
+14025145,Premier League,2025/26,4,2025-09-13,Newcastle United,39,Wolverhampton,3,finished,1.0,0.0
+14025148,Premier League,2025/26,4,2025-09-13,West Ham United,37,Tottenham Hotspur,33,finished,0.0,3.0
+14025127,Premier League,2025/26,4,2025-09-13,Brentford,50,Chelsea,38,finished,2.0,2.0
+14025130,Premier League,2025/26,4,2025-09-14,Burnley,6,Liverpool FC,44,finished,0.0,1.0
+14025142,Premier League,2025/26,4,2025-09-14,Manchester City,17,Manchester United,35,finished,3.0,0.0
+14025166,Premier League,2025/26,5,2025-09-20,Liverpool FC,44,Everton,48,finished,2.0,1.0
+14025157,Premier League,2025/26,5,2025-09-20,Brighton & Hove Albion,30,Tottenham Hotspur,33,finished,2.0,2.0
+14025160,Premier League,2025/26,5,2025-09-20,Burnley,6,Nottingham Forest,14,finished,1.0,1.0
+14025175,Premier League,2025/26,5,2025-09-20,West Ham United,37,Crystal Palace,7,finished,1.0,2.0
+14025178,Premier League,2025/26,5,2025-09-20,Wolverhampton,3,Leeds United,34,finished,1.0,3.0
+14025169,Premier League,2025/26,5,2025-09-20,Manchester United,35,Chelsea,38,finished,2.0,1.0
+14025163,Premier League,2025/26,5,2025-09-20,Fulham,43,Brentford,50,finished,3.0,1.0
+14025151,Premier League,2025/26,5,2025-09-21,Bournemouth,60,Newcastle United,39,finished,0.0,0.0
+14025172,Premier League,2025/26,5,2025-09-21,Sunderland,41,Aston Villa,40,finished,1.0,1.0
+14025154,Premier League,2025/26,5,2025-09-21,Arsenal,42,Manchester City,17,finished,1.0,1.0
+14025184,Premier League,2025/26,6,2025-09-27,Brentford,50,Manchester United,35,finished,3.0,1.0
+14025187,Premier League,2025/26,6,2025-09-27,Chelsea,38,Brighton & Hove Albion,30,finished,1.0,3.0
+14025190,Premier League,2025/26,6,2025-09-27,Crystal Palace,7,Liverpool FC,44,finished,2.0,1.0
+14025196,Premier League,2025/26,6,2025-09-27,Leeds United,34,Bournemouth,60,finished,2.0,2.0
+14025199,Premier League,2025/26,6,2025-09-27,Manchester City,17,Burnley,6,finished,5.0,1.0
+14025205,Premier League,2025/26,6,2025-09-27,Nottingham Forest,14,Sunderland,41,finished,0.0,1.0
+14025208,Premier League,2025/26,6,2025-09-27,Tottenham Hotspur,33,Wolverhampton,3,finished,1.0,1.0
+14025181,Premier League,2025/26,6,2025-09-28,Aston Villa,40,Fulham,43,finished,3.0,1.0
+14025202,Premier League,2025/26,6,2025-09-28,Newcastle United,39,Arsenal,42,finished,1.0,2.0
+14311407,Premier League,2025/26,6,2025-09-29,Everton,48,West Ham United,37,finished,1.0,1.0
+14025211,Premier League,2025/26,7,2025-10-03,Bournemouth,60,Fulham,43,finished,3.0,1.0
+14025225,Premier League,2025/26,7,2025-10-04,Leeds United,34,Tottenham Hotspur,33,finished,1.0,2.0
+14025214,Premier League,2025/26,7,2025-10-04,Arsenal,42,West Ham United,37,finished,2.0,0.0
+14025227,Premier League,2025/26,7,2025-10-04,Manchester United,35,Sunderland,41,finished,2.0,0.0
+14025221,Premier League,2025/26,7,2025-10-04,Chelsea,38,Liverpool FC,44,finished,2.0,1.0
+14025217,Premier League,2025/26,7,2025-10-05,Aston Villa,40,Burnley,6,finished,2.0,1.0
+14025223,Premier League,2025/26,7,2025-10-05,Everton,48,Crystal Palace,7,finished,2.0,1.0
+14025229,Premier League,2025/26,7,2025-10-05,Newcastle United,39,Nottingham Forest,14,finished,2.0,0.0
+14025231,Premier League,2025/26,7,2025-10-05,Wolverhampton,3,Brighton & Hove Albion,30,finished,1.0,1.0
+14025219,Premier League,2025/26,7,2025-10-05,Brentford,50,Manchester City,17,finished,0.0,1.0
+14025245,Premier League,2025/26,8,2025-10-18,Nottingham Forest,14,Chelsea,38,finished,0.0,3.0
+14025233,Premier League,2025/26,8,2025-10-18,Brighton & Hove Albion,30,Newcastle United,39,finished,2.0,1.0
+14025235,Premier League,2025/26,8,2025-10-18,Burnley,6,Leeds United,34,finished,2.0,0.0
+14025237,Premier League,2025/26,8,2025-10-18,Crystal Palace,7,Bournemouth,60,finished,3.0,3.0
+14025243,Premier League,2025/26,8,2025-10-18,Manchester City,17,Everton,48,finished,2.0,0.0
+14025247,Premier League,2025/26,8,2025-10-18,Sunderland,41,Wolverhampton,3,finished,2.0,0.0
+14025239,Premier League,2025/26,8,2025-10-18,Fulham,43,Arsenal,42,finished,0.0,1.0
+14025249,Premier League,2025/26,8,2025-10-19,Tottenham Hotspur,33,Aston Villa,40,finished,1.0,2.0
+14025241,Premier League,2025/26,8,2025-10-19,Liverpool FC,44,Manchester United,35,finished,1.0,2.0
+14504827,Premier League,2025/26,8,2025-10-20,West Ham United,37,Brentford,50,finished,0.0,2.0
+14025265,Premier League,2025/26,9,2025-10-24,Leeds United,34,West Ham United,37,finished,2.0,1.0
+14025261,Premier League,2025/26,9,2025-10-25,Chelsea,38,Sunderland,41,finished,1.0,2.0
+14025269,Premier League,2025/26,9,2025-10-25,Newcastle United,39,Fulham,43,finished,2.0,1.0
+14025267,Premier League,2025/26,9,2025-10-25,Manchester United,35,Brighton & Hove Albion,30,finished,4.0,2.0
+14025259,Premier League,2025/26,9,2025-10-25,Brentford,50,Liverpool FC,44,finished,3.0,2.0
+14025255,Premier League,2025/26,9,2025-10-26,Arsenal,42,Crystal Palace,7,finished,1.0,0.0
+14025257,Premier League,2025/26,9,2025-10-26,Aston Villa,40,Manchester City,17,finished,1.0,0.0
+14025253,Premier League,2025/26,9,2025-10-26,Bournemouth,60,Nottingham Forest,14,finished,2.0,0.0
+14025271,Premier League,2025/26,9,2025-10-26,Wolverhampton,3,Burnley,6,finished,2.0,3.0
+14025263,Premier League,2025/26,9,2025-10-26,Everton,48,Tottenham Hotspur,33,finished,0.0,3.0
+14025273,Premier League,2025/26,10,2025-11-01,Brighton & Hove Albion,30,Leeds United,34,finished,3.0,0.0
+14025275,Premier League,2025/26,10,2025-11-01,Burnley,6,Arsenal,42,finished,0.0,2.0
+14025277,Premier League,2025/26,10,2025-11-01,Crystal Palace,7,Brentford,50,finished,2.0,0.0
+14025279,Premier League,2025/26,10,2025-11-01,Fulham,43,Wolverhampton,3,finished,3.0,0.0
+14025285,Premier League,2025/26,10,2025-11-01,Nottingham Forest,14,Manchester United,35,finished,2.0,2.0
+14025289,Premier League,2025/26,10,2025-11-01,Tottenham Hotspur,33,Chelsea,38,finished,0.0,1.0
+14025281,Premier League,2025/26,10,2025-11-01,Liverpool FC,44,Aston Villa,40,finished,2.0,0.0
+14025291,Premier League,2025/26,10,2025-11-02,West Ham United,37,Newcastle United,39,finished,3.0,1.0
+14025283,Premier League,2025/26,10,2025-11-02,Manchester City,17,Bournemouth,60,finished,3.0,1.0
+14723615,Premier League,2025/26,10,2025-11-03,Sunderland,41,Everton,48,finished,1.0,1.0
+14025057,Premier League,2025/26,11,2025-11-08,Tottenham Hotspur,33,Manchester United,35,finished,2.0,2.0
+14025043,Premier League,2025/26,11,2025-11-08,Everton,48,Fulham,43,finished,2.0,0.0
+14025060,Premier League,2025/26,11,2025-11-08,West Ham United,37,Burnley,6,finished,3.0,2.0
+14025054,Premier League,2025/26,11,2025-11-08,Sunderland,41,Arsenal,42,finished,2.0,2.0
+14025023,Premier League,2025/26,11,2025-11-08,Chelsea,38,Wolverhampton,3,finished,3.0,0.0
+14025014,Premier League,2025/26,11,2025-11-09,Aston Villa,40,Bournemouth,60,finished,4.0,0.0
+14025017,Premier League,2025/26,11,2025-11-09,Brentford,50,Newcastle United,39,finished,3.0,1.0
+14025033,Premier League,2025/26,11,2025-11-09,Crystal Palace,7,Brighton & Hove Albion,30,finished,0.0,0.0
+14025051,Premier League,2025/26,11,2025-11-09,Nottingham Forest,14,Leeds United,34,finished,3.0,1.0
+14025048,Premier League,2025/26,11,2025-11-09,Manchester City,17,Liverpool FC,44,finished,3.0,0.0
+14025072,Premier League,2025/26,12,2025-11-22,Burnley,6,Chelsea,38,finished,0.0,2.0
+14025063,Premier League,2025/26,12,2025-11-22,Bournemouth,60,West Ham United,37,finished,2.0,2.0
+14025069,Premier League,2025/26,12,2025-11-22,Brighton & Hove Albion,30,Brentford,50,finished,2.0,1.0
+14025075,Premier League,2025/26,12,2025-11-22,Fulham,43,Sunderland,41,finished,1.0,0.0
+14025081,Premier League,2025/26,12,2025-11-22,Liverpool FC,44,Nottingham Forest,14,finished,0.0,3.0
+14025090,Premier League,2025/26,12,2025-11-22,Wolverhampton,3,Crystal Palace,7,finished,0.0,2.0
+14025087,Premier League,2025/26,12,2025-11-22,Newcastle United,39,Manchester City,17,finished,2.0,1.0
+14025078,Premier League,2025/26,12,2025-11-23,Leeds United,34,Aston Villa,40,finished,1.0,2.0
+14025066,Premier League,2025/26,12,2025-11-23,Arsenal,42,Tottenham Hotspur,33,finished,4.0,1.0
+14723574,Premier League,2025/26,12,2025-11-24,Manchester United,35,Everton,48,finished,0.0,1.0
+14025096,Premier League,2025/26,13,2025-11-29,Brentford,50,Burnley,6,finished,3.0,1.0
+14025108,Premier League,2025/26,13,2025-11-29,Manchester City,17,Leeds United,34,finished,3.0,2.0
+14025114,Premier League,2025/26,13,2025-11-29,Sunderland,41,Bournemouth,60,finished,3.0,2.0
+14025105,Premier League,2025/26,13,2025-11-29,Everton,48,Newcastle United,39,finished,1.0,4.0
+14025117,Premier League,2025/26,13,2025-11-29,Tottenham Hotspur,33,Fulham,43,finished,1.0,2.0
+14025102,Premier League,2025/26,13,2025-11-30,Crystal Palace,7,Manchester United,35,finished,1.0,2.0
+14025093,Premier League,2025/26,13,2025-11-30,Aston Villa,40,Wolverhampton,3,finished,1.0,0.0
+14025111,Premier League,2025/26,13,2025-11-30,Nottingham Forest,14,Brighton & Hove Albion,30,finished,0.0,2.0
+14025120,Premier League,2025/26,13,2025-11-30,West Ham United,37,Liverpool FC,44,finished,0.0,2.0
+14025099,Premier League,2025/26,13,2025-11-30,Chelsea,38,Arsenal,42,finished,1.0,1.0
+14025123,Premier League,2025/26,14,2025-12-02,Bournemouth,60,Everton,48,finished,0.0,1.0
+14025135,Premier League,2025/26,14,2025-12-02,Fulham,43,Manchester City,17,finished,4.0,5.0
+14025141,Premier League,2025/26,14,2025-12-02,Newcastle United,39,Tottenham Hotspur,33,finished,2.0,2.0
+14025126,Premier League,2025/26,14,2025-12-03,Arsenal,42,Brentford,50,finished,2.0,0.0
+14025129,Premier League,2025/26,14,2025-12-03,Brighton & Hove Albion,30,Aston Villa,40,finished,3.0,4.0
+14025132,Premier League,2025/26,14,2025-12-03,Burnley,6,Crystal Palace,7,finished,0.0,1.0
+14025144,Premier League,2025/26,14,2025-12-03,Wolverhampton,3,Nottingham Forest,14,finished,0.0,1.0
+14025138,Premier League,2025/26,14,2025-12-03,Leeds United,34,Chelsea,38,finished,3.0,1.0
+14025147,Premier League,2025/26,14,2025-12-03,Liverpool FC,44,Sunderland,41,finished,1.0,1.0
+14025150,Premier League,2025/26,14,2025-12-04,Manchester United,35,West Ham United,37,finished,1.0,1.0
+14025156,Premier League,2025/26,15,2025-12-06,Aston Villa,40,Arsenal,42,finished,2.0,1.0
+14025153,Premier League,2025/26,15,2025-12-06,Bournemouth,60,Chelsea,38,finished,0.0,0.0
+14025162,Premier League,2025/26,15,2025-12-06,Everton,48,Nottingham Forest,14,finished,3.0,0.0
+14025171,Premier League,2025/26,15,2025-12-06,Manchester City,17,Sunderland,41,finished,3.0,0.0
+14025174,Premier League,2025/26,15,2025-12-06,Newcastle United,39,Burnley,6,finished,2.0,1.0
+14025177,Premier League,2025/26,15,2025-12-06,Tottenham Hotspur,33,Brentford,50,finished,2.0,0.0
+14025168,Premier League,2025/26,15,2025-12-06,Leeds United,34,Liverpool FC,44,finished,3.0,3.0
+14025159,Premier League,2025/26,15,2025-12-07,Brighton & Hove Albion,30,West Ham United,37,finished,1.0,1.0
+14025165,Premier League,2025/26,15,2025-12-07,Fulham,43,Crystal Palace,7,finished,1.0,2.0
+14912436,Premier League,2025/26,15,2025-12-08,Wolverhampton,3,Manchester United,35,finished,1.0,4.0
+14025192,Premier League,2025/26,16,2025-12-13,Chelsea,38,Everton,48,finished,2.0,0.0
+14025198,Premier League,2025/26,16,2025-12-13,Liverpool FC,44,Brighton & Hove Albion,30,finished,2.0,0.0
+14025189,Premier League,2025/26,16,2025-12-13,Burnley,6,Fulham,43,finished,2.0,3.0
+14025183,Premier League,2025/26,16,2025-12-13,Arsenal,42,Wolverhampton,3,finished,2.0,1.0
+14025195,Premier League,2025/26,16,2025-12-14,Crystal Palace,7,Manchester City,17,finished,0.0,3.0
+14025204,Premier League,2025/26,16,2025-12-14,Nottingham Forest,14,Tottenham Hotspur,33,finished,3.0,0.0
+14025207,Premier League,2025/26,16,2025-12-14,Sunderland,41,Newcastle United,39,finished,1.0,0.0
+14025210,Premier League,2025/26,16,2025-12-14,West Ham United,37,Aston Villa,40,finished,2.0,3.0
+14025186,Premier League,2025/26,16,2025-12-14,Brentford,50,Leeds United,34,finished,1.0,1.0
+15035359,Premier League,2025/26,16,2025-12-15,Manchester United,35,Bournemouth,60,finished,4.0,4.0
+14025228,Premier League,2025/26,17,2025-12-20,Newcastle United,39,Chelsea,38,finished,2.0,2.0
+14025213,Premier League,2025/26,17,2025-12-20,Bournemouth,60,Burnley,6,finished,1.0,1.0
+14025218,Premier League,2025/26,17,2025-12-20,Brighton & Hove Albion,30,Sunderland,41,finished,0.0,0.0
+14025226,Premier League,2025/26,17,2025-12-20,Manchester City,17,West Ham United,37,finished,3.0,0.0
+14025232,Premier League,2025/26,17,2025-12-20,Wolverhampton,3,Brentford,50,finished,0.0,2.0
+14025230,Premier League,2025/26,17,2025-12-20,Tottenham Hotspur,33,Liverpool FC,44,finished,1.0,2.0
+14025220,Premier League,2025/26,17,2025-12-20,Everton,48,Arsenal,42,finished,0.0,1.0
+14025224,Premier League,2025/26,17,2025-12-20,Leeds United,34,Crystal Palace,7,finished,4.0,1.0
+14025216,Premier League,2025/26,17,2025-12-21,Aston Villa,40,Manchester United,35,finished,2.0,1.0
+14907281,Premier League,2025/26,17,2025-12-22,Fulham,43,Nottingham Forest,14,finished,1.0,0.0
+14025246,Premier League,2025/26,18,2025-12-26,Manchester United,35,Newcastle United,39,finished,1.0,0.0
+14025248,Premier League,2025/26,18,2025-12-27,Nottingham Forest,14,Manchester City,17,finished,1.0,2.0
+14025234,Premier League,2025/26,18,2025-12-27,Arsenal,42,Brighton & Hove Albion,30,finished,2.0,1.0
+14025236,Premier League,2025/26,18,2025-12-27,Brentford,50,Bournemouth,60,finished,4.0,1.0
+14025238,Premier League,2025/26,18,2025-12-27,Burnley,6,Everton,48,finished,0.0,0.0
+14025244,Premier League,2025/26,18,2025-12-27,Liverpool FC,44,Wolverhampton,3,finished,2.0,1.0
+14025252,Premier League,2025/26,18,2025-12-27,West Ham United,37,Fulham,43,finished,0.0,1.0
+14025240,Premier League,2025/26,18,2025-12-27,Chelsea,38,Aston Villa,40,finished,1.0,2.0
+14025250,Premier League,2025/26,18,2025-12-28,Sunderland,41,Leeds United,34,finished,1.0,1.0
+14025242,Premier League,2025/26,18,2025-12-28,Crystal Palace,7,Tottenham Hotspur,33,finished,0.0,1.0
+14025258,Premier League,2025/26,19,2025-12-30,Burnley,6,Newcastle United,39,finished,1.0,3.0
+14025260,Premier League,2025/26,19,2025-12-30,Chelsea,38,Bournemouth,60,finished,2.0,2.0
+14025268,Premier League,2025/26,19,2025-12-30,Nottingham Forest,14,Everton,48,finished,0.0,2.0
+14025272,Premier League,2025/26,19,2025-12-30,West Ham United,37,Brighton & Hove Albion,30,finished,2.0,2.0
+14025254,Premier League,2025/26,19,2025-12-30,Arsenal,42,Aston Villa,40,finished,4.0,1.0
+14025266,Premier League,2025/26,19,2025-12-30,Manchester United,35,Wolverhampton,3,finished,1.0,1.0
+14025262,Premier League,2025/26,19,2026-01-01,Crystal Palace,7,Fulham,43,finished,1.0,1.0
+14025264,Premier League,2025/26,19,2026-01-01,Liverpool FC,44,Leeds United,34,finished,0.0,0.0
+14025256,Premier League,2025/26,19,2026-01-01,Brentford,50,Tottenham Hotspur,33,finished,0.0,0.0
+14025270,Premier League,2025/26,19,2026-01-01,Sunderland,41,Manchester City,17,finished,0.0,0.0
+14025276,Premier League,2025/26,20,2026-01-03,Aston Villa,40,Nottingham Forest,14,finished,3.0,1.0
+14025278,Premier League,2025/26,20,2026-01-03,Brighton & Hove Albion,30,Burnley,6,finished,2.0,0.0
+14025292,Premier League,2025/26,20,2026-01-03,Wolverhampton,3,West Ham United,37,finished,3.0,0.0
+14025274,Premier League,2025/26,20,2026-01-03,Bournemouth,60,Arsenal,42,finished,2.0,3.0
+14025284,Premier League,2025/26,20,2026-01-04,Leeds United,34,Manchester United,35,finished,1.0,1.0
+14025280,Premier League,2025/26,20,2026-01-04,Everton,48,Brentford,50,finished,2.0,4.0
+14025288,Premier League,2025/26,20,2026-01-04,Newcastle United,39,Crystal Palace,7,finished,2.0,0.0
+14025290,Premier League,2025/26,20,2026-01-04,Tottenham Hotspur,33,Sunderland,41,finished,1.0,1.0
+14025282,Premier League,2025/26,20,2026-01-04,Fulham,43,Liverpool FC,44,finished,2.0,2.0
+14025286,Premier League,2025/26,20,2026-01-04,Manchester City,17,Chelsea,38,finished,1.0,1.0
+14025055,Premier League,2025/26,21,2026-01-06,West Ham United,37,Nottingham Forest,14,finished,1.0,2.0
+14025015,Premier League,2025/26,21,2026-01-07,Bournemouth,60,Tottenham Hotspur,33,finished,3.0,2.0
+14025027,Premier League,2025/26,21,2026-01-07,Brentford,50,Sunderland,41,finished,3.0,0.0
+14025058,Premier League,2025/26,21,2026-01-07,Crystal Palace,7,Aston Villa,40,finished,0.0,0.0
+14025046,Premier League,2025/26,21,2026-01-07,Everton,48,Wolverhampton,3,finished,1.0,1.0
+14025049,Premier League,2025/26,21,2026-01-07,Fulham,43,Chelsea,38,finished,2.0,1.0
+14025061,Premier League,2025/26,21,2026-01-07,Manchester City,17,Brighton & Hove Albion,30,finished,1.0,1.0
+14025037,Premier League,2025/26,21,2026-01-07,Burnley,6,Manchester United,35,finished,2.0,2.0
+14025052,Premier League,2025/26,21,2026-01-07,Newcastle United,39,Leeds United,34,finished,4.0,3.0
+14025019,Premier League,2025/26,21,2026-01-08,Arsenal,42,Liverpool FC,44,finished,0.0,0.0
+14025079,Premier League,2025/26,22,2026-01-17,Manchester United,35,Manchester City,17,finished,2.0,0.0
+14025070,Premier League,2025/26,22,2026-01-17,Chelsea,38,Brentford,50,finished,2.0,0.0
+14025073,Premier League,2025/26,22,2026-01-17,Leeds United,34,Fulham,43,finished,1.0,0.0
+14025076,Premier League,2025/26,22,2026-01-17,Liverpool FC,44,Burnley,6,finished,1.0,1.0
+14025085,Premier League,2025/26,22,2026-01-17,Sunderland,41,Crystal Palace,7,finished,2.0,1.0
+14025089,Premier League,2025/26,22,2026-01-17,Tottenham Hotspur,33,West Ham United,37,finished,1.0,2.0
+14025082,Premier League,2025/26,22,2026-01-17,Nottingham Forest,14,Arsenal,42,finished,0.0,0.0
+14025092,Premier League,2025/26,22,2026-01-18,Wolverhampton,3,Newcastle United,39,finished,0.0,0.0
+14025064,Premier League,2025/26,22,2026-01-18,Aston Villa,40,Everton,48,finished,0.0,1.0
+15129445,Premier League,2025/26,22,2026-01-19,Brighton & Hove Albion,30,Bournemouth,60,finished,1.0,1.0
+14025122,Premier League,2025/26,23,2026-01-24,West Ham United,37,Sunderland,41,finished,3.0,1.0
+14025104,Premier League,2025/26,23,2026-01-24,Burnley,6,Tottenham Hotspur,33,finished,2.0,2.0
+14025113,Premier League,2025/26,23,2026-01-24,Fulham,43,Brighton & Hove Albion,30,finished,2.0,1.0
+14025116,Premier League,2025/26,23,2026-01-24,Manchester City,17,Wolverhampton,3,finished,2.0,0.0
+14025095,Premier League,2025/26,23,2026-01-24,Bournemouth,60,Liverpool FC,44,finished,3.0,2.0
+14025101,Premier League,2025/26,23,2026-01-25,Brentford,50,Nottingham Forest,14,finished,0.0,2.0
+14025107,Premier League,2025/26,23,2026-01-25,Crystal Palace,7,Chelsea,38,finished,1.0,3.0
+14025119,Premier League,2025/26,23,2026-01-25,Newcastle United,39,Aston Villa,40,finished,0.0,2.0
+14025098,Premier League,2025/26,23,2026-01-25,Arsenal,42,Manchester United,35,finished,2.0,3.0
+15129439,Premier League,2025/26,23,2026-01-26,Everton,48,Leeds United,34,finished,1.0,1.0
+14025128,Premier League,2025/26,24,2026-01-31,Brighton & Hove Albion,30,Everton,48,finished,1.0,1.0
+14025134,Premier League,2025/26,24,2026-01-31,Leeds United,34,Arsenal,42,finished,0.0,4.0
+14025152,Premier League,2025/26,24,2026-01-31,Wolverhampton,3,Bournemouth,60,finished,0.0,2.0
+14025131,Premier League,2025/26,24,2026-01-31,Chelsea,38,West Ham United,37,finished,3.0,2.0
+14025137,Premier League,2025/26,24,2026-01-31,Liverpool FC,44,Newcastle United,39,finished,4.0,1.0
+14025125,Premier League,2025/26,24,2026-02-01,Aston Villa,40,Brentford,50,finished,0.0,1.0
+14025140,Premier League,2025/26,24,2026-02-01,Manchester United,35,Fulham,43,finished,3.0,2.0
+14025143,Premier League,2025/26,24,2026-02-01,Nottingham Forest,14,Crystal Palace,7,finished,1.0,1.0
+14025149,Premier League,2025/26,24,2026-02-01,Tottenham Hotspur,33,Manchester City,17,finished,2.0,2.0
+15129444,Premier League,2025/26,24,2026-02-02,Sunderland,41,Burnley,6,finished,3.0,0.0
+14025170,Premier League,2025/26,25,2026-02-06,Leeds United,34,Nottingham Forest,14,finished,3.0,1.0
+14025176,Premier League,2025/26,25,2026-02-07,Manchester United,35,Tottenham Hotspur,33,finished,2.0,0.0
+14025158,Premier League,2025/26,25,2026-02-07,Arsenal,42,Sunderland,41,finished,3.0,0.0
+14025155,Premier League,2025/26,25,2026-02-07,Bournemouth,60,Aston Villa,40,finished,1.0,1.0
+14025164,Premier League,2025/26,25,2026-02-07,Burnley,6,West Ham United,37,finished,0.0,2.0
+14025167,Premier League,2025/26,25,2026-02-07,Fulham,43,Everton,48,finished,1.0,2.0
+14025182,Premier League,2025/26,25,2026-02-07,Wolverhampton,3,Chelsea,38,finished,1.0,3.0
+14025179,Premier League,2025/26,25,2026-02-07,Newcastle United,39,Brentford,50,finished,2.0,3.0
+14025161,Premier League,2025/26,25,2026-02-08,Brighton & Hove Albion,30,Crystal Palace,7,finished,0.0,1.0
+14025173,Premier League,2025/26,25,2026-02-08,Liverpool FC,44,Manchester City,17,finished,1.0,2.0
+14025188,Premier League,2025/26,26,2026-02-10,Chelsea,38,Leeds United,34,finished,2.0,2.0
+14025191,Premier League,2025/26,26,2026-02-10,Everton,48,Bournemouth,60,finished,1.0,2.0
+14025200,Premier League,2025/26,26,2026-02-10,Tottenham Hotspur,33,Newcastle United,39,finished,1.0,2.0
+14025203,Premier League,2025/26,26,2026-02-10,West Ham United,37,Manchester United,35,finished,1.0,1.0
+14025206,Premier League,2025/26,26,2026-02-11,Aston Villa,40,Brighton & Hove Albion,30,finished,1.0,0.0
+14025209,Premier League,2025/26,26,2026-02-11,Crystal Palace,7,Burnley,6,finished,2.0,3.0
+14025212,Premier League,2025/26,26,2026-02-11,Manchester City,17,Fulham,43,finished,3.0,0.0
+14025194,Premier League,2025/26,26,2026-02-11,Nottingham Forest,14,Wolverhampton,3,finished,0.0,0.0
+14025197,Premier League,2025/26,26,2026-02-11,Sunderland,41,Liverpool FC,44,finished,0.0,1.0
+14025185,Premier League,2025/26,26,2026-02-12,Brentford,50,Arsenal,42,finished,1.0,1.0
+14025215,Premier League,2025/26,27,2026-02-21,Aston Villa,40,Leeds United,34,finished,1.0,1.0
+14024006,Premier League,2025/26,27,2026-02-21,Brentford,50,Brighton & Hove Albion,30,finished,0.0,2.0
+14024007,Premier League,2025/26,27,2026-02-21,Chelsea,38,Burnley,6,finished,1.0,1.0
+14023969,Premier League,2025/26,27,2026-02-21,West Ham United,37,Bournemouth,60,finished,0.0,0.0
+14024010,Premier League,2025/26,27,2026-02-21,Manchester City,17,Newcastle United,39,finished,2.0,1.0
+14024008,Premier League,2025/26,27,2026-02-22,Crystal Palace,7,Wolverhampton,3,finished,1.0,0.0
+14024013,Premier League,2025/26,27,2026-02-22,Nottingham Forest,14,Liverpool FC,44,finished,0.0,1.0
+14024011,Premier League,2025/26,27,2026-02-22,Sunderland,41,Fulham,43,finished,1.0,3.0
+14024012,Premier League,2025/26,27,2026-02-22,Tottenham Hotspur,33,Arsenal,42,finished,1.0,4.0
+15238290,Premier League,2025/26,27,2026-02-23,Everton,48,Manchester United,35,finished,0.0,1.0
+14023979,Premier League,2025/26,28,2026-02-27,Wolverhampton,3,Aston Villa,40,finished,2.0,0.0
+14023970,Premier League,2025/26,28,2026-02-28,Bournemouth,60,Sunderland,41,finished,1.0,1.0
+14023975,Premier League,2025/26,28,2026-02-28,Burnley,6,Brentford,50,finished,3.0,4.0
+14023976,Premier League,2025/26,28,2026-02-28,Liverpool FC,44,West Ham United,37,finished,5.0,2.0
+14023977,Premier League,2025/26,28,2026-02-28,Newcastle United,39,Everton,48,finished,2.0,3.0
+14023974,Premier League,2025/26,28,2026-02-28,Leeds United,34,Manchester City,17,finished,0.0,1.0
+14023972,Premier League,2025/26,28,2026-03-01,Brighton & Hove Albion,30,Nottingham Forest,14,finished,2.0,1.0
+14023973,Premier League,2025/26,28,2026-03-01,Fulham,43,Tottenham Hotspur,33,finished,2.0,1.0
+14023978,Premier League,2025/26,28,2026-03-01,Manchester United,35,Crystal Palace,7,finished,2.0,1.0
+14023971,Premier League,2025/26,28,2026-03-01,Arsenal,42,Chelsea,38,finished,2.0,1.0
+14023980,Premier League,2025/26,29,2026-03-03,Bournemouth,60,Brentford,50,finished,0.0,0.0
+14023941,Premier League,2025/26,29,2026-03-03,Everton,48,Burnley,6,finished,2.0,0.0
+14023982,Premier League,2025/26,29,2026-03-03,Leeds United,34,Sunderland,41,finished,0.0,1.0
+14023985,Premier League,2025/26,29,2026-03-03,Wolverhampton,3,Liverpool FC,44,finished,2.0,1.0
+14023986,Premier League,2025/26,29,2026-03-04,Aston Villa,40,Chelsea,38,finished,1.0,4.0
+14023933,Premier League,2025/26,29,2026-03-04,Brighton & Hove Albion,30,Arsenal,42,finished,0.0,1.0
+14023947,Premier League,2025/26,29,2026-03-04,Fulham,43,West Ham United,37,finished,0.0,1.0
+14023984,Premier League,2025/26,29,2026-03-04,Manchester City,17,Nottingham Forest,14,finished,2.0,2.0
+14023983,Premier League,2025/26,29,2026-03-04,Newcastle United,39,Manchester United,35,finished,2.0,1.0
+14023981,Premier League,2025/26,29,2026-03-05,Tottenham Hotspur,33,Crystal Palace,7,finished,1.0,3.0
+14023988,Premier League,2025/26,30,2026-03-14,Burnley,6,Bournemouth,60,finished,0.0,0.0
+14023996,Premier League,2025/26,30,2026-03-14,Sunderland,41,Brighton & Hove Albion,30,finished,0.0,1.0
+14023987,Premier League,2025/26,30,2026-03-14,Arsenal,42,Everton,48,finished,2.0,0.0
+14023990,Premier League,2025/26,30,2026-03-14,Chelsea,38,Newcastle United,39,finished,0.0,1.0
+14023993,Premier League,2025/26,30,2026-03-14,West Ham United,37,Manchester City,17,finished,1.0,1.0
+14023991,Premier League,2025/26,30,2026-03-15,Crystal Palace,7,Leeds United,34,finished,0.0,0.0
+14023994,Premier League,2025/26,30,2026-03-15,Manchester United,35,Aston Villa,40,finished,3.0,1.0
+14023995,Premier League,2025/26,30,2026-03-15,Nottingham Forest,14,Fulham,43,finished,0.0,0.0
+14023992,Premier League,2025/26,30,2026-03-15,Liverpool FC,44,Tottenham Hotspur,33,finished,1.0,1.0
+15408501,Premier League,2025/26,30,2026-03-16,Brentford,50,Wolverhampton,3,finished,2.0,2.0
+14025018,Premier League,2025/26,31,2026-02-18,Wolverhampton,3,Arsenal,42,finished,2.0,2.0
+14023997,Premier League,2025/26,31,2026-03-20,Bournemouth,60,Manchester United,35,finished,2.0,2.0
+14024015,Premier League,2025/26,31,2026-03-21,Brighton & Hove Albion,30,Liverpool FC,44,finished,2.0,1.0
+14024016,Premier League,2025/26,31,2026-03-21,Fulham,43,Burnley,6,finished,3.0,1.0
+14024019,Premier League,2025/26,31,2026-03-21,Manchester City,17,Crystal Palace,7,upcoming,,
+14024017,Premier League,2025/26,31,2026-03-21,Everton,48,Chelsea,38,finished,3.0,0.0
+14024018,Premier League,2025/26,31,2026-03-21,Leeds United,34,Brentford,50,finished,0.0,0.0
+14024021,Premier League,2025/26,31,2026-03-22,Newcastle United,39,Sunderland,41,finished,1.0,2.0
+14024014,Premier League,2025/26,31,2026-03-22,Aston Villa,40,West Ham United,37,finished,2.0,0.0
+14024020,Premier League,2025/26,31,2026-03-22,Tottenham Hotspur,33,Nottingham Forest,14,finished,0.0,3.0
+15999228,Premier League,2025/26,31,2026-05-13,Manchester City,17,Crystal Palace,7,finished,3.0,0.0
+14025029,Premier League,2025/26,32,2026-04-10,West Ham United,37,Wolverhampton,3,finished,4.0,0.0
+14025021,Premier League,2025/26,32,2026-04-11,Arsenal,42,Bournemouth,60,finished,1.0,2.0
+14025022,Premier League,2025/26,32,2026-04-11,Brentford,50,Everton,48,finished,2.0,2.0
+14024002,Premier League,2025/26,32,2026-04-11,Burnley,6,Brighton & Hove Albion,30,finished,0.0,2.0
+14024000,Premier League,2025/26,32,2026-04-11,Liverpool FC,44,Fulham,43,finished,2.0,0.0
+14023999,Premier League,2025/26,32,2026-04-12,Crystal Palace,7,Newcastle United,39,finished,2.0,1.0
+14025025,Premier League,2025/26,32,2026-04-12,Nottingham Forest,14,Aston Villa,40,finished,1.0,1.0
+14025026,Premier League,2025/26,32,2026-04-12,Sunderland,41,Tottenham Hotspur,33,finished,1.0,0.0
+14023998,Premier League,2025/26,32,2026-04-12,Chelsea,38,Manchester City,17,finished,0.0,3.0
+14025024,Premier League,2025/26,32,2026-04-13,Manchester United,35,Leeds United,34,finished,1.0,2.0
+14025031,Premier League,2025/26,33,2026-04-18,Brentford,50,Fulham,43,finished,0.0,0.0
+14025036,Premier League,2025/26,33,2026-04-18,Leeds United,34,Wolverhampton,3,finished,3.0,0.0
+14025040,Premier League,2025/26,33,2026-04-18,Newcastle United,39,Bournemouth,60,finished,1.0,2.0
+14025042,Premier League,2025/26,33,2026-04-18,Tottenham Hotspur,33,Brighton & Hove Albion,30,finished,2.0,2.0
+14025032,Premier League,2025/26,33,2026-04-18,Chelsea,38,Manchester United,35,finished,0.0,1.0
+14025030,Premier League,2025/26,33,2026-04-19,Aston Villa,40,Sunderland,41,finished,4.0,3.0
+14025035,Premier League,2025/26,33,2026-04-19,Everton,48,Liverpool FC,44,finished,1.0,2.0
+14025041,Premier League,2025/26,33,2026-04-19,Nottingham Forest,14,Burnley,6,finished,4.0,1.0
+14025039,Premier League,2025/26,33,2026-04-19,Manchester City,17,Arsenal,42,finished,2.0,1.0
+14025034,Premier League,2025/26,33,2026-04-20,Crystal Palace,7,West Ham United,37,finished,0.0,0.0
+14024001,Premier League,2025/26,34,2026-04-21,Brighton & Hove Albion,30,Chelsea,38,finished,3.0,0.0
+14025044,Premier League,2025/26,34,2026-04-22,Bournemouth,60,Leeds United,34,finished,2.0,2.0
+14024003,Premier League,2025/26,34,2026-04-22,Burnley,6,Manchester City,17,finished,0.0,1.0
+14023932,Premier League,2025/26,34,2026-04-24,Sunderland,41,Nottingham Forest,14,finished,0.0,5.0
+14024004,Premier League,2025/26,34,2026-04-25,Fulham,43,Aston Villa,40,finished,1.0,0.0
+14024005,Premier League,2025/26,34,2026-04-25,Liverpool FC,44,Crystal Palace,7,finished,3.0,1.0
+14023934,Premier League,2025/26,34,2026-04-25,West Ham United,37,Everton,48,finished,2.0,1.0
+14024022,Premier League,2025/26,34,2026-04-25,Wolverhampton,3,Tottenham Hotspur,33,finished,0.0,1.0
+14025045,Premier League,2025/26,34,2026-04-25,Arsenal,42,Newcastle United,39,finished,1.0,0.0
+14023926,Premier League,2025/26,34,2026-04-27,Manchester United,35,Brentford,50,finished,2.0,1.0
+14023940,Premier League,2025/26,35,2026-05-01,Leeds United,34,Burnley,6,finished,3.0,1.0
+14023945,Premier League,2025/26,35,2026-05-02,Brentford,50,West Ham United,37,finished,3.0,0.0
+14023949,Premier League,2025/26,35,2026-05-02,Newcastle United,39,Brighton & Hove Albion,30,finished,3.0,1.0
+14023951,Premier League,2025/26,35,2026-05-02,Wolverhampton,3,Sunderland,41,finished,1.0,1.0
+14023931,Premier League,2025/26,35,2026-05-02,Arsenal,42,Fulham,43,finished,3.0,0.0
+14024023,Premier League,2025/26,35,2026-05-03,Bournemouth,60,Crystal Palace,7,finished,3.0,0.0
+14023939,Premier League,2025/26,35,2026-05-03,Manchester United,35,Liverpool FC,44,finished,3.0,2.0
+14023927,Premier League,2025/26,35,2026-05-03,Aston Villa,40,Tottenham Hotspur,33,finished,1.0,2.0
+14023925,Premier League,2025/26,35,2026-05-04,Chelsea,38,Nottingham Forest,14,finished,1.0,3.0
+14023930,Premier League,2025/26,35,2026-05-04,Everton,48,Manchester City,17,finished,3.0,3.0
+14024024,Premier League,2025/26,36,2026-05-09,Liverpool FC,44,Chelsea,38,finished,1.0,1.0
+14023935,Premier League,2025/26,36,2026-05-09,Brighton & Hove Albion,30,Wolverhampton,3,finished,3.0,0.0
+14023948,Premier League,2025/26,36,2026-05-09,Fulham,43,Bournemouth,60,finished,0.0,1.0
+14023938,Premier League,2025/26,36,2026-05-09,Sunderland,41,Manchester United,35,finished,0.0,0.0
+14023946,Premier League,2025/26,36,2026-05-09,Manchester City,17,Brentford,50,finished,3.0,0.0
+14023929,Premier League,2025/26,36,2026-05-10,Burnley,6,Aston Villa,40,finished,2.0,2.0
+14023937,Premier League,2025/26,36,2026-05-10,Crystal Palace,7,Everton,48,finished,2.0,2.0
+14023943,Premier League,2025/26,36,2026-05-10,Nottingham Forest,14,Newcastle United,39,finished,1.0,1.0
+14023942,Premier League,2025/26,36,2026-05-10,West Ham United,37,Arsenal,42,finished,0.0,1.0
+14023944,Premier League,2025/26,36,2026-05-11,Tottenham Hotspur,33,Leeds United,34,finished,1.0,1.0
+14023928,Premier League,2025/26,37,2026-05-15,Aston Villa,40,Liverpool FC,44,finished,4.0,2.0
+14023956,Premier League,2025/26,37,2026-05-17,Manchester United,35,Nottingham Forest,14,finished,3.0,2.0
+14023953,Premier League,2025/26,37,2026-05-17,Brentford,50,Crystal Palace,7,finished,2.0,2.0
+14023955,Premier League,2025/26,37,2026-05-17,Everton,48,Sunderland,41,finished,1.0,3.0
+14023954,Premier League,2025/26,37,2026-05-17,Leeds United,34,Brighton & Hove Albion,30,finished,1.0,0.0
+14023958,Premier League,2025/26,37,2026-05-17,Wolverhampton,3,Fulham,43,finished,1.0,1.0
+14023957,Premier League,2025/26,37,2026-05-17,Newcastle United,39,West Ham United,37,finished,3.0,1.0
+14023950,Premier League,2025/26,37,2026-05-18,Arsenal,42,Burnley,6,finished,1.0,0.0
+14023936,Premier League,2025/26,37,2026-05-19,Bournemouth,60,Manchester City,17,finished,1.0,1.0
+16087727,Premier League,2025/26,37,2026-05-19,Chelsea,38,Tottenham Hotspur,33,finished,2.0,1.0
+14023959,Premier League,2025/26,38,2026-05-24,Brighton & Hove Albion,30,Manchester United,35,finished,0.0,3.0
+14023960,Premier League,2025/26,38,2026-05-24,Burnley,6,Wolverhampton,3,finished,1.0,1.0
+14023963,Premier League,2025/26,38,2026-05-24,Crystal Palace,7,Arsenal,42,finished,1.0,2.0
+14023965,Premier League,2025/26,38,2026-05-24,Fulham,43,Newcastle United,39,finished,2.0,0.0
+14023962,Premier League,2025/26,38,2026-05-24,Liverpool FC,44,Brentford,50,finished,1.0,1.0
+14023961,Premier League,2025/26,38,2026-05-24,Manchester City,17,Aston Villa,40,finished,1.0,2.0
+14023964,Premier League,2025/26,38,2026-05-24,Nottingham Forest,14,Bournemouth,60,finished,1.0,1.0
+14023966,Premier League,2025/26,38,2026-05-24,Sunderland,41,Chelsea,38,finished,2.0,1.0
+14023967,Premier League,2025/26,38,2026-05-24,Tottenham Hotspur,33,Everton,48,finished,1.0,0.0
+14023968,Premier League,2025/26,38,2026-05-24,West Ham United,37,Leeds United,34,finished,3.0,0.0
+14082854,La Liga,2025/26,1,2025-08-15,Girona FC,24264,Rayo Vallecano,2818,finished,1.0,3.0
+14082858,La Liga,2025/26,1,2025-08-15,Villarreal,2819,Real Oviedo,2851,finished,2.0,0.0
+14082855,La Liga,2025/26,1,2025-08-16,Mallorca,2826,FC Barcelona,2817,finished,0.0,3.0
+14082849,La Liga,2025/26,1,2025-08-16,Deportivo Alavés,2885,Levante UD,2849,finished,2.0,1.0
+14082857,La Liga,2025/26,1,2025-08-16,Valencia,2828,Real Sociedad,2824,finished,1.0,1.0
+14082851,La Liga,2025/26,1,2025-08-17,Celta Vigo,2821,Getafe,2859,finished,0.0,2.0
+14082850,La Liga,2025/26,1,2025-08-17,Athletic Club,2825,Sevilla,2833,finished,3.0,2.0
+14082853,La Liga,2025/26,1,2025-08-17,Espanyol,2814,Atlético Madrid,2836,finished,2.0,1.0
+14082852,La Liga,2025/26,1,2025-08-18,Elche,2846,Real Betis,2816,finished,1.0,1.0
+14082856,La Liga,2025/26,1,2025-08-19,Real Madrid,2829,Osasuna,2820,finished,1.0,0.0
+14082864,La Liga,2025/26,2,2025-08-22,Real Betis,2816,Deportivo Alavés,2885,finished,1.0,0.0
+14082866,La Liga,2025/26,2,2025-08-23,Mallorca,2826,Celta Vigo,2821,finished,1.0,1.0
+14082860,La Liga,2025/26,2,2025-08-23,Atlético Madrid,2836,Elche,2846,finished,1.0,1.0
+14082865,La Liga,2025/26,2,2025-08-23,Levante UD,2849,FC Barcelona,2817,finished,2.0,3.0
+14082861,La Liga,2025/26,2,2025-08-24,Osasuna,2820,Valencia,2828,finished,1.0,0.0
+14082867,La Liga,2025/26,2,2025-08-24,Real Sociedad,2824,Espanyol,2814,finished,2.0,2.0
+14083100,La Liga,2025/26,2,2025-08-24,Villarreal,2819,Girona FC,24264,finished,5.0,0.0
+14082862,La Liga,2025/26,2,2025-08-24,Real Oviedo,2851,Real Madrid,2829,finished,0.0,3.0
+14082859,La Liga,2025/26,2,2025-08-25,Athletic Club,2825,Rayo Vallecano,2818,finished,1.0,0.0
+14083092,La Liga,2025/26,2,2025-08-25,Sevilla,2833,Getafe,2859,finished,1.0,2.0
+14083129,La Liga,2025/26,3,2025-08-29,Elche,2846,Levante UD,2849,finished,2.0,0.0
+14083187,La Liga,2025/26,3,2025-08-29,Valencia,2828,Getafe,2859,finished,3.0,0.0
+14083109,La Liga,2025/26,3,2025-08-30,Deportivo Alavés,2885,Atlético Madrid,2836,finished,1.0,1.0
+14083157,La Liga,2025/26,3,2025-08-30,Real Oviedo,2851,Real Sociedad,2824,finished,1.0,0.0
+14083148,La Liga,2025/26,3,2025-08-30,Girona FC,24264,Sevilla,2833,finished,0.0,2.0
+14083197,La Liga,2025/26,3,2025-08-30,Real Madrid,2829,Mallorca,2826,finished,2.0,1.0
+14083119,La Liga,2025/26,3,2025-08-31,Celta Vigo,2821,Villarreal,2819,finished,1.0,1.0
+14083167,La Liga,2025/26,3,2025-08-31,Real Betis,2816,Athletic Club,2825,finished,1.0,2.0
+14083138,La Liga,2025/26,3,2025-08-31,Espanyol,2814,Osasuna,2820,finished,1.0,0.0
+14083178,La Liga,2025/26,3,2025-08-31,Rayo Vallecano,2818,FC Barcelona,2817,finished,1.0,1.0
+14083253,La Liga,2025/26,4,2025-09-12,Sevilla,2833,Elche,2846,finished,2.0,2.0
+14083240,La Liga,2025/26,4,2025-09-13,Getafe,2859,Real Oviedo,2851,finished,2.0,0.0
+14083256,La Liga,2025/26,4,2025-09-13,Real Sociedad,2824,Real Madrid,2829,finished,1.0,2.0
+14083246,La Liga,2025/26,4,2025-09-13,Athletic Club,2825,Deportivo Alavés,2885,finished,0.0,1.0
+14083206,La Liga,2025/26,4,2025-09-13,Atlético Madrid,2836,Villarreal,2819,finished,2.0,0.0
+14083225,La Liga,2025/26,4,2025-09-14,Celta Vigo,2821,Girona FC,24264,finished,1.0,1.0
+14083249,La Liga,2025/26,4,2025-09-14,Levante UD,2849,Real Betis,2816,finished,2.0,2.0
+14083243,La Liga,2025/26,4,2025-09-14,Osasuna,2820,Rayo Vallecano,2818,finished,2.0,0.0
+14083216,La Liga,2025/26,4,2025-09-14,FC Barcelona,2817,Valencia,2828,finished,6.0,0.0
+14083234,La Liga,2025/26,4,2025-09-15,Espanyol,2814,Mallorca,2826,finished,3.0,2.0
+14083266,La Liga,2025/26,5,2025-09-19,Real Betis,2816,Real Sociedad,2824,finished,3.0,1.0
+14083285,La Liga,2025/26,5,2025-09-20,Girona FC,24264,Levante UD,2849,finished,0.0,4.0
+14083333,La Liga,2025/26,5,2025-09-20,Real Madrid,2829,Espanyol,2814,finished,2.0,0.0
+14083259,La Liga,2025/26,5,2025-09-20,Deportivo Alavés,2885,Sevilla,2833,finished,1.0,2.0
+14083351,La Liga,2025/26,5,2025-09-20,Villarreal,2819,Osasuna,2820,finished,2.0,1.0
+14083298,La Liga,2025/26,5,2025-09-20,Valencia,2828,Athletic Club,2825,finished,2.0,0.0
+14083322,La Liga,2025/26,5,2025-09-21,Rayo Vallecano,2818,Celta Vigo,2821,finished,1.0,1.0
+14083310,La Liga,2025/26,5,2025-09-21,Mallorca,2826,Atlético Madrid,2836,finished,1.0,1.0
+14083275,La Liga,2025/26,5,2025-09-21,Elche,2846,Real Oviedo,2851,finished,1.0,0.0
+14083262,La Liga,2025/26,5,2025-09-21,FC Barcelona,2817,Getafe,2859,finished,3.0,0.0
+14083498,La Liga,2025/26,6,2025-08-27,Celta Vigo,2821,Real Betis,2816,finished,1.0,1.0
+14083369,La Liga,2025/26,6,2025-09-23,Athletic Club,2825,Girona FC,24264,finished,1.0,1.0
+14083407,La Liga,2025/26,6,2025-09-23,Espanyol,2814,Valencia,2828,finished,2.0,2.0
+14083426,La Liga,2025/26,6,2025-09-23,Levante UD,2849,Real Madrid,2829,finished,1.0,4.0
+14083443,La Liga,2025/26,6,2025-09-23,Sevilla,2833,Villarreal,2819,finished,1.0,2.0
+14083462,La Liga,2025/26,6,2025-09-24,Getafe,2859,Deportivo Alavés,2885,finished,1.0,1.0
+14083386,La Liga,2025/26,6,2025-09-24,Atlético Madrid,2836,Rayo Vallecano,2818,finished,3.0,2.0
+14083528,La Liga,2025/26,6,2025-09-24,Real Sociedad,2824,Mallorca,2826,finished,1.0,0.0
+14083516,La Liga,2025/26,6,2025-09-25,Osasuna,2820,Elche,2846,finished,1.0,1.0
+14083481,La Liga,2025/26,6,2025-09-25,Real Oviedo,2851,FC Barcelona,2817,finished,1.0,3.0
+14083595,La Liga,2025/26,7,2025-09-26,Girona FC,24264,Espanyol,2814,finished,0.0,0.0
+14083569,La Liga,2025/26,7,2025-09-27,Getafe,2859,Levante UD,2849,finished,1.0,1.0
+14083541,La Liga,2025/26,7,2025-09-27,Atlético Madrid,2836,Real Madrid,2829,finished,5.0,2.0
+14083580,La Liga,2025/26,7,2025-09-27,Mallorca,2826,Deportivo Alavés,2885,finished,1.0,0.0
+14083586,La Liga,2025/26,7,2025-09-27,Villarreal,2819,Athletic Club,2825,finished,1.0,0.0
+14083574,La Liga,2025/26,7,2025-09-28,Rayo Vallecano,2818,Sevilla,2833,finished,0.0,1.0
+14083589,La Liga,2025/26,7,2025-09-28,Elche,2846,Celta Vigo,2821,finished,2.0,1.0
+14083553,La Liga,2025/26,7,2025-09-28,FC Barcelona,2817,Real Sociedad,2824,finished,2.0,1.0
+14083564,La Liga,2025/26,7,2025-09-28,Real Betis,2816,Osasuna,2820,finished,2.0,0.0
+14083601,La Liga,2025/26,7,2025-09-30,Valencia,2828,Real Oviedo,2851,finished,1.0,2.0
+14083640,La Liga,2025/26,8,2025-09-03,Osasuna,2820,Getafe,2859,upcoming,,
+14652471,La Liga,2025/26,8,2025-10-03,Osasuna,2820,Getafe,2859,finished,2.0,1.0
+14083645,La Liga,2025/26,8,2025-10-04,Real Oviedo,2851,Levante UD,2849,finished,0.0,2.0
+14083615,La Liga,2025/26,8,2025-10-04,Girona FC,24264,Valencia,2828,finished,2.0,1.0
+14083610,La Liga,2025/26,8,2025-10-04,Athletic Club,2825,Mallorca,2826,finished,2.0,1.0
+14083620,La Liga,2025/26,8,2025-10-04,Real Madrid,2829,Villarreal,2819,finished,3.0,1.0
+14083605,La Liga,2025/26,8,2025-10-05,Deportivo Alavés,2885,Elche,2846,finished,3.0,1.0
+14083630,La Liga,2025/26,8,2025-10-05,Sevilla,2833,FC Barcelona,2817,finished,4.0,1.0
+14083635,La Liga,2025/26,8,2025-10-05,Espanyol,2814,Real Betis,2816,finished,1.0,2.0
+14083650,La Liga,2025/26,8,2025-10-05,Real Sociedad,2824,Rayo Vallecano,2818,finished,0.0,1.0
+14083625,La Liga,2025/26,8,2025-10-05,Celta Vigo,2821,Atlético Madrid,2836,finished,1.0,1.0
+14083694,La Liga,2025/26,9,2025-10-17,Real Oviedo,2851,Espanyol,2814,finished,0.0,2.0
+14083699,La Liga,2025/26,9,2025-10-18,Sevilla,2833,Mallorca,2826,finished,1.0,3.0
+14083664,La Liga,2025/26,9,2025-10-18,FC Barcelona,2817,Girona FC,24264,finished,2.0,1.0
+14083690,La Liga,2025/26,9,2025-10-18,Villarreal,2819,Real Betis,2816,finished,2.0,2.0
+14083659,La Liga,2025/26,9,2025-10-18,Atlético Madrid,2836,Osasuna,2820,finished,1.0,0.0
+14083685,La Liga,2025/26,9,2025-10-19,Elche,2846,Athletic Club,2825,finished,0.0,0.0
+14083670,La Liga,2025/26,9,2025-10-19,Celta Vigo,2821,Real Sociedad,2824,finished,1.0,1.0
+14083680,La Liga,2025/26,9,2025-10-19,Levante UD,2849,Rayo Vallecano,2818,finished,0.0,3.0
+14083675,La Liga,2025/26,9,2025-10-19,Getafe,2859,Real Madrid,2829,finished,0.0,1.0
+14083655,La Liga,2025/26,9,2025-10-20,Deportivo Alavés,2885,Valencia,2828,finished,0.0,0.0
+14083712,La Liga,2025/26,10,2025-10-24,Real Sociedad,2824,Sevilla,2833,finished,2.0,1.0
+14083708,La Liga,2025/26,10,2025-10-25,Girona FC,24264,Real Oviedo,2851,finished,3.0,3.0
+14083737,La Liga,2025/26,10,2025-10-25,Espanyol,2814,Elche,2846,finished,1.0,0.0
+14083704,La Liga,2025/26,10,2025-10-25,Athletic Club,2825,Getafe,2859,finished,0.0,1.0
+14083717,La Liga,2025/26,10,2025-10-25,Valencia,2828,Villarreal,2819,finished,0.0,2.0
+14083742,La Liga,2025/26,10,2025-10-26,Mallorca,2826,Levante UD,2849,finished,1.0,1.0
+14083729,La Liga,2025/26,10,2025-10-26,Real Madrid,2829,FC Barcelona,2817,finished,2.0,1.0
+14083733,La Liga,2025/26,10,2025-10-26,Osasuna,2820,Celta Vigo,2821,finished,2.0,3.0
+14083721,La Liga,2025/26,10,2025-10-26,Rayo Vallecano,2818,Deportivo Alavés,2885,finished,1.0,0.0
+14083725,La Liga,2025/26,10,2025-10-27,Real Betis,2816,Atlético Madrid,2836,finished,0.0,2.0
+14083098,La Liga,2025/26,11,2025-10-31,Getafe,2859,Girona FC,24264,finished,2.0,1.0
+14083105,La Liga,2025/26,11,2025-11-01,Villarreal,2819,Rayo Vallecano,2818,finished,4.0,0.0
+14083094,La Liga,2025/26,11,2025-11-01,Atlético Madrid,2836,Sevilla,2833,finished,3.0,0.0
+14083101,La Liga,2025/26,11,2025-11-01,Real Sociedad,2824,Athletic Club,2825,finished,3.0,2.0
+14083099,La Liga,2025/26,11,2025-11-01,Real Madrid,2829,Valencia,2828,finished,4.0,0.0
+14083103,La Liga,2025/26,11,2025-11-02,Levante UD,2849,Celta Vigo,2821,finished,1.0,2.0
+14083093,La Liga,2025/26,11,2025-11-02,Deportivo Alavés,2885,Espanyol,2814,finished,2.0,1.0
+14083095,La Liga,2025/26,11,2025-11-02,FC Barcelona,2817,Elche,2846,finished,3.0,1.0
+14083097,La Liga,2025/26,11,2025-11-02,Real Betis,2816,Mallorca,2826,finished,3.0,0.0
+14083104,La Liga,2025/26,11,2025-11-03,Real Oviedo,2851,Osasuna,2820,finished,0.0,0.0
+14083110,La Liga,2025/26,12,2025-11-07,Elche,2846,Real Sociedad,2824,finished,1.0,1.0
+14083114,La Liga,2025/26,12,2025-11-08,Girona FC,24264,Deportivo Alavés,2885,finished,1.0,0.0
+14083120,La Liga,2025/26,12,2025-11-08,Sevilla,2833,Osasuna,2820,finished,1.0,0.0
+14083108,La Liga,2025/26,12,2025-11-08,Atlético Madrid,2836,Levante UD,2849,finished,3.0,1.0
+14083111,La Liga,2025/26,12,2025-11-08,Espanyol,2814,Villarreal,2819,finished,0.0,2.0
+14083106,La Liga,2025/26,12,2025-11-09,Athletic Club,2825,Real Oviedo,2851,finished,1.0,0.0
+14083112,La Liga,2025/26,12,2025-11-09,Rayo Vallecano,2818,Real Madrid,2829,finished,0.0,0.0
+14083118,La Liga,2025/26,12,2025-11-09,Mallorca,2826,Getafe,2859,finished,1.0,0.0
+14083116,La Liga,2025/26,12,2025-11-09,Valencia,2828,Real Betis,2816,finished,1.0,1.0
+14083115,La Liga,2025/26,12,2025-11-09,Celta Vigo,2821,FC Barcelona,2817,finished,2.0,4.0
+14083133,La Liga,2025/26,13,2025-11-21,Valencia,2828,Levante UD,2849,finished,1.0,0.0
+14083121,La Liga,2025/26,13,2025-11-22,Deportivo Alavés,2885,Celta Vigo,2821,finished,0.0,1.0
+14083130,La Liga,2025/26,13,2025-11-22,FC Barcelona,2817,Athletic Club,2825,finished,4.0,0.0
+14083126,La Liga,2025/26,13,2025-11-22,Osasuna,2820,Real Sociedad,2824,finished,1.0,3.0
+14083134,La Liga,2025/26,13,2025-11-22,Villarreal,2819,Mallorca,2826,finished,2.0,1.0
+14083128,La Liga,2025/26,13,2025-11-23,Real Oviedo,2851,Rayo Vallecano,2818,finished,0.0,0.0
+14083122,La Liga,2025/26,13,2025-11-23,Real Betis,2816,Girona FC,24264,finished,1.0,1.0
+14083131,La Liga,2025/26,13,2025-11-23,Getafe,2859,Atlético Madrid,2836,finished,0.0,1.0
+14083124,La Liga,2025/26,13,2025-11-23,Elche,2846,Real Madrid,2829,finished,2.0,2.0
+14083125,La Liga,2025/26,13,2025-11-24,Espanyol,2814,Sevilla,2833,finished,2.0,1.0
+14083149,La Liga,2025/26,14,2025-11-28,Getafe,2859,Elche,2846,finished,1.0,0.0
+14083140,La Liga,2025/26,14,2025-11-29,Mallorca,2826,Osasuna,2820,finished,2.0,2.0
+14083144,La Liga,2025/26,14,2025-11-29,FC Barcelona,2817,Deportivo Alavés,2885,finished,3.0,1.0
+14083145,La Liga,2025/26,14,2025-11-29,Levante UD,2849,Athletic Club,2825,finished,0.0,2.0
+14083135,La Liga,2025/26,14,2025-11-29,Atlético Madrid,2836,Real Oviedo,2851,finished,2.0,0.0
+14083143,La Liga,2025/26,14,2025-11-30,Real Sociedad,2824,Villarreal,2819,finished,2.0,3.0
+14083147,La Liga,2025/26,14,2025-11-30,Sevilla,2833,Real Betis,2816,finished,0.0,2.0
+14083137,La Liga,2025/26,14,2025-11-30,Celta Vigo,2821,Espanyol,2814,finished,0.0,1.0
+14083139,La Liga,2025/26,14,2025-11-30,Girona FC,24264,Real Madrid,2829,finished,1.0,1.0
+14083141,La Liga,2025/26,14,2025-12-01,Rayo Vallecano,2818,Valencia,2828,finished,1.0,1.0
+14083162,La Liga,2025/26,15,2025-12-05,Real Oviedo,2851,Mallorca,2826,finished,0.0,0.0
+14083159,La Liga,2025/26,15,2025-12-06,Villarreal,2819,Getafe,2859,finished,2.0,0.0
+14083150,La Liga,2025/26,15,2025-12-06,Deportivo Alavés,2885,Real Sociedad,2824,finished,1.0,0.0
+14083155,La Liga,2025/26,15,2025-12-06,Real Betis,2816,FC Barcelona,2817,finished,3.0,5.0
+14083151,La Liga,2025/26,15,2025-12-06,Athletic Club,2825,Atlético Madrid,2836,finished,1.0,0.0
+14083153,La Liga,2025/26,15,2025-12-07,Elche,2846,Girona FC,24264,finished,3.0,0.0
+14083163,La Liga,2025/26,15,2025-12-07,Valencia,2828,Sevilla,2833,finished,1.0,1.0
+14083154,La Liga,2025/26,15,2025-12-07,Espanyol,2814,Rayo Vallecano,2818,finished,1.0,0.0
+14083158,La Liga,2025/26,15,2025-12-07,Real Madrid,2829,Celta Vigo,2821,finished,0.0,2.0
+14083160,La Liga,2025/26,15,2025-12-08,Osasuna,2820,Levante UD,2849,finished,2.0,0.0
+14083177,La Liga,2025/26,16,2025-12-12,Real Sociedad,2824,Girona FC,24264,finished,1.0,2.0
+14083165,La Liga,2025/26,16,2025-12-13,Atlético Madrid,2836,Valencia,2828,finished,2.0,1.0
+14083174,La Liga,2025/26,16,2025-12-13,Mallorca,2826,Elche,2846,finished,3.0,1.0
+14083168,La Liga,2025/26,16,2025-12-13,FC Barcelona,2817,Osasuna,2820,finished,2.0,0.0
+14083175,La Liga,2025/26,16,2025-12-13,Getafe,2859,Espanyol,2814,finished,0.0,1.0
+14083179,La Liga,2025/26,16,2025-12-14,Sevilla,2833,Real Oviedo,2851,finished,4.0,0.0
+14083171,La Liga,2025/26,16,2025-12-14,Celta Vigo,2821,Athletic Club,2825,finished,2.0,0.0
+14083169,La Liga,2025/26,16,2025-12-14,Levante UD,2849,Villarreal,2819,upcoming,,
+14083164,La Liga,2025/26,16,2025-12-14,Deportivo Alavés,2885,Real Madrid,2829,finished,1.0,2.0
+14083173,La Liga,2025/26,16,2025-12-15,Rayo Vallecano,2818,Real Betis,2816,finished,0.0,0.0
+15398993,La Liga,2025/26,16,2026-02-18,Levante UD,2849,Villarreal,2819,finished,0.0,1.0
+14083193,La Liga,2025/26,17,2025-12-19,Valencia,2828,Mallorca,2826,finished,1.0,1.0
+14083192,La Liga,2025/26,17,2025-12-20,Real Oviedo,2851,Celta Vigo,2821,finished,0.0,0.0
+14083184,La Liga,2025/26,17,2025-12-20,Levante UD,2849,Real Sociedad,2824,finished,1.0,1.0
+14083188,La Liga,2025/26,17,2025-12-20,Osasuna,2820,Deportivo Alavés,2885,finished,3.0,0.0
+14083185,La Liga,2025/26,17,2025-12-20,Real Madrid,2829,Sevilla,2833,finished,2.0,0.0
+14083189,La Liga,2025/26,17,2025-12-21,Girona FC,24264,Atlético Madrid,2836,finished,0.0,3.0
+14083190,La Liga,2025/26,17,2025-12-21,Villarreal,2819,FC Barcelona,2817,finished,0.0,2.0
+14083183,La Liga,2025/26,17,2025-12-21,Elche,2846,Rayo Vallecano,2818,finished,4.0,0.0
+14083181,La Liga,2025/26,17,2025-12-21,Real Betis,2816,Getafe,2859,finished,4.0,0.0
+14083180,La Liga,2025/26,17,2025-12-22,Athletic Club,2825,Espanyol,2814,finished,1.0,2.0
+14083205,La Liga,2025/26,18,2026-01-02,Rayo Vallecano,2818,Getafe,2859,finished,1.0,1.0
+14083196,La Liga,2025/26,18,2026-01-03,Celta Vigo,2821,Valencia,2828,finished,4.0,1.0
+14083200,La Liga,2025/26,18,2026-01-03,Osasuna,2820,Athletic Club,2825,finished,1.0,1.0
+14083198,La Liga,2025/26,18,2026-01-03,Elche,2846,Villarreal,2819,finished,1.0,3.0
+14083203,La Liga,2025/26,18,2026-01-03,Espanyol,2814,FC Barcelona,2817,finished,0.0,2.0
+14083209,La Liga,2025/26,18,2026-01-04,Sevilla,2833,Levante UD,2849,finished,0.0,3.0
+14083204,La Liga,2025/26,18,2026-01-04,Real Madrid,2829,Real Betis,2816,finished,5.0,1.0
+14083194,La Liga,2025/26,18,2026-01-04,Deportivo Alavés,2885,Real Oviedo,2851,finished,1.0,1.0
+14083208,La Liga,2025/26,18,2026-01-04,Mallorca,2826,Girona FC,24264,finished,1.0,2.0
+14083201,La Liga,2025/26,18,2026-01-04,Real Sociedad,2824,Atlético Madrid,2836,finished,1.0,1.0
+14083215,La Liga,2025/26,19,2025-12-02,FC Barcelona,2817,Atlético Madrid,2836,finished,3.0,1.0
+14083210,La Liga,2025/26,19,2025-12-03,Athletic Club,2825,Real Madrid,2829,finished,0.0,3.0
+14083212,La Liga,2025/26,19,2026-01-09,Getafe,2859,Real Sociedad,2824,finished,1.0,2.0
+14083218,La Liga,2025/26,19,2026-01-10,Real Oviedo,2851,Real Betis,2816,finished,1.0,1.0
+14083214,La Liga,2025/26,19,2026-01-10,Villarreal,2819,Deportivo Alavés,2885,finished,3.0,1.0
+14083213,La Liga,2025/26,19,2026-01-10,Girona FC,24264,Osasuna,2820,finished,1.0,0.0
+14083220,La Liga,2025/26,19,2026-01-10,Valencia,2828,Elche,2846,finished,1.0,1.0
+14083223,La Liga,2025/26,19,2026-01-11,Rayo Vallecano,2818,Mallorca,2826,finished,2.0,1.0
+14083222,La Liga,2025/26,19,2026-01-11,Levante UD,2849,Espanyol,2814,finished,1.0,1.0
+14083219,La Liga,2025/26,19,2026-01-12,Sevilla,2833,Celta Vigo,2821,finished,0.0,1.0
+14083229,La Liga,2025/26,20,2026-01-16,Espanyol,2814,Girona FC,24264,finished,0.0,2.0
+14083238,La Liga,2025/26,20,2026-01-17,Real Madrid,2829,Levante UD,2849,finished,2.0,0.0
+14083235,La Liga,2025/26,20,2026-01-17,Mallorca,2826,Athletic Club,2825,finished,3.0,2.0
+14083232,La Liga,2025/26,20,2026-01-17,Osasuna,2820,Real Oviedo,2851,finished,3.0,2.0
+14083224,La Liga,2025/26,20,2026-01-17,Real Betis,2816,Villarreal,2819,finished,2.0,0.0
+14083230,La Liga,2025/26,20,2026-01-18,Getafe,2859,Valencia,2828,finished,0.0,1.0
+14083233,La Liga,2025/26,20,2026-01-18,Atlético Madrid,2836,Deportivo Alavés,2885,finished,1.0,0.0
+14083226,La Liga,2025/26,20,2026-01-18,Celta Vigo,2821,Rayo Vallecano,2818,finished,3.0,0.0
+14083237,La Liga,2025/26,20,2026-01-18,Real Sociedad,2824,FC Barcelona,2817,finished,2.0,1.0
+14083228,La Liga,2025/26,20,2026-01-19,Elche,2846,Sevilla,2833,finished,2.0,2.0
+14083146,La Liga,2025/26,21,2026-01-23,Levante UD,2849,Elche,2846,finished,3.0,2.0
+14083176,La Liga,2025/26,21,2026-01-24,Rayo Vallecano,2818,Osasuna,2820,finished,1.0,3.0
+14083156,La Liga,2025/26,21,2026-01-24,Valencia,2828,Espanyol,2814,finished,3.0,2.0
+14083127,La Liga,2025/26,21,2026-01-24,Sevilla,2833,Athletic Club,2825,finished,2.0,1.0
+14083186,La Liga,2025/26,21,2026-01-24,Villarreal,2819,Real Madrid,2829,finished,0.0,2.0
+14083107,La Liga,2025/26,21,2026-01-25,Atlético Madrid,2836,Mallorca,2826,finished,3.0,0.0
+14083117,La Liga,2025/26,21,2026-01-25,FC Barcelona,2817,Real Oviedo,2851,finished,3.0,0.0
+14083136,La Liga,2025/26,21,2026-01-25,Real Sociedad,2824,Celta Vigo,2821,finished,3.0,1.0
+14083096,La Liga,2025/26,21,2026-01-25,Deportivo Alavés,2885,Real Betis,2816,finished,2.0,1.0
+14083166,La Liga,2025/26,21,2026-01-26,Girona FC,24264,Getafe,2859,finished,1.0,1.0
+14083236,La Liga,2025/26,22,2026-01-30,Espanyol,2814,Deportivo Alavés,2885,finished,1.0,2.0
+14083251,La Liga,2025/26,22,2026-01-31,Real Oviedo,2851,Girona FC,24264,finished,1.0,0.0
+14083227,La Liga,2025/26,22,2026-01-31,Osasuna,2820,Villarreal,2819,finished,2.0,2.0
+14083241,La Liga,2025/26,22,2026-01-31,Levante UD,2849,Atlético Madrid,2836,finished,0.0,0.0
+14083244,La Liga,2025/26,22,2026-01-31,Elche,2846,FC Barcelona,2817,finished,1.0,3.0
+14083254,La Liga,2025/26,22,2026-02-01,Real Madrid,2829,Rayo Vallecano,2818,finished,2.0,1.0
+14083207,La Liga,2025/26,22,2026-02-01,Real Betis,2816,Valencia,2828,finished,2.0,1.0
+14083247,La Liga,2025/26,22,2026-02-01,Getafe,2859,Celta Vigo,2821,finished,0.0,0.0
+14083195,La Liga,2025/26,22,2026-02-01,Athletic Club,2825,Real Sociedad,2824,finished,1.0,1.0
+14083217,La Liga,2025/26,22,2026-02-02,Mallorca,2826,Sevilla,2833,finished,4.0,1.0
+14083279,La Liga,2025/26,23,2026-02-06,Celta Vigo,2821,Osasuna,2820,finished,1.0,2.0
+14083341,La Liga,2025/26,23,2026-02-07,Rayo Vallecano,2818,Real Oviedo,2851,upcoming,,
+14083269,La Liga,2025/26,23,2026-02-07,FC Barcelona,2817,Mallorca,2826,finished,3.0,0.0
+14083292,La Liga,2025/26,23,2026-02-07,Real Sociedad,2824,Elche,2846,finished,3.0,1.0
+14083257,La Liga,2025/26,23,2026-02-08,Deportivo Alavés,2885,Getafe,2859,finished,0.0,2.0
+14083260,La Liga,2025/26,23,2026-02-08,Athletic Club,2825,Levante UD,2849,finished,4.0,2.0
+14083315,La Liga,2025/26,23,2026-02-08,Sevilla,2833,Girona FC,24264,finished,1.0,1.0
+14083263,La Liga,2025/26,23,2026-02-08,Atlético Madrid,2836,Real Betis,2816,finished,0.0,1.0
+14083327,La Liga,2025/26,23,2026-02-08,Valencia,2828,Real Madrid,2829,finished,0.0,2.0
+14083303,La Liga,2025/26,23,2026-02-09,Villarreal,2819,Espanyol,2814,finished,4.0,1.0
+15534915,La Liga,2025/26,23,2026-03-04,Rayo Vallecano,2818,Real Oviedo,2851,finished,3.0,0.0
+14083360,La Liga,2025/26,24,2026-02-13,Elche,2846,Osasuna,2820,finished,0.0,0.0
+14083524,La Liga,2025/26,24,2026-02-14,Espanyol,2814,Celta Vigo,2821,finished,2.0,2.0
+14083378,La Liga,2025/26,24,2026-02-14,Getafe,2859,Villarreal,2819,finished,2.0,1.0
+14083436,La Liga,2025/26,24,2026-02-14,Sevilla,2833,Deportivo Alavés,2885,finished,1.0,1.0
+14083418,La Liga,2025/26,24,2026-02-14,Real Madrid,2829,Real Sociedad,2824,finished,4.0,1.0
+14083454,La Liga,2025/26,24,2026-02-15,Real Oviedo,2851,Athletic Club,2825,finished,1.0,2.0
+14083472,La Liga,2025/26,24,2026-02-15,Rayo Vallecano,2818,Atlético Madrid,2836,finished,3.0,0.0
+14083396,La Liga,2025/26,24,2026-02-15,Levante UD,2849,Valencia,2828,finished,0.0,2.0
+14083509,La Liga,2025/26,24,2026-02-15,Mallorca,2826,Real Betis,2816,finished,1.0,2.0
+14083491,La Liga,2025/26,24,2026-02-16,Girona FC,24264,FC Barcelona,2817,finished,2.0,1.0
+14083549,La Liga,2025/26,25,2026-02-20,Athletic Club,2825,Elche,2846,finished,2.0,1.0
+14081792,La Liga,2025/26,25,2026-02-21,Real Sociedad,2824,Real Oviedo,2851,finished,3.0,3.0
+14083572,La Liga,2025/26,25,2026-02-21,Real Betis,2816,Rayo Vallecano,2818,finished,1.0,1.0
+14081794,La Liga,2025/26,25,2026-02-21,Osasuna,2820,Real Madrid,2829,finished,2.0,1.0
+14083561,La Liga,2025/26,25,2026-02-21,Atlético Madrid,2836,Espanyol,2814,finished,4.0,2.0
+14083582,La Liga,2025/26,25,2026-02-22,Getafe,2859,Sevilla,2833,finished,0.0,1.0
+14083567,La Liga,2025/26,25,2026-02-22,FC Barcelona,2817,Levante UD,2849,finished,3.0,0.0
+14083577,La Liga,2025/26,25,2026-02-22,Celta Vigo,2821,Mallorca,2826,finished,2.0,0.0
+14081796,La Liga,2025/26,25,2026-02-22,Villarreal,2819,Valencia,2828,finished,2.0,1.0
+14083537,La Liga,2025/26,25,2026-02-23,Deportivo Alavés,2885,Girona FC,24264,finished,2.0,2.0
+14081793,La Liga,2025/26,26,2026-02-27,Levante UD,2849,Deportivo Alavés,2885,finished,2.0,0.0
+14081790,La Liga,2025/26,26,2026-02-28,Rayo Vallecano,2818,Athletic Club,2825,finished,1.0,1.0
+14081789,La Liga,2025/26,26,2026-02-28,FC Barcelona,2817,Villarreal,2819,finished,4.0,1.0
+14081818,La Liga,2025/26,26,2026-02-28,Mallorca,2826,Real Sociedad,2824,finished,0.0,1.0
+14081795,La Liga,2025/26,26,2026-02-28,Real Oviedo,2851,Atlético Madrid,2836,finished,0.0,1.0
+14081819,La Liga,2025/26,26,2026-03-01,Elche,2846,Espanyol,2814,finished,2.0,2.0
+14083591,La Liga,2025/26,26,2026-03-01,Valencia,2828,Osasuna,2820,finished,1.0,0.0
+14081791,La Liga,2025/26,26,2026-03-01,Real Betis,2816,Sevilla,2833,finished,2.0,2.0
+14081797,La Liga,2025/26,26,2026-03-01,Girona FC,24264,Celta Vigo,2821,finished,1.0,2.0
+14081798,La Liga,2025/26,26,2026-03-02,Real Madrid,2829,Getafe,2859,finished,0.0,1.0
+14083607,La Liga,2025/26,27,2026-03-06,Celta Vigo,2821,Real Madrid,2829,finished,1.0,2.0
+14081805,La Liga,2025/26,27,2026-03-07,Osasuna,2820,Mallorca,2826,finished,2.0,2.0
+14081802,La Liga,2025/26,27,2026-03-07,Levante UD,2849,Girona FC,24264,finished,1.0,1.0
+14083602,La Liga,2025/26,27,2026-03-07,Atlético Madrid,2836,Real Sociedad,2824,finished,3.0,2.0
+14083597,La Liga,2025/26,27,2026-03-07,Athletic Club,2825,FC Barcelona,2817,finished,0.0,1.0
+14081803,La Liga,2025/26,27,2026-03-08,Villarreal,2819,Elche,2846,finished,2.0,1.0
+14081801,La Liga,2025/26,27,2026-03-08,Getafe,2859,Real Betis,2816,finished,2.0,0.0
+14081804,La Liga,2025/26,27,2026-03-08,Sevilla,2833,Rayo Vallecano,2818,finished,1.0,1.0
+14081799,La Liga,2025/26,27,2026-03-08,Valencia,2828,Deportivo Alavés,2885,finished,3.0,2.0
+14081800,La Liga,2025/26,27,2026-03-09,Espanyol,2814,Real Oviedo,2851,finished,1.0,1.0
+14081806,La Liga,2025/26,28,2026-03-13,Deportivo Alavés,2885,Villarreal,2819,finished,1.0,1.0
+14083632,La Liga,2025/26,28,2026-03-14,Girona FC,24264,Athletic Club,2825,finished,3.0,0.0
+14083612,La Liga,2025/26,28,2026-03-14,Atlético Madrid,2836,Getafe,2859,finished,1.0,0.0
+14083627,La Liga,2025/26,28,2026-03-14,Real Oviedo,2851,Valencia,2828,finished,1.0,0.0
+14083637,La Liga,2025/26,28,2026-03-14,Real Madrid,2829,Elche,2846,finished,4.0,1.0
+14083642,La Liga,2025/26,28,2026-03-15,Mallorca,2826,Espanyol,2814,finished,2.0,1.0
+14083617,La Liga,2025/26,28,2026-03-15,FC Barcelona,2817,Sevilla,2833,finished,5.0,2.0
+14083622,La Liga,2025/26,28,2026-03-15,Real Betis,2816,Celta Vigo,2821,finished,1.0,1.0
+14083652,La Liga,2025/26,28,2026-03-15,Real Sociedad,2824,Osasuna,2820,finished,3.0,1.0
+14083647,La Liga,2025/26,28,2026-03-16,Rayo Vallecano,2818,Levante UD,2849,finished,1.0,1.0
+14081808,La Liga,2025/26,29,2026-03-20,Villarreal,2819,Real Sociedad,2824,finished,3.0,1.0
+14083668,La Liga,2025/26,29,2026-03-21,Elche,2846,Mallorca,2826,finished,2.0,1.0
+14083673,La Liga,2025/26,29,2026-03-21,Espanyol,2814,Getafe,2859,finished,1.0,2.0
+14083678,La Liga,2025/26,29,2026-03-21,Levante UD,2849,Real Oviedo,2851,finished,4.0,2.0
+14081815,La Liga,2025/26,29,2026-03-21,Osasuna,2820,Girona FC,24264,finished,1.0,0.0
+14083684,La Liga,2025/26,29,2026-03-21,Sevilla,2833,Valencia,2828,finished,0.0,2.0
+14083662,La Liga,2025/26,29,2026-03-22,FC Barcelona,2817,Rayo Vallecano,2818,finished,1.0,0.0
+14083689,La Liga,2025/26,29,2026-03-22,Celta Vigo,2821,Deportivo Alavés,2885,finished,3.0,4.0
+14083657,La Liga,2025/26,29,2026-03-22,Athletic Club,2825,Real Betis,2816,finished,2.0,1.0
+14081807,La Liga,2025/26,29,2026-03-22,Real Madrid,2829,Atlético Madrid,2836,finished,3.0,2.0
+14083697,La Liga,2025/26,30,2026-04-03,Rayo Vallecano,2818,Elche,2846,finished,1.0,0.0
+14083701,La Liga,2025/26,30,2026-04-04,Real Sociedad,2824,Levante UD,2849,finished,2.0,0.0
+14081816,La Liga,2025/26,30,2026-04-04,Mallorca,2826,Real Madrid,2829,finished,2.0,1.0
+14081811,La Liga,2025/26,30,2026-04-04,Real Betis,2816,Espanyol,2814,finished,0.0,0.0
+14081810,La Liga,2025/26,30,2026-04-04,Atlético Madrid,2836,FC Barcelona,2817,finished,1.0,2.0
+14081813,La Liga,2025/26,30,2026-04-05,Getafe,2859,Athletic Club,2825,finished,2.0,0.0
+14081817,La Liga,2025/26,30,2026-04-05,Valencia,2828,Celta Vigo,2821,finished,2.0,3.0
+14081814,La Liga,2025/26,30,2026-04-05,Real Oviedo,2851,Sevilla,2833,finished,1.0,0.0
+14081809,La Liga,2025/26,30,2026-04-05,Deportivo Alavés,2885,Osasuna,2820,finished,2.0,2.0
+14081812,La Liga,2025/26,30,2026-04-06,Girona FC,24264,Villarreal,2819,finished,1.0,0.0
+14083191,La Liga,2025/26,31,2026-04-10,Real Madrid,2829,Girona FC,24264,finished,1.0,1.0
+14083152,La Liga,2025/26,31,2026-04-11,Real Sociedad,2824,Deportivo Alavés,2885,finished,3.0,3.0
+14083132,La Liga,2025/26,31,2026-04-11,Elche,2846,Valencia,2828,finished,1.0,0.0
+14083113,La Liga,2025/26,31,2026-04-11,FC Barcelona,2817,Espanyol,2814,finished,4.0,1.0
+14083161,La Liga,2025/26,31,2026-04-11,Sevilla,2833,Atlético Madrid,2836,finished,2.0,1.0
+14083172,La Liga,2025/26,31,2026-04-12,Osasuna,2820,Real Betis,2816,finished,1.0,1.0
+14083142,La Liga,2025/26,31,2026-04-12,Mallorca,2826,Rayo Vallecano,2818,finished,3.0,0.0
+14083123,La Liga,2025/26,31,2026-04-12,Celta Vigo,2821,Real Oviedo,2851,finished,0.0,3.0
+14083102,La Liga,2025/26,31,2026-04-12,Athletic Club,2825,Villarreal,2819,finished,1.0,2.0
+14083182,La Liga,2025/26,31,2026-04-13,Levante UD,2849,Getafe,2859,finished,1.0,0.0
+14083211,La Liga,2025/26,32,2026-04-24,Real Betis,2816,Real Madrid,2829,finished,1.0,1.0
+14083202,La Liga,2025/26,32,2026-04-25,Deportivo Alavés,2885,Mallorca,2826,finished,2.0,1.0
+14083245,La Liga,2025/26,32,2026-04-25,Getafe,2859,FC Barcelona,2817,finished,0.0,2.0
+14083255,La Liga,2025/26,32,2026-04-25,Valencia,2828,Girona FC,24264,finished,2.0,1.0
+14083242,La Liga,2025/26,32,2026-04-25,Atlético Madrid,2836,Athletic Club,2825,finished,3.0,2.0
+14083239,La Liga,2025/26,32,2026-04-26,Rayo Vallecano,2818,Real Sociedad,2824,finished,3.0,3.0
+14083252,La Liga,2025/26,32,2026-04-26,Real Oviedo,2851,Elche,2846,finished,1.0,2.0
+14083231,La Liga,2025/26,32,2026-04-26,Osasuna,2820,Sevilla,2833,finished,2.0,1.0
+14083248,La Liga,2025/26,32,2026-04-26,Villarreal,2819,Celta Vigo,2821,finished,2.0,1.0
+14083221,La Liga,2025/26,32,2026-04-27,Espanyol,2814,Levante UD,2849,finished,0.0,0.0
+14083258,La Liga,2025/26,33,2026-04-21,Athletic Club,2825,Osasuna,2820,finished,1.0,0.0
+14083270,La Liga,2025/26,33,2026-04-21,Mallorca,2826,Valencia,2828,finished,1.0,1.0
+14083318,La Liga,2025/26,33,2026-04-21,Girona FC,24264,Real Betis,2816,finished,2.0,3.0
+14083295,La Liga,2025/26,33,2026-04-21,Real Madrid,2829,Deportivo Alavés,2885,finished,2.0,1.0
+14083306,La Liga,2025/26,33,2026-04-22,Elche,2846,Atlético Madrid,2836,finished,3.0,2.0
+14083346,La Liga,2025/26,33,2026-04-22,Real Sociedad,2824,Getafe,2859,finished,0.0,1.0
+14083261,La Liga,2025/26,33,2026-04-22,FC Barcelona,2817,Celta Vigo,2821,finished,1.0,0.0
+14083265,La Liga,2025/26,33,2026-04-23,Levante UD,2849,Sevilla,2833,finished,2.0,0.0
+14083330,La Liga,2025/26,33,2026-04-23,Rayo Vallecano,2818,Espanyol,2814,finished,1.0,0.0
+14083282,La Liga,2025/26,33,2026-04-23,Real Oviedo,2851,Villarreal,2819,finished,1.0,1.0
+14083457,La Liga,2025/26,34,2026-05-01,Girona FC,24264,Mallorca,2826,finished,0.0,1.0
+14083512,La Liga,2025/26,34,2026-05-02,Villarreal,2819,Levante UD,2849,finished,5.0,1.0
+14083476,La Liga,2025/26,34,2026-05-02,Valencia,2828,Atlético Madrid,2836,finished,0.0,2.0
+14083364,La Liga,2025/26,34,2026-05-02,Deportivo Alavés,2885,Athletic Club,2825,finished,2.0,4.0
+14083495,La Liga,2025/26,34,2026-05-02,Osasuna,2820,FC Barcelona,2817,finished,1.0,2.0
+14083401,La Liga,2025/26,34,2026-05-03,Celta Vigo,2821,Elche,2846,finished,3.0,1.0
+14083440,La Liga,2025/26,34,2026-05-03,Getafe,2859,Rayo Vallecano,2818,finished,0.0,2.0
+14083381,La Liga,2025/26,34,2026-05-03,Real Betis,2816,Real Oviedo,2851,finished,3.0,0.0
+14083422,La Liga,2025/26,34,2026-05-03,Espanyol,2814,Real Madrid,2829,finished,0.0,2.0
+14083526,La Liga,2025/26,34,2026-05-04,Sevilla,2833,Real Sociedad,2824,finished,1.0,0.0
+14083568,La Liga,2025/26,35,2026-05-08,Levante UD,2849,Osasuna,2820,finished,3.0,2.0
+14083578,La Liga,2025/26,35,2026-05-09,Elche,2846,Deportivo Alavés,2885,finished,1.0,1.0
+14083587,La Liga,2025/26,35,2026-05-09,Sevilla,2833,Espanyol,2814,finished,2.0,1.0
+14083551,La Liga,2025/26,35,2026-05-09,Atlético Madrid,2836,Celta Vigo,2821,finished,0.0,1.0
+14083583,La Liga,2025/26,35,2026-05-09,Real Sociedad,2824,Real Betis,2816,finished,2.0,2.0
+14083573,La Liga,2025/26,35,2026-05-10,Mallorca,2826,Villarreal,2819,finished,1.0,1.0
+14083539,La Liga,2025/26,35,2026-05-10,Athletic Club,2825,Valencia,2828,finished,0.0,1.0
+14083592,La Liga,2025/26,35,2026-05-10,Real Oviedo,2851,Getafe,2859,finished,0.0,0.0
+14083562,La Liga,2025/26,35,2026-05-10,FC Barcelona,2817,Real Madrid,2829,finished,2.0,0.0
+14083598,La Liga,2025/26,35,2026-05-11,Rayo Vallecano,2818,Girona FC,24264,finished,1.0,1.0
+14083613,La Liga,2025/26,36,2026-05-12,Celta Vigo,2821,Levante UD,2849,finished,2.0,3.0
+14083608,La Liga,2025/26,36,2026-05-12,Real Betis,2816,Elche,2846,finished,2.0,1.0
+14083634,La Liga,2025/26,36,2026-05-12,Osasuna,2820,Atlético Madrid,2836,finished,1.0,2.0
+14083629,La Liga,2025/26,36,2026-05-13,Espanyol,2814,Athletic Club,2825,finished,2.0,0.0
+14083644,La Liga,2025/26,36,2026-05-13,Villarreal,2819,Sevilla,2833,finished,2.0,3.0
+14083603,La Liga,2025/26,36,2026-05-13,Deportivo Alavés,2885,FC Barcelona,2817,finished,1.0,0.0
+14083618,La Liga,2025/26,36,2026-05-13,Getafe,2859,Mallorca,2826,finished,3.0,1.0
+14083639,La Liga,2025/26,36,2026-05-14,Valencia,2828,Rayo Vallecano,2818,finished,1.0,1.0
+14083624,La Liga,2025/26,36,2026-05-14,Girona FC,24264,Real Sociedad,2824,finished,1.0,1.0
+14083649,La Liga,2025/26,36,2026-05-14,Real Madrid,2829,Real Oviedo,2851,finished,2.0,0.0
+14083656,La Liga,2025/26,37,2026-05-17,Athletic Club,2825,Celta Vigo,2821,finished,1.0,1.0
+14083661,La Liga,2025/26,37,2026-05-17,Atlético Madrid,2836,Girona FC,24264,finished,1.0,0.0
+14083671,La Liga,2025/26,37,2026-05-17,Elche,2846,Getafe,2859,finished,1.0,0.0
+14083676,La Liga,2025/26,37,2026-05-17,Levante UD,2849,Mallorca,2826,finished,2.0,0.0
+14083696,La Liga,2025/26,37,2026-05-17,Osasuna,2820,Espanyol,2814,finished,1.0,2.0
+14083682,La Liga,2025/26,37,2026-05-17,Rayo Vallecano,2818,Villarreal,2819,finished,2.0,0.0
+14083692,La Liga,2025/26,37,2026-05-17,Real Oviedo,2851,Deportivo Alavés,2885,finished,0.0,1.0
+14083687,La Liga,2025/26,37,2026-05-17,Real Sociedad,2824,Valencia,2828,finished,3.0,4.0
+14083702,La Liga,2025/26,37,2026-05-17,Sevilla,2833,Real Madrid,2829,finished,0.0,1.0
+14083666,La Liga,2025/26,37,2026-05-17,FC Barcelona,2817,Real Betis,2816,finished,3.0,1.0
+14083715,La Liga,2025/26,38,2026-05-23,Celta Vigo,2821,Sevilla,2833,finished,1.0,0.0
+14083706,La Liga,2025/26,38,2026-05-23,Deportivo Alavés,2885,Rayo Vallecano,2818,finished,1.0,2.0
+14083719,La Liga,2025/26,38,2026-05-23,Espanyol,2814,Real Sociedad,2824,finished,1.0,1.0
+14083723,La Liga,2025/26,38,2026-05-23,Getafe,2859,Osasuna,2820,finished,1.0,0.0
+14083743,La Liga,2025/26,38,2026-05-23,Girona FC,24264,Elche,2846,finished,1.0,1.0
+14083727,La Liga,2025/26,38,2026-05-23,Mallorca,2826,Real Oviedo,2851,finished,3.0,0.0
+14083710,La Liga,2025/26,38,2026-05-23,Real Betis,2816,Levante UD,2849,finished,2.0,1.0
+14083731,La Liga,2025/26,38,2026-05-23,Real Madrid,2829,Athletic Club,2825,finished,4.0,2.0
+14083739,La Liga,2025/26,38,2026-05-23,Valencia,2828,FC Barcelona,2817,finished,3.0,1.0
+14083735,La Liga,2025/26,38,2026-05-24,Villarreal,2819,Atlético Madrid,2836,finished,5.0,1.0

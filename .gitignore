@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+data/raw/
+data/browser_profile/
+.venv/
+*.egg-info/
+.vercel
+.env*
+node_modules/
+.next/
+*.tsbuildinfo
