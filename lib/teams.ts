@@ -124,6 +124,17 @@ export type TeamTableRow = {
   points: number
 }
 
+/** Parse a raw Sofascore stat string into its numeric value and percentage. */
+export function parseRaw(raw: string | null): { value: number | null; pct: number | null } {
+  if (!raw) return { value: null, pct: null }
+  const valMatch = raw.match(/^(-?[0-9]+\.?[0-9]*)/)
+  const pctMatch = raw.match(/([0-9]+)%/)
+  return {
+    value: valMatch ? Number(valMatch[1]) : null,
+    pct: pctMatch ? Number(pctMatch[1]) : null,
+  }
+}
+
 /** Pick the right column for a stat and coerce the numeric-typed string Postgres returns. */
 export function statValue(row: SeasonStatRow | undefined, spec: TeamStat): number {
   if (!row) return 0
@@ -136,4 +147,113 @@ export function indexStats(rows: SeasonStatRow[]): Map<string, SeasonStatRow> {
   const map = new Map<string, SeasonStatRow>()
   for (const r of rows) map.set(`${r.team}|${r.stat}`, r)
   return map
+}
+
+/**
+ * Fetch matches + match_stats from base tables and compute standings + per-team
+ * stat averages client-side, bypassing SQL views entirely.
+ */
+export async function fetchTeamData(
+  supabase: { from: (t: string) => any },
+  season: string,
+  wantedStats: string[],
+): Promise<{ table: TeamTableRow[]; stats: SeasonStatRow[] }> {
+  const { data: matchData } = await supabase
+    .from("matches")
+    .select("event_id, league, season, home, away, status, home_goals, away_goals")
+    .eq("season", season)
+    .eq("status", "finished")
+    .limit(1000)
+
+  const matchRows = (matchData || []) as {
+    event_id: number; league: string; season: string
+    home: string; away: string; status: string
+    home_goals: number | null; away_goals: number | null
+  }[]
+
+  const matchById = new Map(matchRows.map((m: any) => [m.event_id, m]))
+  const eventIds = matchRows.map((m: any) => m.event_id)
+
+  const rawStats: { event_id: number; stat: string; home: string; away: string }[] = []
+  for (let i = 0; i < eventIds.length; i += 50) {
+    const batch = eventIds.slice(i, i + 50)
+    const { data } = await supabase
+      .from("match_stats")
+      .select("event_id, stat, home, away")
+      .in("event_id", batch)
+      .in("stat", wantedStats)
+      .limit(5000)
+    if (data) rawStats.push(...data)
+  }
+
+  const allowedTeams = new Set<string>()
+  const fullLeagueSet = new Set<string>(FULL_LEAGUES)
+  const singleClubNames = new Set<string>(SINGLE_CLUBS.map((c) => c.team))
+  for (const m of matchRows) {
+    if (fullLeagueSet.has(m.league)) {
+      allowedTeams.add(m.home)
+      allowedTeams.add(m.away)
+    } else {
+      if (singleClubNames.has(m.home)) allowedTeams.add(m.home)
+      if (singleClubNames.has(m.away)) allowedTeams.add(m.away)
+    }
+  }
+
+  const teamMap = new Map<string, { league: string; gf: number; ga: number; w: number; d: number; l: number; p: number }>()
+  function addSide(team: string, league: string, gf: number, ga: number) {
+    if (!allowedTeams.has(team)) return
+    let t = teamMap.get(team)
+    if (!t) { t = { league, gf: 0, ga: 0, w: 0, d: 0, l: 0, p: 0 }; teamMap.set(team, t) }
+    t.gf += gf; t.ga += ga; t.p++
+    if (gf > ga) t.w++; else if (gf === ga) t.d++; else t.l++
+  }
+  for (const m of matchRows) {
+    if (m.home_goals != null && m.away_goals != null) {
+      addSide(m.home, m.league, m.home_goals, m.away_goals)
+      addSide(m.away, m.league, m.away_goals, m.home_goals)
+    }
+  }
+  const table: TeamTableRow[] = []
+  for (const [team, t] of teamMap) {
+    table.push({
+      season, league: t.league, team, played: t.p,
+      won: t.w, drawn: t.d, lost: t.l,
+      goals_for: t.gf, goals_against: t.ga,
+      goal_diff: t.gf - t.ga,
+      points: t.w * 3 + t.d,
+    })
+  }
+  table.sort((a, b) => b.points - a.points)
+
+  type Acc = { sum: number; pctSum: number; count: number }
+  const accMap = new Map<string, Acc>()
+  for (const rs of rawStats) {
+    const m = matchById.get(rs.event_id) as any
+    if (!m) continue
+    const sides: [string, string][] = [[m.home, rs.home], [m.away, rs.away]]
+    for (const [team, raw] of sides) {
+      if (!allowedTeams.has(team)) continue
+      const { value, pct } = parseRaw(raw)
+      if (value == null && pct == null) continue
+      const key = `${team}|${rs.stat}`
+      let acc = accMap.get(key)
+      if (!acc) { acc = { sum: 0, pctSum: 0, count: 0 }; accMap.set(key, acc) }
+      acc.sum += value ?? 0
+      acc.pctSum += pct ?? 0
+      acc.count++
+    }
+  }
+
+  const stats: SeasonStatRow[] = []
+  for (const [key, acc] of accMap) {
+    const [team, stat] = key.split("|")
+    stats.push({
+      team, stat,
+      per_match: Math.round((acc.sum / acc.count) * 100) / 100,
+      pct: Math.round((acc.pctSum / acc.count) * 10) / 10,
+      matches: acc.count,
+    })
+  }
+
+  return { table, stats }
 }

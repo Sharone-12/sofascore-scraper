@@ -1,17 +1,38 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
+import { percentileRank } from "@/lib/stats"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   FULL_LEAGUES,
   SINGLE_CLUBS,
   CLUB_CARD_STATS,
+  LEAGUE_ABBR,
   statValue,
   indexStats,
+  fetchTeamData,
   type TeamTableRow,
   type SeasonStatRow,
+  type TeamStat,
 } from "@/lib/teams"
 import { resolveSeason } from "@/lib/seasons"
+
+const POWER_STATS: (TeamStat & { weight: number })[] = [
+  { stat: "Expected goals", label: "xG", weight: 3 },
+  { stat: "Ball possession", label: "Poss", pct: true, weight: 2 },
+  { stat: "Total shots", label: "Shots", weight: 1.5 },
+  { stat: "Tackles", label: "Tackles", weight: 1 },
+  { stat: "Recoveries", label: "Recov", weight: 1 },
+  { stat: "Final third entries", label: "F3rd", weight: 1.5 },
+]
+
+const POWER_COLORS = [
+  "oklch(0.85 0.18 145)",
+  "oklch(0.78 0.15 145)",
+  "oklch(0.72 0.12 145)",
+  "oklch(0.66 0.09 145)",
+  "oklch(0.60 0.06 145)",
+]
 
 function formBar({ won, drawn, lost, played }: TeamTableRow) {
   if (!played) return []
@@ -186,31 +207,159 @@ function ClubCard({
   )
 }
 
+type RankedTeam = {
+  team: string
+  league: string
+  score: number
+  ppg: number
+  gd: number
+  played: number
+}
+
+function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
+  const top = ranked.slice(0, 5)
+  const maxScore = top[0]?.score ?? 1
+  return (
+    <section className="surface rounded-2xl bg-card overflow-hidden">
+      <header className="px-5 pt-5 pb-4">
+        <h2
+          className="text-lg font-semibold tracking-tight uppercase"
+          style={{ fontFamily: "var(--font-condensed)" }}
+        >
+          Power Rankings
+        </h2>
+        <p className="stat-label mt-1">
+          Composite score across xG, possession, shots, tackles, recoveries &amp; final third entries
+        </p>
+      </header>
+
+      <div className="px-3 pb-4 space-y-1">
+        {top.map((t, i) => (
+          <Link
+            key={t.team}
+            href={`/teams/compare?teams=${encodeURIComponent(t.team)}`}
+            className="group relative flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/[0.04] transition-colors"
+          >
+            <span
+              className="stat-figure text-2xl w-8 text-center shrink-0"
+              style={{ color: POWER_COLORS[i], fontFamily: "var(--font-condensed)" }}
+            >
+              {i + 1}
+            </span>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="font-semibold text-[0.95rem] truncate group-hover:text-white transition-colors">
+                  {t.team}
+                </span>
+                <span className="stat-label shrink-0">
+                  {LEAGUE_ABBR[t.league] ?? t.league}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 mt-1.5">
+                <div
+                  className="h-[5px] rounded-full"
+                  style={{
+                    width: `${(t.score / maxScore) * 100}%`,
+                    background: POWER_COLORS[i],
+                    opacity: 0.7,
+                    minWidth: "1rem",
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 shrink-0">
+              <div className="text-right">
+                <div
+                  className="stat-figure text-lg"
+                  style={{ color: POWER_COLORS[i] }}
+                >
+                  {t.score.toFixed(1)}
+                </div>
+                <div className="stat-label">rating</div>
+              </div>
+              <div className="text-right hidden sm:block">
+                <div className="stat-figure text-sm">{t.ppg.toFixed(2)}</div>
+                <div className="stat-label">ppg</div>
+              </div>
+              <div className="text-right hidden sm:block">
+                <div
+                  className="stat-figure text-sm"
+                  style={{
+                    color: t.gd > 0 ? "var(--pitch)" : t.gd < 0 ? "oklch(0.65 0.14 25)" : "var(--muted-foreground)",
+                  }}
+                >
+                  {t.gd > 0 ? "+" : ""}{t.gd}
+                </div>
+                <div className="stat-label">gd</div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function computePowerRankings(
+  table: TeamTableRow[],
+  stats: SeasonStatRow[],
+): RankedTeam[] {
+  const byKey = indexStats(stats)
+  const teams = table.filter((t) => t.played >= 3)
+
+  const populations = new Map<string, number[]>()
+  for (const spec of POWER_STATS) {
+    populations.set(
+      spec.stat,
+      teams.map((t) => statValue(byKey.get(`${t.team}|${spec.stat}`), spec)),
+    )
+  }
+
+  const totalWeight = POWER_STATS.reduce((s, w) => s + w.weight, 0)
+
+  return teams
+    .map((t) => {
+      let acc = 0
+      for (const spec of POWER_STATS) {
+        const val = statValue(byKey.get(`${t.team}|${spec.stat}`), spec)
+        const pop = populations.get(spec.stat)!
+        acc += percentileRank(val, pop) * spec.weight
+      }
+      return {
+        team: t.team,
+        league: t.league,
+        score: acc / totalWeight,
+        ppg: t.played ? t.points / t.played : 0,
+        gd: t.goal_diff,
+        played: t.played,
+      }
+    })
+    .sort((a, b) => b.score - a.score)
+}
+
+const WANTED_STATS = Array.from(
+  new Set([
+    ...CLUB_CARD_STATS.map((s) => s.stat),
+    ...POWER_STATS.map((s) => s.stat),
+  ]),
+)
+
 async function Tables({
   searchParams,
 }: {
   searchParams: Promise<{ season?: string }>
 }) {
   const season = resolveSeason((await searchParams).season)
-  const [tableRes, statsRes] = await Promise.all([
-    supabase
-      .from("team_table")
-      .select("*")
-      .eq("season", season)
-      .order("points", { ascending: false })
-      .order("goal_diff", { ascending: false }),
-    supabase
-      .from("team_season_stats")
-      .select("team, stat, per_match, pct, matches")
-      .eq("season", season)
-      .in("team", SINGLE_CLUBS.map((c) => c.team) as unknown as string[]),
-  ])
-
-  const all = (tableRes.data || []) as TeamTableRow[]
-  const clubStats = indexStats((statsRes.data || []) as SeasonStatRow[])
+  const { table: all, stats } = await fetchTeamData(supabase, season, WANTED_STATS)
+  const clubStats = indexStats(stats)
+  const ranked = computePowerRankings(all, stats)
 
   return (
     <div className="stagger space-y-5">
+      <PowerRankings ranked={ranked} />
+
       <div className="grid lg:grid-cols-2 gap-5">
         {FULL_LEAGUES.map((lg) => (
           <LeagueTable
@@ -221,8 +370,6 @@ async function Tables({
         ))}
       </div>
 
-      {/* Single clubs: their leagues aren't ingested in full, so there is no
-          table to show — just the club's own record and per-match numbers. */}
       <div className="grid lg:grid-cols-2 gap-5">
         {SINGLE_CLUBS.map((c) => (
           <ClubCard

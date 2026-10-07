@@ -13,6 +13,7 @@ import {
   TEAM_COLORS,
   statValue,
   indexStats,
+  parseRaw,
   type SeasonStatRow,
   type TeamTableRow,
 } from "@/lib/teams"
@@ -112,16 +113,6 @@ function TeamPicker({
       )}
     </div>
   )
-}
-
-function parseRaw(raw: string | null): { value: number | null; pct: number | null } {
-  if (!raw) return { value: null, pct: null }
-  const valMatch = raw.match(/^(-?[0-9]+\.?[0-9]*)/)
-  const pctMatch = raw.match(/([0-9]+)%/)
-  return {
-    value: valMatch ? Number(valMatch[1]) : null,
-    pct: pctMatch ? Number(pctMatch[1]) : null,
-  }
 }
 
 export default function TeamCompareContent() {
