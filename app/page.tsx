@@ -215,7 +215,7 @@ async function Content() {
 export default function Home() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
-      <div className="mb-10 animate-fade-in">
+      <div className="relative z-10 mb-10 animate-fade-in">
         <h1
           className="text-5xl sm:text-6xl tracking-[-0.035em] leading-[0.95] mb-4"
           style={{ fontFamily: "var(--font-condensed)" }}
