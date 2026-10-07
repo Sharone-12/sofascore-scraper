@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase"
 import { notFound } from "next/navigation"
 import { RADAR_STATS, STAT_GROUPS, percentileRank } from "@/lib/stats"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
+import { PlayerAvatar, TeamCrest } from "@/components/player-avatar"
 import {
   Card,
   CardContent,
@@ -94,37 +95,49 @@ async function PlayerContent({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="mb-10 animate-fade-in">
-        <div className="flex items-center gap-3 mb-2 flex-wrap">
-          <h1
-            className="text-5xl font-bold tracking-[-0.035em] leading-none"
-            style={{ fontFamily: "var(--font-condensed)" }}
-          >
-            {name}
-          </h1>
-          <Badge
-            variant="outline"
-            className="stat-label border-white/15 bg-white/5"
-          >
-            {player.position as string}
-          </Badge>
-        </div>
-        <p className="text-muted-foreground text-base">
-          {player.team as string}
-          <span className="mx-2 opacity-40">·</span>
-          {player.league as string}
-          <span className="mx-2 opacity-40">·</span>
-          {player.season as string}
-        </p>
-        <div className="mt-4">
-          <Link
-            href={`/compare?players=${player.slug}`}
-            className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline transition-colors"
-            style={{ color: "var(--brand)" }}
-          >
-            Compare with another player
-            <span className="text-xs">→</span>
-          </Link>
+      <div className="mb-10 animate-fade-in flex items-start gap-5">
+        <PlayerAvatar
+          playerId={player.player_id as number}
+          name={name}
+          size={88}
+        />
+        <div className="min-w-0">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
+            <h1
+              className="text-5xl font-bold tracking-[-0.035em] leading-none"
+              style={{ fontFamily: "var(--font-condensed)" }}
+            >
+              {name}
+            </h1>
+            <Badge
+              variant="outline"
+              className="stat-label border-white/15 bg-white/5"
+            >
+              {player.position as string}
+            </Badge>
+          </div>
+          <p className="text-muted-foreground text-base flex items-center gap-2 flex-wrap">
+            <TeamCrest
+              teamId={player.team_id as number}
+              name={player.team as string}
+              size={20}
+            />
+            {player.team as string}
+            <span className="opacity-40">·</span>
+            {player.league as string}
+            <span className="opacity-40">·</span>
+            {player.season as string}
+          </p>
+          <div className="mt-4">
+            <Link
+              href={`/compare?players=${player.slug}`}
+              className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline transition-colors"
+              style={{ color: "var(--brand)" }}
+            >
+              Compare with another player
+              <span className="text-xs">→</span>
+            </Link>
+          </div>
         </div>
       </div>
 

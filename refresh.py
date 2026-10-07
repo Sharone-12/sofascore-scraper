@@ -63,6 +63,16 @@ def main() -> None:
     except Exception as exc:
         log(f"supabase sync failed: {exc}")
 
+    # Images are cosmetic, and only new ids are fetched, so a failure here must
+    # not stop the data commit below.
+    try:
+        from sync_images import sync_images
+        log("mirroring images")
+        sync_images()
+        log("image mirror done")
+    except Exception as exc:
+        log(f"image mirror failed: {exc}")
+
     changed = [
         line[3:] for line in sh("git", "status", "--porcelain", "--", *OUTPUTS).splitlines()
     ]

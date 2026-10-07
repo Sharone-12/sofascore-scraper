@@ -12,6 +12,7 @@ import {
 } from "@/lib/stats"
 import { LEAGUE_ABBR } from "@/lib/teams"
 import { PlayerSearch } from "@/components/player-search"
+import { PlayerAvatar, TeamCrest } from "@/components/player-avatar"
 import { StatBarChart } from "@/components/charts"
 import {
   Card,
@@ -132,20 +133,34 @@ export default function CompareContent() {
                 ×
               </button>
 
-              <div className="px-4 pt-3.5 pb-3">
-                <p
-                  className="font-semibold tracking-tight truncate pr-5"
-                  style={{ color: PLAYER_COLORS[i] }}
-                >
-                  {p.player as string}
-                </p>
-                <p className="text-sm text-foreground/80 truncate mt-0.5">
-                  {p.team as string}
-                </p>
-                <p className="stat-label mt-1">
-                  {p.position as string} · {LEAGUE_ABBR[p.league as string] ?? (p.league as string)} ·{" "}
-                  {p.season as string}
-                </p>
+              <div className="px-4 pt-3.5 pb-3 flex gap-3">
+                <PlayerAvatar
+                  playerId={p.player_id as number}
+                  name={p.player as string}
+                  size={48}
+                  ring={PLAYER_COLORS[i]}
+                />
+                <div className="min-w-0">
+                  <p
+                    className="font-semibold tracking-tight truncate pr-5"
+                    style={{ color: PLAYER_COLORS[i] }}
+                  >
+                    {p.player as string}
+                  </p>
+                  <p className="text-sm text-foreground/80 truncate mt-0.5 flex items-center gap-1.5">
+                    <TeamCrest
+                      teamId={p.team_id as number}
+                      name={p.team as string}
+                      size={16}
+                    />
+                    <span className="truncate">{p.team as string}</span>
+                  </p>
+                  <p className="stat-label mt-1 truncate">
+                    {p.position as string} ·{" "}
+                    {LEAGUE_ABBR[p.league as string] ?? (p.league as string)} ·{" "}
+                    {p.season as string}
+                  </p>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 border-t border-white/5 divide-x divide-white/5">
