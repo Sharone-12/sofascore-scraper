@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Archivo, Oswald } from "next/font/google"
 import Link from "next/link"
+import { AskPanel } from "@/components/ask-panel"
 import "./globals.css"
 
 const sans = Archivo({
@@ -64,6 +65,7 @@ export default function RootLayout({
           </div>
         </nav>
         <main className="flex-1">{children}</main>
+        <AskPanel />
       </body>
     </html>
   )

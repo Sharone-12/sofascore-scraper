@@ -13,6 +13,7 @@ import {
 import { LEAGUE_ABBR } from "@/lib/teams"
 import { PlayerSearch } from "@/components/player-search"
 import { PlayerAvatar, TeamCrest } from "@/components/player-avatar"
+import { useAsk, AskAnswer } from "@/components/ask-panel"
 import { StatBarChart } from "@/components/charts"
 import {
   Card,
@@ -29,6 +30,7 @@ export default function CompareContent() {
   const [players, setPlayers] = useState<Player[]>([])
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState<StatMode>("p90")
+  const verdict = useAsk()
 
   const slugParam = searchParams.get("players")
   const slugs = slugParam?.split(",").filter(Boolean) || []
@@ -215,7 +217,37 @@ export default function CompareContent() {
               ? "rates, minutes-adjusted"
               : "raw season counts, not minutes-adjusted"}
           </span>
+
+          {players.length >= 2 && (
+            <button
+              type="button"
+              onClick={() =>
+                verdict.ask(
+                  `Who is the better player, and why? ${players
+                    .map((p) => p.player as string)
+                    .join(" vs ")}`,
+                  players.map((p) => p.slug as string),
+                )
+              }
+              disabled={verdict.loading}
+              className="ml-auto rounded-lg px-3 py-1.5 text-xs font-medium disabled:opacity-40 transition-opacity"
+              style={{ background: "var(--brand)", color: "oklch(0.15 0 0)" }}
+            >
+              {verdict.loading ? "Thinking…" : "Who's better?"}
+            </button>
+          )}
         </div>
+      )}
+
+      {(verdict.loading || verdict.answer || verdict.error) && (
+        <Card className="surface border-0 mb-8 animate-slide-up">
+          <CardHeader>
+            <CardTitle className="stat-label text-sm">Verdict</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AskAnswer {...verdict} />
+          </CardContent>
+        </Card>
       )}
 
       {loading && (

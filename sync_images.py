@@ -42,12 +42,16 @@ def _env() -> tuple[str, str]:
 
 
 def _request(url: str, *, method="GET", data=None, headers=None, timeout=30,
-             tries=4):
+             tries=6):
     """HTTP with retries on transport errors.
 
     Over ~1100 requests a dropped connection or DNS blip is a certainty, and
     one of those must not end the run. HTTPError is NOT retried: it carries a
     real answer (404 = no image) that callers need to see.
+
+    6 tries ≈ 63s of backoff. 4 (~7s) wasn't enough — a DNS outage killed a run
+    at 537/1072. The run resumes from the bucket either way, so the cost of
+    waiting longer is far lower than the cost of stopping.
     """
     req = urllib.request.Request(url, data=data, method=method)
     for k, v in (headers or {}).items():
