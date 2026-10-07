@@ -18,6 +18,7 @@ import {
   type TeamTableRow,
 } from "@/lib/teams"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
+import { TeamCrest } from "@/components/player-avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const MAX_TEAMS = 3
@@ -125,6 +126,7 @@ export default function TeamCompareContent() {
 
   const [table, setTable] = useState<TeamTableRow[]>([])
   const [stats, setStats] = useState<SeasonStatRow[]>([])
+  const [teamIds, setTeamIds] = useState<Map<string, number>>(new Map())
   const [loading, setLoading] = useState(true)
 
   // One fetch for the whole season: the standings and every stat we render.
@@ -132,7 +134,7 @@ export default function TeamCompareContent() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      const [{ data: tbl }, { data: st }] = await Promise.all([
+      const [{ data: tbl }, { data: st }, { data: ids }] = await Promise.all([
         // Only whole leagues plus the tracked single clubs. Every other team in
         // a single-club league is a two-game fragment of its own season, since
         // only PSG's and Bayern's fixtures are ingested.
@@ -150,10 +152,17 @@ export default function TeamCompareContent() {
           .select("team, stat, per_match, pct, matches")
           .eq("season", CURRENT_SEASON)
           .in("stat", WANTED_STATS),
+        supabase
+          .from("players")
+          .select("team, team_id")
+          .eq("season", CURRENT_SEASON),
       ])
       if (cancelled) return
       setTable((tbl || []) as TeamTableRow[])
       setStats((st || []) as SeasonStatRow[])
+      const idMap = new Map<string, number>()
+      for (const r of ids || []) idMap.set(r.team, r.team_id)
+      setTeamIds(idMap)
       setLoading(false)
     }
     load()
@@ -245,11 +254,16 @@ export default function TeamCompareContent() {
               style={{ borderTop: `2px solid ${TEAM_COLORS[i]}` }}
             >
               <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="min-w-0">
-                  <p className="font-semibold truncate">{t.team}</p>
-                  <p className="stat-label mt-0.5">
-                    {t.league}
-                  </p>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  {teamIds.has(t.team) && (
+                    <TeamCrest teamId={teamIds.get(t.team)!} name={t.team} size={28} />
+                  )}
+                  <div className="min-w-0">
+                    <p className="font-semibold truncate">{t.team}</p>
+                    <p className="stat-label mt-0.5">
+                      {t.league}
+                    </p>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -349,7 +363,12 @@ export default function TeamCompareContent() {
                           className="stat-label text-right py-2.5 px-2"
                           style={{ color: TEAM_COLORS[i] }}
                         >
-                          {team}
+                          <span className="inline-flex items-center gap-1.5 justify-end">
+                            {teamIds.has(team) && (
+                              <TeamCrest teamId={teamIds.get(team)!} name={team} size={16} />
+                            )}
+                            {team}
+                          </span>
                         </th>
                       ))}
                     </tr>
