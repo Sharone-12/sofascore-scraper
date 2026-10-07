@@ -129,13 +129,14 @@ export default function TeamCompareContent() {
   const [stats, setStats] = useState<SeasonStatRow[]>([])
   const [teamIds, setTeamIds] = useState<Map<string, number>>(new Map())
   const [loading, setLoading] = useState(true)
+  const [statsError, setStatsError] = useState(false)
 
   // One fetch for the whole season: the standings and every stat we render.
   // 40 teams x ~28 stats is small enough to filter in memory as selection changes.
   useEffect(() => {
     let cancelled = false
     async function load() {
-      const [{ data: tbl }, { data: st }, { data: ids }] = await Promise.all([
+      const [tblRes, stRes, idsRes] = await Promise.all([
         // Only whole leagues plus the tracked single clubs. Every other team in
         // a single-club league is a two-game fragment of its own season, since
         // only PSG's and Bayern's fixtures are ingested.
@@ -159,10 +160,18 @@ export default function TeamCompareContent() {
           .eq("season", season),
       ])
       if (cancelled) return
-      setTable((tbl || []) as TeamTableRow[])
-      setStats((st || []) as SeasonStatRow[])
+
+      if (stRes.error) {
+        console.error("team_season_stats query failed:", stRes.error.message)
+        setStatsError(true)
+      } else {
+        setStatsError(false)
+      }
+
+      setTable((tblRes.data || []) as TeamTableRow[])
+      setStats((stRes.data || []) as SeasonStatRow[])
       const idMap = new Map<string, number>()
-      for (const r of ids || []) idMap.set(r.team, r.team_id)
+      for (const r of idsRes.data || []) idMap.set(r.team, r.team_id)
       setTeamIds(idMap)
       setLoading(false)
     }
@@ -184,19 +193,20 @@ export default function TeamCompareContent() {
   const byKey = useMemo(() => indexStats(stats), [stats])
 
   // Radar axes are percentile ranks against all 40 teams, so possession (%)
-  // and shot counts share one 0-100 scale.
+  // and shot counts share one 0-100 scale. Only teams that actually have the
+  // stat in the DB enter the population — a missing row means no data, not zero.
   const radarData = useMemo(() => {
     if (selected.length === 0) return []
     return TEAM_RADAR_STATS.map((spec) => {
-      const population = table.map((t) =>
-        statValue(byKey.get(`${t.team}|${spec.stat}`), spec),
-      )
+      const population = table
+        .filter((t) => byKey.has(`${t.team}|${spec.stat}`))
+        .map((t) => statValue(byKey.get(`${t.team}|${spec.stat}`), spec))
       const row: Record<string, string | number> = { stat: spec.label }
       for (const team of selected) {
-        row[team] = percentileRank(
-          statValue(byKey.get(`${team}|${spec.stat}`), spec),
-          population,
-        )
+        const entry = byKey.get(`${team}|${spec.stat}`)
+        row[team] = entry
+          ? percentileRank(statValue(entry, spec), population)
+          : 0
       }
       return row
     })
@@ -206,13 +216,17 @@ export default function TeamCompareContent() {
     () =>
       TEAM_STAT_GROUPS.map((group) => ({
         label: group.label,
-        data: group.stats.map((spec) => {
-          const row: Record<string, string | number> = { stat: spec.label }
-          for (const team of selected) {
-            row[team] = statValue(byKey.get(`${team}|${spec.stat}`), spec)
-          }
-          return row
-        }),
+        data: group.stats
+          .filter((spec) =>
+            selected.some((team) => byKey.has(`${team}|${spec.stat}`)),
+          )
+          .map((spec) => {
+            const row: Record<string, string | number> = { stat: spec.label }
+            for (const team of selected) {
+              row[team] = statValue(byKey.get(`${team}|${spec.stat}`), spec)
+            }
+            return row
+          }),
       })),
     [selected, byKey],
   )
@@ -302,6 +316,13 @@ export default function TeamCompareContent() {
         <p className="text-muted-foreground animate-fade-in">Loading teams…</p>
       )}
 
+      {statsError && (
+        <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 px-4 py-3 mb-6 text-sm text-amber-200">
+          Stats couldn&apos;t be loaded — the team_season_stats view may need
+          to be created. Run <code className="text-amber-300">sql/team_views.sql</code> in the Supabase SQL editor.
+        </div>
+      )}
+
       {!loading && selected.length === 0 && (
         <div className="surface rounded-2xl bg-card py-20 text-center animate-fade-in">
           <p
@@ -333,7 +354,9 @@ export default function TeamCompareContent() {
       {selected.length > 0 && (
         <>
           <div className="grid md:grid-cols-2 gap-5 mb-6 stagger">
-            {barGroups.map((group) => (
+            {barGroups
+              .filter((group) => group.data.length > 0)
+              .map((group) => (
               <Card key={group.label} className="surface border-0">
                 <CardHeader>
                   <CardTitle className="stat-label text-sm">
@@ -387,9 +410,12 @@ export default function TeamCompareContent() {
                           </td>
                         </tr>
                         {group.stats.map((spec) => {
-                          const vals = selected.map((team) =>
-                            statValue(byKey.get(`${team}|${spec.stat}`), spec),
+                          const entries = selected.map((team) =>
+                            byKey.get(`${team}|${spec.stat}`),
                           )
+                          const vals = entries.map((e) => statValue(e, spec))
+                          const hasAny = entries.some(Boolean)
+                          if (!hasAny) return null
                           const max = Math.max(...vals)
                           return (
                             <tr
@@ -401,6 +427,7 @@ export default function TeamCompareContent() {
                               </td>
                               {selected.map((team, i) => {
                                 const v = vals[i]
+                                const missing = !entries[i]
                                 const best =
                                   vals.length > 1 && v === max && v > 0
                                 return (
@@ -413,7 +440,7 @@ export default function TeamCompareContent() {
                                         : "var(--muted-foreground)",
                                     }}
                                   >
-                                    {v.toFixed(spec.pct ? 1 : 2)}
+                                    {missing ? "—" : v.toFixed(spec.pct ? 1 : 2)}
                                   </td>
                                 )
                               })}

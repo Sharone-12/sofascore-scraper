@@ -1,8 +1,9 @@
 -- Team-level views derived from existing matches / match_stats.
 -- Additive only: no base tables are modified. Drop with DROP VIEW to reverse.
 
--- Raw stat strings arrive in four shapes: '2.44', '83%', '8/23 (35%)', '114.0 km'.
--- value     = leading number (successful count for ratios)
+-- Raw stat strings arrive in five shapes:
+--   '2.44', '83%', '8/23 (35%)', '114.0 km', '-0.50' (Goals prevented).
+-- value     = leading number, including negatives (successful count for ratios)
 -- attempted = denominator when the shape is 'made/attempted'
 -- pct       = trailing percentage when present
 CREATE OR REPLACE VIEW team_match_stats AS
@@ -26,7 +27,7 @@ WITH sided AS (
 SELECT
   event_id, season, league, date, round,
   team, opponent, is_home, gf, ga, stat,
-  NULLIF(substring(raw FROM '^([0-9]+\.?[0-9]*)'), '')::numeric  AS value,
+  NULLIF(substring(raw FROM '^(-?[0-9]+\.?[0-9]*)'), '')::numeric AS value,
   NULLIF(substring(raw FROM '^[0-9.]+/([0-9]+)'), '')::numeric    AS attempted,
   NULLIF(substring(raw FROM '([0-9]+)%'), '')::numeric            AS pct,
   raw
@@ -40,7 +41,7 @@ SELECT
   ROUND(AVG(pct), 1)            AS pct,
   ROUND(SUM(value), 1)          AS total
 FROM team_match_stats
-WHERE value IS NOT NULL
+WHERE value IS NOT NULL OR pct IS NOT NULL
 GROUP BY season, league, team, stat;
 
 CREATE OR REPLACE VIEW team_table AS

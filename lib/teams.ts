@@ -127,7 +127,7 @@ export type TeamTableRow = {
 /** Pick the right column for a stat and coerce the numeric-typed string Postgres returns. */
 export function statValue(row: SeasonStatRow | undefined, spec: TeamStat): number {
   if (!row) return 0
-  const raw = spec.pct ? row.pct : row.per_match
+  const raw = spec.pct ? (row.pct ?? row.per_match) : row.per_match
   return raw == null ? 0 : Number(raw)
 }
 
