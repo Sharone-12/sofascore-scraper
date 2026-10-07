@@ -303,7 +303,9 @@ function computePowerRankings(
   stats: SeasonStatRow[],
 ): RankedTeam[] {
   const byKey = indexStats(stats)
-  const teams = table.filter((t) => t.played >= 3)
+  const maxPlayed = Math.max(...table.map((t) => t.played), 1)
+  const minGames = Math.max(3, Math.floor(maxPlayed * 0.4))
+  const teams = table.filter((t) => t.played >= minGames)
   if (teams.length === 0) return []
 
   const ppgVals = teams.map((t) => t.points / t.played)
@@ -322,9 +324,9 @@ function computePowerRankings(
       const gdpg = t.goal_diff / t.played
       const xg = statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT)
       const score =
-        normalize(ppg, ppgMin, ppgMax) * 50 +
+        normalize(ppg, ppgMin, ppgMax) * 60 +
         normalize(gdpg, gdMin, gdMax) * 30 +
-        normalize(xg, xgMin, xgMax) * 20
+        normalize(xg, xgMin, xgMax) * 10
       return {
         team: t.team,
         league: t.league,
