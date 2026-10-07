@@ -17,14 +17,7 @@ import {
 } from "@/lib/teams"
 import { resolveSeason } from "@/lib/seasons"
 
-const POWER_STATS: (TeamStat & { weight: number })[] = [
-  { stat: "Expected goals", label: "xG", weight: 3 },
-  { stat: "Ball possession", label: "Poss", pct: true, weight: 2 },
-  { stat: "Total shots", label: "Shots", weight: 1.5 },
-  { stat: "Tackles", label: "Tackles", weight: 1 },
-  { stat: "Recoveries", label: "Recov", weight: 1 },
-  { stat: "Final third entries", label: "F3rd", weight: 1.5 },
-]
+const POWER_STAT = { stat: "Expected goals", label: "xG" } as TeamStat
 
 const POWER_COLORS = [
   "oklch(0.85 0.18 145)",
@@ -229,7 +222,7 @@ function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
           Power Rankings
         </h2>
         <p className="stat-label mt-1">
-          Composite score across xG, possession, shots, tackles, recoveries &amp; final third entries
+          Points per game, goal difference &amp; xG — weighted toward results
         </p>
       </header>
 
@@ -309,29 +302,27 @@ function computePowerRankings(
   const byKey = indexStats(stats)
   const teams = table.filter((t) => t.played >= 3)
 
-  const populations = new Map<string, number[]>()
-  for (const spec of POWER_STATS) {
-    populations.set(
-      spec.stat,
-      teams.map((t) => statValue(byKey.get(`${t.team}|${spec.stat}`), spec)),
-    )
-  }
+  const ppgVals = teams.map((t) => t.points / t.played)
+  const gdPerGame = teams.map((t) => t.goal_diff / t.played)
+  const xgVals = teams.map((t) =>
+    statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT),
+  )
 
-  const totalWeight = POWER_STATS.reduce((s, w) => s + w.weight, 0)
-
+  // 50% PPG, 30% GD per game, 20% xG
   return teams
     .map((t) => {
-      let acc = 0
-      for (const spec of POWER_STATS) {
-        const val = statValue(byKey.get(`${t.team}|${spec.stat}`), spec)
-        const pop = populations.get(spec.stat)!
-        acc += percentileRank(val, pop) * spec.weight
-      }
+      const ppg = t.points / t.played
+      const gdpg = t.goal_diff / t.played
+      const xg = statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT)
+      const score =
+        percentileRank(ppg, ppgVals) * 0.5 +
+        percentileRank(gdpg, gdPerGame) * 0.3 +
+        percentileRank(xg, xgVals) * 0.2
       return {
         team: t.team,
         league: t.league,
-        score: acc / totalWeight,
-        ppg: t.played ? t.points / t.played : 0,
+        score,
+        ppg,
         gd: t.goal_diff,
         played: t.played,
       }
@@ -342,7 +333,7 @@ function computePowerRankings(
 const WANTED_STATS = Array.from(
   new Set([
     ...CLUB_CARD_STATS.map((s) => s.stat),
-    ...POWER_STATS.map((s) => s.stat),
+    POWER_STAT.stat,
   ]),
 )
 
