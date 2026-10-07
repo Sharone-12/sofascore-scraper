@@ -157,7 +157,7 @@ export function PlayerSearch({
   const showPanel = open && query.trim().length > 0
 
   return (
-    <div ref={ref} className="relative w-full">
+    <div ref={ref} className="relative z-50 w-full">
       <div className="relative group">
         <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-muted-foreground pointer-events-none transition-colors group-focus-within:text-primary" />
         <Input
@@ -174,7 +174,7 @@ export function PlayerSearch({
           aria-controls="player-search-results"
           autoComplete="off"
           spellCheck={false}
-          className="w-full pl-10 pr-10 h-12 rounded-xl bg-card border-white/10 hover:border-white/20 focus:border-primary/60 focus:ring-4 focus:ring-primary/10 transition-all text-base"
+          className="w-full pl-10 pr-10 h-12 rounded-xl bg-card border-white/10 hover:border-white/20 focus-visible:border-white/25 focus-visible:ring-0 outline-none transition-all text-base"
         />
         {query && (
           <button
