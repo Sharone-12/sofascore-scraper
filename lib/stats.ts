@@ -72,6 +72,22 @@ export const STAT_GROUPS = [
 
 export const PLAYER_COLORS = ["#4ade80", "#60a5fa", "#fbbf24"]
 
+export type StatMode = "p90" | "total"
+
+/**
+ * STAT_GROUPS keys are the per-90 columns; every one has a raw season total in
+ * the same column minus the suffix (verified against the players table).
+ */
+export function statKey(key: string, mode: StatMode): string {
+  return mode === "p90" ? key : key.replace(/_p90$/, "")
+}
+
+/** Per-90 rates need 2dp; totals are whole counts apart from xG/xA. */
+export function formatStat(value: number, mode: StatMode): string {
+  if (mode === "p90") return value.toFixed(2)
+  return Number.isInteger(value) ? String(value) : value.toFixed(1)
+}
+
 export function percentileRank(value: number, values: number[]): number {
   const valid = values.filter((v) => v != null && !isNaN(v))
   if (valid.length === 0) return 0

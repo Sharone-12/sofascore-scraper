@@ -3,7 +3,14 @@
 import { useState, useEffect, Fragment } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
-import { STAT_GROUPS, PLAYER_COLORS } from "@/lib/stats"
+import {
+  STAT_GROUPS,
+  PLAYER_COLORS,
+  statKey,
+  formatStat,
+  type StatMode,
+} from "@/lib/stats"
+import { LEAGUE_ABBR } from "@/lib/teams"
 import { PlayerSearch } from "@/components/player-search"
 import { StatBarChart } from "@/components/charts"
 import {
@@ -12,7 +19,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 
 type Player = Record<string, string | number | null>
 
@@ -21,6 +27,7 @@ export default function CompareContent() {
   const searchParams = useSearchParams()
   const [players, setPlayers] = useState<Player[]>([])
   const [loading, setLoading] = useState(false)
+  const [mode, setMode] = useState<StatMode>("p90")
 
   const slugParam = searchParams.get("players")
   const slugs = slugParam?.split(",").filter(Boolean) || []
@@ -69,12 +76,14 @@ export default function CompareContent() {
 
   const playerNames = players.map((p) => p.player as string)
 
+  const modeLabel = mode === "p90" ? "per 90 minutes" : "season total"
+
   const barGroups = STAT_GROUPS.map((group) => ({
     label: group.label,
     data: group.stats.map((s) => {
       const row: Record<string, string | number> = { stat: s.label }
       players.forEach((p) => {
-        row[p.player as string] = Number(p[s.key]) || 0
+        row[p.player as string] = Number(p[statKey(s.key, mode)]) || 0
       })
       return row
     }),
@@ -92,7 +101,8 @@ export default function CompareContent() {
           <span className="font-bold">head.</span>
         </h1>
         <p className="text-muted-foreground text-base">
-          Side-by-side per-90 stats for up to 3 players
+          Side-by-side {mode === "p90" ? "per-90" : "season total"} stats for up
+          to 3 players
         </p>
       </div>
 
@@ -106,22 +116,90 @@ export default function CompareContent() {
       </div>
 
       {players.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-8 stagger">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 stagger">
           {players.map((p, i) => (
-            <Badge
+            <div
               key={p.slug as string}
-              variant="outline"
-              className="text-sm py-1.5 px-3 cursor-pointer hover:bg-accent/80 transition-all duration-200"
-              style={{ borderColor: PLAYER_COLORS[i] }}
-              onClick={() => removePlayer(p.slug as string)}
+              className="surface relative rounded-xl bg-card overflow-hidden"
+              style={{ borderTop: `2px solid ${PLAYER_COLORS[i]}` }}
             >
-              <span className="mr-2" style={{ color: PLAYER_COLORS[i] }}>
-                ●
-              </span>
-              {p.player as string}
-              <span className="ml-2 text-muted-foreground/60 text-xs">×</span>
-            </Badge>
+              <button
+                type="button"
+                aria-label={`Remove ${p.player as string}`}
+                onClick={() => removePlayer(p.slug as string)}
+                className="absolute top-2.5 right-2.5 text-muted-foreground/50 hover:text-foreground transition-colors text-sm leading-none"
+              >
+                ×
+              </button>
+
+              <div className="px-4 pt-3.5 pb-3">
+                <p
+                  className="font-semibold tracking-tight truncate pr-5"
+                  style={{ color: PLAYER_COLORS[i] }}
+                >
+                  {p.player as string}
+                </p>
+                <p className="text-sm text-foreground/80 truncate mt-0.5">
+                  {p.team as string}
+                </p>
+                <p className="stat-label mt-1">
+                  {p.position as string} · {LEAGUE_ABBR[p.league as string] ?? (p.league as string)} ·{" "}
+                  {p.season as string}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 border-t border-white/5 divide-x divide-white/5">
+                <div className="px-4 py-2">
+                  <div className="stat-label">Minutes</div>
+                  <div className="tabular-nums text-sm">
+                    {Number(p.minutes) || 0}
+                  </div>
+                </div>
+                <div className="px-4 py-2">
+                  <div className="stat-label">Apps</div>
+                  <div className="tabular-nums text-sm">
+                    {Number(p.appearances) || 0}
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
+        </div>
+      )}
+
+      {players.length > 0 && (
+        <div className="flex items-center gap-3 mb-8">
+          <div
+            className="inline-flex rounded-lg p-0.5 bg-secondary/40"
+            role="group"
+            aria-label="Stat mode"
+          >
+            {(
+              [
+                ["p90", "Per 90"],
+                ["total", "Totals"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={mode === value}
+                onClick={() => setMode(value)}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  mode === value
+                    ? "bg-card text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <span className="stat-label">
+            {mode === "p90"
+              ? "rates, minutes-adjusted"
+              : "raw season counts, not minutes-adjusted"}
+          </span>
         </div>
       )}
 
@@ -141,7 +219,7 @@ export default function CompareContent() {
                     {group.label}
                   </CardTitle>
                   <p className="text-xs text-muted-foreground/60">
-                    per 90 minutes
+                    {modeLabel}
                   </p>
                 </CardHeader>
                 <CardContent>
@@ -153,7 +231,9 @@ export default function CompareContent() {
 
           <Card className="surface animate-slide-up border-0">
             <CardHeader>
-              <CardTitle className="stat-label text-sm">All Stats</CardTitle>
+              <CardTitle className="stat-label text-sm">
+                All Stats · {modeLabel}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -187,8 +267,9 @@ export default function CompareContent() {
                           </td>
                         </tr>
                         {group.stats.map((s, si) => {
+                          const col = statKey(s.key, mode)
                           const vals = players.map(
-                            (p) => Number(p[s.key]) || 0,
+                            (p) => Number(p[col]) || 0,
                           )
                           const max = Math.max(...vals)
                           return (
@@ -199,8 +280,8 @@ export default function CompareContent() {
                               <td className="py-2 pr-4 text-muted-foreground">
                                 {s.label}
                               </td>
-                              {players.map((p, i) => {
-                                const v = Number(p[s.key]) || 0
+                              {players.map((p) => {
+                                const v = Number(p[col]) || 0
                                 const isBest =
                                   vals.length > 1 && v === max && v > 0
                                 return (
@@ -208,7 +289,7 @@ export default function CompareContent() {
                                     key={p.slug as string}
                                     className={`text-right py-2 px-2 font-mono tabular-nums ${isBest ? "font-bold text-foreground" : "text-muted-foreground"}`}
                                   >
-                                    {v.toFixed(2)}
+                                    {formatStat(v, mode)}
                                   </td>
                                 )
                               })}
