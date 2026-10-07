@@ -83,37 +83,30 @@ export const ROLE_PROFILES: Record<string, Weighted[]> = {
 }
 
 /**
- * Attacking output, scored against EVERY outfield player in the season rather
- * than within a role — the one number that is comparable across roles.
+ * Share of the season's available minutes at which a rate is half trusted.
  *
- * Role scores answer "how good at your job vs your peers", which is the right
- * question for "best winger" but cannot answer "best player": a striker's 70
- * and a centre-back's 64 come from different pools. This is the honest version
- * of what people mean by best player — raw attacking production, same yardstick
- * for everyone. A centre-back will score low on it, and that is expected: it
- * measures output, not value.
+ * This used to be a flat 450 minutes, which quietly meant something different
+ * in October than in May: eight games in, the most anyone has played is ~630,
+ * so even an ever-present was only 58% trusted and the whole table squashed
+ * toward 50. Scaling to the season makes "half a season played" the halfway
+ * point whenever you ask.
  */
-export const IMPACT_PROFILE: Weighted[] = [
-  { key: "goals_p90", weight: 3 },
-  { key: "assists_p90", weight: 3 },
-  { key: "xg_p90", weight: 2 },
-  { key: "xa_p90", weight: 2 },
-  { key: "key_passes_p90", weight: 1.5 },
-  { key: "big_chances_created_p90", weight: 1.5 },
-  { key: "dribbles_p90", weight: 1.5 },
-]
+export const CONFIDENCE_SHARE = 0.5
 
-/** Minutes at which a rate is trusted halfway. 450 = five full matches. */
-export const CONFIDENCE_K = 450
+/** Half-trust point in minutes for a cohort: half of what a regular has played. */
+export function confidenceK(rows: Row[]): number {
+  const most = Math.max(0, ...rows.map((r) => Number(r.minutes) || 0))
+  return Math.max(1, most * CONFIDENCE_SHARE)
+}
 
 /**
- * How much of a player's percentile score to believe, from their sample size.
- * Rises smoothly from 0, so there's no cutoff cliff — a 95-minute cameo gets
- * pulled toward the cohort average rather than excluded outright.
+ * How much of a player's percentile to believe, from their sample size. Rises
+ * smoothly from 0, so there's no cutoff cliff — a short cameo is pulled toward
+ * the cohort average rather than excluded outright.
  */
-export function confidence(minutes: number): number {
+export function confidence(minutes: number, k: number): number {
   const m = Math.max(0, minutes)
-  return m / (m + CONFIDENCE_K)
+  return m / (m + k)
 }
 
 export type Row = Record<string, unknown>
@@ -145,23 +138,40 @@ export type Scored = {
  * season's worth of one role — mixing seasons would rank a player against their
  * own past self, and mixing roles would judge a winger on a striker's metrics.
  */
-export function rankPlayers(rows: Row[], role: string): Scored[] {
+export function rankPlayers(rows: Row[], role: string, k?: number): Scored[] {
   const profile = ROLE_PROFILES[role]
   if (!profile || rows.length === 0) return []
-  return score(rows, profile, role)
+  return score(rows, profile, role, k ?? confidenceK(rows))
 }
 
 /**
- * Rank every outfield player in one season against each other on attacking
- * output. Unlike rankPlayers the cohort is the whole season, which is exactly
- * what makes the result comparable across roles.
+ * Every player scored inside their own role, then ranked against each other.
+ *
+ * This is what answers "best player". Ranking everyone in one pool does not
+ * work: roughly half an outfield cohort are defenders with no attacking output,
+ * so one goal already beats most of the field and a quiet winger drifts up the
+ * table. Scoring within role asks "how far above your own peers are you", which
+ * is comparable across roles and is what people mean by best.
+ *
+ * One `k` for every role, from the whole cohort, so a role that happens to be
+ * short of minutes isn't trusted more than the rest.
  */
-export function rankImpact(rows: Row[]): Scored[] {
+export function rankAllRoles(rows: Row[]): Scored[] {
   if (rows.length === 0) return []
-  return score(rows, IMPACT_PROFILE, "")
+  const k = confidenceK(rows)
+  return Object.keys(ROLE_PROFILES)
+    .flatMap((role) =>
+      rankPlayers(rows.filter((r) => String(r.role ?? "") === role), role, k),
+    )
+    .sort((a, b) => b.score - a.score)
 }
 
-function score(rows: Row[], profile: Weighted[], role: string): Scored[] {
+function score(
+  rows: Row[],
+  profile: Weighted[],
+  role: string,
+  k: number,
+): Scored[] {
 
   // Cohort values per stat, gathered once rather than per player.
   const cohort = new Map<string, number[]>()
@@ -186,7 +196,7 @@ function score(rows: Row[], profile: Weighted[], role: string): Scored[] {
       }
       const raw = acc / totalWeight
       const minutes = Number(r.minutes) || 0
-      const c = confidence(minutes)
+      const c = confidence(minutes, k)
       return {
         player: String(r.player ?? ""),
         slug: String(r.slug ?? ""),
