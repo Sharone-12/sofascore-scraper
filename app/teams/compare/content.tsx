@@ -143,18 +143,13 @@ export default function TeamCompareContent() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      const [matchesRes, rawStatsRes, idsRes] = await Promise.all([
+      const [matchesRes, idsRes] = await Promise.all([
         supabase
           .from("matches")
           .select("event_id, league, season, home, away, status, home_goals, away_goals")
           .eq("season", season)
           .eq("status", "finished")
           .limit(1000),
-        supabase
-          .from("match_stats")
-          .select("event_id, stat, home, away")
-          .in("stat", WANTED_STATS)
-          .limit(10000),
         supabase
           .from("players")
           .select("team, team_id")
@@ -167,12 +162,23 @@ export default function TeamCompareContent() {
         home: string; away: string; status: string
         home_goals: number | null; away_goals: number | null
       }[]
-      const rawStats = (rawStatsRes.data || []) as {
-        event_id: number; stat: string; home: string; away: string
-      }[]
 
       const matchById = new Map(matchRows.map((m) => [m.event_id, m]))
-      const seasonMatches = new Set(matchRows.map((m) => m.event_id))
+      const eventIds = matchRows.map((m) => m.event_id)
+
+      // Fetch match_stats in batches of 50 event_ids to stay under URL/row limits
+      const rawStats: { event_id: number; stat: string; home: string; away: string }[] = []
+      for (let i = 0; i < eventIds.length; i += 50) {
+        const batch = eventIds.slice(i, i + 50)
+        const { data } = await supabase
+          .from("match_stats")
+          .select("event_id, stat, home, away")
+          .in("event_id", batch)
+          .in("stat", WANTED_STATS)
+          .limit(5000)
+        if (data) rawStats.push(...(data as typeof rawStats))
+      }
+      if (cancelled) return
 
       const allowedTeams = new Set<string>()
       const fullLeagueSet = new Set<string>(FULL_LEAGUES)
@@ -216,8 +222,8 @@ export default function TeamCompareContent() {
       type Acc = { sum: number; pctSum: number; count: number }
       const accMap = new Map<string, Acc>()
       for (const rs of rawStats) {
-        if (!seasonMatches.has(rs.event_id)) continue
-        const m = matchById.get(rs.event_id)!
+        const m = matchById.get(rs.event_id)
+        if (!m) continue
         const sides: [string, string][] = [[m.home, rs.home], [m.away, rs.away]]
         for (const [team, raw] of sides) {
           if (!allowedTeams.has(team)) continue
