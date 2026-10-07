@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
+import { resolveSeason } from "@/lib/seasons"
 
 export type Cited = {
   player: string
@@ -23,6 +25,7 @@ const EMPTY: AskState = { loading: false, answer: null, cited: [], error: null }
 /** Shared by the floating panel and the compare page's "Who's better?" button. */
 export function useAsk() {
   const [state, setState] = useState<AskState>(EMPTY)
+  const season = resolveSeason(useSearchParams().get("season"))
 
   const ask = useCallback(async (question: string, slugs: string[] = []) => {
     setState({ ...EMPTY, loading: true })
@@ -30,7 +33,7 @@ export function useAsk() {
       const res = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, slugs }),
+        body: JSON.stringify({ question, slugs, season }),
       })
       const json = await res.json()
       if (!res.ok) {
@@ -52,7 +55,7 @@ export function useAsk() {
         error: e instanceof Error ? e.message : "Network error",
       })
     }
-  }, [])
+  }, [season])
 
   return { ...state, ask }
 }

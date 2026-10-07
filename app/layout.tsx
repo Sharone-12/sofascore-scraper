@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import { Archivo, Oswald } from "next/font/google"
 import Link from "next/link"
+import { Suspense } from "react"
 import { AskPanel } from "@/components/ask-panel"
+import { SeasonToggle } from "@/components/season-toggle"
 import "./globals.css"
 
 const sans = Archivo({
@@ -47,6 +49,10 @@ export default function RootLayout({
                 style={{ background: "var(--pitch)" }}
               />
             </Link>
+            <div className="flex items-center gap-2">
+            <Suspense fallback={null}>
+              <SeasonToggle />
+            </Suspense>
             <div className="segment flex rounded-full p-1 gap-0.5">
               {[
                 { href: "/", label: "Players" },
@@ -62,10 +68,15 @@ export default function RootLayout({
                 </Link>
               ))}
             </div>
+            </div>
           </div>
         </nav>
         <main className="flex-1">{children}</main>
-        <AskPanel />
+        {/* Reads ?season= to scope its questions, so it needs a boundary or it
+            blocks static prerendering of pages like /_not-found. */}
+        <Suspense fallback={null}>
+          <AskPanel />
+        </Suspense>
       </body>
     </html>
   )

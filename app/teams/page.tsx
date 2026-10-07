@@ -3,7 +3,6 @@ import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  CURRENT_SEASON,
   FULL_LEAGUES,
   SINGLE_CLUBS,
   CLUB_CARD_STATS,
@@ -12,6 +11,7 @@ import {
   type TeamTableRow,
   type SeasonStatRow,
 } from "@/lib/teams"
+import { resolveSeason } from "@/lib/seasons"
 
 function formBar({ won, drawn, lost, played }: TeamTableRow) {
   if (!played) return []
@@ -186,18 +186,23 @@ function ClubCard({
   )
 }
 
-async function Tables() {
+async function Tables({
+  searchParams,
+}: {
+  searchParams: Promise<{ season?: string }>
+}) {
+  const season = resolveSeason((await searchParams).season)
   const [tableRes, statsRes] = await Promise.all([
     supabase
       .from("team_table")
       .select("*")
-      .eq("season", CURRENT_SEASON)
+      .eq("season", season)
       .order("points", { ascending: false })
       .order("goal_diff", { ascending: false }),
     supabase
       .from("team_season_stats")
       .select("team, stat, per_match, pct, matches")
-      .eq("season", CURRENT_SEASON)
+      .eq("season", season)
       .in("team", SINGLE_CLUBS.map((c) => c.team) as unknown as string[]),
   ])
 
@@ -233,7 +238,11 @@ async function Tables() {
   )
 }
 
-export default function TeamsPage() {
+export default function TeamsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ season?: string }>
+}) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
       <div className="mb-10 animate-fade-in">
@@ -247,7 +256,7 @@ export default function TeamsPage() {
           </span>
         </h1>
         <p className="text-muted-foreground text-base max-w-md mb-6">
-          League standings and per-match team profiles, {CURRENT_SEASON}.
+          League standings and per-match team profiles.
         </p>
         <Link
           href="/teams/compare"
@@ -267,7 +276,7 @@ export default function TeamsPage() {
           </div>
         }
       >
-        <Tables />
+        <Tables searchParams={searchParams} />
       </Suspense>
     </div>
   )

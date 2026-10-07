@@ -77,6 +77,30 @@ def _trim_to_teams(df: pd.DataFrame, leagues: dict, cols: tuple[str, ...]) -> pd
 
 POSITIONS = {"D": "Defender", "M": "Midfielder", "F": "Forward"}
 
+# Sofascore's three broad buckets put wingers in midfield and holding mids in
+# defence, so they can't be scored fairly against each other. /characteristics
+# gives the real positions; these collapse them into the roles we score on.
+ROLE_MAP = {
+    "GK": "Goalkeeper",
+    "DC": "Centre-Back",
+    "DL": "Full-Back", "DR": "Full-Back",
+    # Sofascore writes both Rodri (DM/MC) and Pedri (MC/DM), so the label
+    # cannot separate a holding 6 from a creative 8. Scoring them apart
+    # would invent precision the data does not have.
+    "DM": "Central Mid",
+    "MC": "Central Mid",
+    "ML": "Winger", "MR": "Winger", "LW": "Winger", "RW": "Winger",
+    "AM": "Attacking Mid",
+    "ST": "Striker",
+}
+
+# Fallback when /characteristics has nothing for a player.
+BROAD_TO_ROLE = {
+    "Defender": "Centre-Back",
+    "Midfielder": "Central Mid",
+    "Forward": "Striker",
+}
+
 # Keep a player if they logged at least this share of the minutes available in
 # their league so far. A fixed minute bar wipes out most of a squad five rounds
 # into a season; a share scales with it.
@@ -314,6 +338,49 @@ def per_90(df: pd.DataFrame) -> pd.DataFrame:
     return out.sort_values(["league", "team", "player"], kind="stable").reset_index(drop=True)
 
 
+def fetch_roles(player_ids: list[int], refresh: bool = False) -> dict[int, tuple[str, str]]:
+    """player_id -> (detailed positions e.g. 'LW/RW', scoring role).
+
+    One cheap request per player, cached like everything else, so a re-run only
+    pays for players it hasn't seen. Sofascore lists positions most-played
+    first, so the first entry is the primary one.
+    """
+    out: dict[int, tuple[str, str]] = {}
+    for n, pid in enumerate(player_ids, 1):
+        cache = RAW / f"chars_{pid}.json"
+        try:
+            data = _get(f"{SOFASCORE}/api/v1/player/{pid}/characteristics", cache, refresh)
+        except RuntimeError:
+            continue
+        positions = [p for p in (data.get("positions") or []) if p]
+        if not positions:
+            continue
+        out[pid] = ("/".join(positions), ROLE_MAP.get(positions[0], ""))
+        if n % 200 == 0:
+            print(f"    roles {n}/{len(player_ids)}...", flush=True)
+    return out
+
+
+def add_roles(df: pd.DataFrame, refresh: bool = False, offline: bool = False) -> pd.DataFrame:
+    """Attach detailed_position and role, falling back to the broad bucket."""
+    if df.empty:
+        return df
+    ids = sorted({int(i) for i in df["player_id"].dropna()})
+    if offline:
+        ids = [i for i in ids if (RAW / f"chars_{i}.json").exists()]
+    roles = fetch_roles(ids, refresh=False) if ids else {}
+    df = df.copy()
+    df["detailed_position"] = df["player_id"].map(
+        lambda i: roles.get(int(i), ("", ""))[0]
+    )
+    df["role"] = df.apply(
+        lambda r: roles.get(int(r["player_id"]), ("", ""))[1]
+        or BROAD_TO_ROLE.get(r["position"], "Central Mid"),
+        axis=1,
+    )
+    return df
+
+
 # ── 2. Match results and team stats ──
 
 def fetch_matches(start: int, leagues: dict | None = None, refresh: bool = False) -> pd.DataFrame:
@@ -533,6 +600,8 @@ def build(
             if not players.empty:
                 # Trim after per_90 so the cutoff still sees the whole league.
                 p90 = _trim_to_teams(per_90(players), leagues, ("team",))
+                print("  resolving detailed positions...")
+                p90 = add_roles(p90, refresh=do_refresh, offline=offline)
                 p90.to_csv(PROCESSED / f"players_{season_tag(start)}.csv", index=False)
                 print(f"  saved {len(p90)} players with {MIN_SHARE:.0%}+ of available minutes")
                 out[f"players_{tag}"] = p90

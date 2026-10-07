@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { percentileRank } from "@/lib/stats"
 import {
-  CURRENT_SEASON,
   FULL_LEAGUES,
   SINGLE_CLUBS,
   LEAGUE_ABBR,
@@ -17,6 +16,7 @@ import {
   type SeasonStatRow,
   type TeamTableRow,
 } from "@/lib/teams"
+import { resolveSeason } from "@/lib/seasons"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
 import { TeamCrest } from "@/components/player-avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -118,6 +118,7 @@ export default function TeamCompareContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const teamsParam = searchParams.get("teams")
+  const season = resolveSeason(searchParams.get("season"))
 
   const selected = useMemo(
     () => teamsParam?.split(",").filter(Boolean) ?? [],
@@ -141,7 +142,7 @@ export default function TeamCompareContent() {
         supabase
           .from("team_table")
           .select("*")
-          .eq("season", CURRENT_SEASON)
+          .eq("season", season)
           .or(
             `league.in.(${FULL_LEAGUES.map((l) => `"${l}"`).join(",")}),` +
               `team.in.(${SINGLE_CLUBS.map((c) => `"${c.team}"`).join(",")})`,
@@ -150,12 +151,12 @@ export default function TeamCompareContent() {
         supabase
           .from("team_season_stats")
           .select("team, stat, per_match, pct, matches")
-          .eq("season", CURRENT_SEASON)
+          .eq("season", season)
           .in("stat", WANTED_STATS),
         supabase
           .from("players")
           .select("team, team_id")
-          .eq("season", CURRENT_SEASON),
+          .eq("season", season),
       ])
       if (cancelled) return
       setTable((tbl || []) as TeamTableRow[])
@@ -169,7 +170,7 @@ export default function TeamCompareContent() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [season])
 
   function setTeams(next: string[]) {
     router.push(
@@ -232,7 +233,7 @@ export default function TeamCompareContent() {
           <span className="font-bold">club.</span>
         </h1>
         <p className="text-muted-foreground text-base">
-          Per-match averages across {CURRENT_SEASON}. Add up to {MAX_TEAMS}.
+          Per-match averages across {season}. Add up to {MAX_TEAMS}.
         </p>
       </div>
 

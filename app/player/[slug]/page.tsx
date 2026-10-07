@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { supabase } from "@/lib/supabase"
+import { resolveSeason } from "@/lib/seasons"
 import { notFound } from "next/navigation"
 import { RADAR_STATS, STAT_GROUPS, percentileRank } from "@/lib/stats"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
@@ -31,10 +32,13 @@ function Loading() {
 
 async function PlayerContent({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>
+  searchParams: Promise<{ season?: string }>
 }) {
   const { slug } = await params
+  const season = resolveSeason((await searchParams).season)
 
   const { data: players } = await supabase
     .from("players")
@@ -45,12 +49,17 @@ async function PlayerContent({
 
   if (!players || players.length === 0) notFound()
 
-  const player = players[0] as Record<string, unknown>
+  // Prefer the selected season; fall back to the newest one we hold for them,
+  // since a player may not appear in both.
+  const player = ((players.find((p) => p.season === season) ??
+    players[0]) as unknown) as Record<string, unknown>
 
   const { data: positionPeers } = await supabase
     .from("players")
     .select(RADAR_STATS.map((s) => s.key).join(","))
-    .eq("position", player.position as string)
+    // Peers in the same ROLE, not the same broad bucket: a winger compared
+    // against every midfielder is measured on the wrong job.
+    .eq("role", (player.role as string) || (player.position as string))
     .eq("season", player.season as string)
 
   const peers = (positionPeers as unknown) as Record<string, unknown>[] | null
@@ -113,7 +122,7 @@ async function PlayerContent({
               variant="outline"
               className="stat-label border-white/15 bg-white/5"
             >
-              {player.position as string}
+              {(player.role as string) || (player.position as string)}
             </Badge>
           </div>
           <p className="text-muted-foreground text-base flex items-center gap-2 flex-wrap">
@@ -165,8 +174,8 @@ async function PlayerContent({
             Percentile Ranks
           </CardTitle>
           <p className="text-xs text-muted-foreground/70">
-            vs. all {player.position as string}s in{" "}
-            {player.league as string} · {player.season as string}
+            vs. all {(player.role as string) || (player.position as string)}s
+            · {player.season as string}
           </p>
         </CardHeader>
         <CardContent>
@@ -195,12 +204,14 @@ async function PlayerContent({
 
 export default function PlayerPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>
+  searchParams: Promise<{ season?: string }>
 }) {
   return (
     <Suspense fallback={<Loading />}>
-      <PlayerContent params={params} />
+      <PlayerContent params={params} searchParams={searchParams} />
     </Suspense>
   )
 }

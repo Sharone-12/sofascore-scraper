@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
-import { rankPlayers, POSITION_PROFILES, type Scored } from "@/lib/rank"
+import {
+  rankPlayers,
+  rankImpact,
+  ROLE_PROFILES,
+  IMPACT_PROFILE,
+  type Scored,
+} from "@/lib/rank"
 import { parseIntent, DATA_SCOPE } from "@/lib/ask"
+import { resolveSeason } from "@/lib/seasons"
 
 // The model gets facts, never a database. Everything it is allowed to assert is
 // computed here first, so it ranks nothing and recalls nothing on its own.
 
-const CURRENT_SEASON = "2026/27"
 
 // OpenRouter. Chosen by bake-off against the real prompt, not by reputation:
 // of the free models, this one answered in ~3s, spotted a genuine tie on score,
@@ -34,8 +40,11 @@ Hard rules:
 - Never invent a player, club or number. If a name is not in DATA, say you don't have them.
 - Every claim cites a number from DATA. No numbers from memory, no arithmetic of your own.
 - DATA covers: ${DATA_SCOPE} So "best in the world" means best within that set — say so once, briefly, and do not imply wider coverage.
-- "score" is a 0-100 weighted percentile for the player's position, already adjusted for minutes played: a small sample is pulled toward 50. A low-minutes player with a flashy rate ranks below a proven one, and that is correct. Mention minutes when a sample is thin.
-- Percentiles are within the player's own position and season.
+- Every score is a 0-100 weighted percentile, already adjusted for minutes played: a small sample is pulled toward 50. A low-minutes player with a flashy rate ranks below a proven one, and that is correct. Mention minutes when a sample is thin.
+- There are two kinds of score, and the DATA block says which you were given:
+  1. ROLE score — percentile against players in the SAME role only. Use it for "best winger", "best centre-back". Role scores are NOT comparable across roles: a striker on 70 is not better than a centre-back on 64, they are percentiles in different pools on different metrics. Never rank different roles against each other using role scores.
+  2. ATTACKING IMPACT — percentile against every outfield player in one cohort. This one IS comparable across roles, so use it to answer "best player" and "top N players". It measures attacking production only; note that when a defender is involved.
+- A high score means "dominant relative to that cohort", not "world class in absolute terms". Coverage is two leagues plus two clubs, early in the season.
 
 Style: direct and confident, like a good analyst. Lead with the answer, then the two or three numbers that justify it. Short paragraphs or a tight list. No preamble, no restating the question, no hedging about being an AI, and never show your reasoning steps — give the finished answer only. Write the numbers inline as plain prose: never emit citation markers, bracket references or raw JSON.`
 
@@ -53,7 +62,7 @@ function clean(text: string): string {
     .trim()
 }
 
-type Body = { question?: string; slugs?: string[] }
+type Body = { question?: string; slugs?: string[]; season?: string }
 
 /** Only the fields the model should see — keeps the prompt small and factual. */
 function brief(s: Scored) {
@@ -61,7 +70,8 @@ function brief(s: Scored) {
     player: s.player,
     team: s.team,
     league: s.league,
-    position: s.position,
+    role: s.position,
+    plays: s.detailedPosition,
     season: s.season,
     minutes: s.minutes,
     score: s.score,
@@ -70,14 +80,14 @@ function brief(s: Scored) {
   }
 }
 
-async function cohort(position: string, season: string): Promise<Scored[]> {
+async function cohort(role: string, season: string): Promise<Scored[]> {
   const { data, error } = await supabase
     .from("players")
     .select("*")
-    .eq("position", position)
+    .eq("role", role)
     .eq("season", season)
   if (error) throw new Error(error.message)
-  return rankPlayers(data ?? [], position)
+  return rankPlayers(data ?? [], role)
 }
 
 export async function POST(req: Request) {
@@ -111,7 +121,9 @@ export async function POST(req: Request) {
   }
 
   const intent = parseIntent(question, slugs.length > 0)
-  const season = intent.season ?? CURRENT_SEASON
+  // A season named in the question wins; otherwise whatever the page is
+  // showing; otherwise the default (26/27).
+  const season = intent.season ?? resolveSeason(body.season)
 
   try {
     const sections: string[] = []
@@ -122,13 +134,13 @@ export async function POST(req: Request) {
       // so "who is better" is answered against their real peers.
       const { data, error } = await supabase
         .from("players")
-        .select("player, slug, position, season")
+        .select("player, slug, role, season")
         .in("slug", slugs)
         .eq("season", season)
       if (error) throw new Error(error.message)
 
       const byPosition = new Map<string, Scored[]>()
-      for (const pos of new Set((data ?? []).map((r) => r.position as string))) {
+      for (const pos of new Set((data ?? []).map((r) => r.role as string))) {
         byPosition.set(pos, await cohort(pos, season))
       }
       cited = slugs
@@ -143,15 +155,42 @@ export async function POST(req: Request) {
 
       if (cited.length) {
         sections.push(
-          `PLAYERS BEING COMPARED (each scored against their own position in ${season}):\n` +
+          `PLAYERS BEING COMPARED — "score" here is their ROLE score, against their own role only in ${season}:\n` +
             JSON.stringify(cited.map(brief), null, 1),
         )
+        // Without this, comparing a winger to a striker means comparing two
+        // percentiles from different pools, which says nothing.
+        const { data: all } = await supabase
+          .from("players")
+          .select("*")
+          .eq("season", season)
+        const impact = rankImpact(all ?? [])
+        const theirs = cited
+          .map((c) => {
+            const i = impact.findIndex((p) => p.slug === c.slug)
+            return i < 0
+              ? null
+              : {
+                  player: impact[i].player,
+                  role: impact[i].position,
+                  attacking_impact: impact[i].score,
+                  rank_of: impact.length,
+                  rank: i + 1,
+                }
+          })
+          .filter(Boolean)
+        if (theirs.length) {
+          sections.push(
+            `THE SAME PLAYERS ON ATTACKING IMPACT — one cohort of every outfield player, so these ARE comparable across roles:\n` +
+              JSON.stringify(theirs, null, 1),
+          )
+        }
         const positions = [...new Set(cited.map((c) => c.position))]
         sections.push(
           `METRICS THAT DEFINE THESE POSITIONS (weight = importance):\n` +
             JSON.stringify(
               Object.fromEntries(
-                positions.map((p) => [p, POSITION_PROFILES[p]]),
+                positions.map((p) => [p, ROLE_PROFILES[p]]),
               ),
               null,
               1,
@@ -160,29 +199,43 @@ export async function POST(req: Request) {
       }
     }
 
-    if (!cited.length) {
-      // Rank mode. No position named means rank every position and show each
-      // one's leaders, which is the honest reading of "best player".
-      const positions = intent.positions.length
-        ? intent.positions
-        : Object.keys(POSITION_PROFILES)
-
-      for (const pos of positions) {
-        const ranked = await cohort(pos, season)
-        const top = ranked.slice(0, intent.limit)
+    if (!cited.length && intent.positions.length) {
+      // A role was named: rank inside that role's cohort.
+      for (const role of intent.positions) {
+        const top = (await cohort(role, season)).slice(0, intent.limit)
         cited.push(...top)
         sections.push(
-          `TOP ${top.length} ${pos.toUpperCase()}S, ${season} (weighted percentile, minutes-adjusted):\n` +
+          `TOP ${top.length} ${role.toUpperCase()}S, ${season} (percentile within this role, minutes-adjusted):\n` +
             JSON.stringify(top.map(brief), null, 1),
         )
       }
       sections.push(
-        `METRICS THAT DEFINE EACH POSITION (weight = importance):\n` +
+        `METRICS THAT DEFINE THESE ROLES (weight = importance):\n` +
           JSON.stringify(
-            Object.fromEntries(positions.map((p) => [p, POSITION_PROFILES[p]])),
+            Object.fromEntries(intent.positions.map((r) => [r, ROLE_PROFILES[r]])),
             null,
             1,
           ),
+      )
+    } else if (!cited.length) {
+      // No role named — "best player", "top 3". Role scores can't answer this,
+      // because they're percentiles in different pools. Attacking impact is
+      // scored against every outfield player at once, so it genuinely compares.
+      const { data, error } = await supabase
+        .from("players")
+        .select("*")
+        .eq("season", season)
+      if (error) throw new Error(error.message)
+      const top = rankImpact(data ?? []).slice(0, intent.limit)
+      cited.push(...top)
+      sections.push(
+        `TOP ${top.length} BY ATTACKING IMPACT, ${season} — ranked against EVERY outfield player in one cohort, so these scores ARE comparable across roles:\n` +
+          JSON.stringify(top.map(brief), null, 1),
+      )
+      sections.push(
+        `WHAT ATTACKING IMPACT MEASURES (weight = importance):\n` +
+          JSON.stringify(IMPACT_PROFILE, null, 1) +
+          `\nIt measures attacking production only. Defenders score low by design; that reflects their job, not their quality.`,
       )
     }
 

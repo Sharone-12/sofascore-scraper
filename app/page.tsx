@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { supabase } from "@/lib/supabase"
+import { resolveSeason } from "@/lib/seasons"
 import { PlayerSearch } from "@/components/player-search"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
@@ -130,18 +131,25 @@ function Board({
   )
 }
 
-async function Content() {
+async function Content({
+  searchParams,
+}: {
+  searchParams: Promise<{ season?: string }>
+}) {
+  // Awaited here, inside the Suspense boundary: cacheComponents won't let a
+  // prerendered route read request data at the top level.
+  const season = resolveSeason((await searchParams).season)
   const [{ data: scorers }, { data: assisters }] = await Promise.all([
     supabase
       .from("players")
       .select("player, slug, team, league, goals")
-      .eq("season", "2026/27")
+      .eq("season", season)
       .order("goals", { ascending: false })
       .limit(12),
     supabase
       .from("players")
       .select("player, slug, team, league, assists")
-      .eq("season", "2026/27")
+      .eq("season", season)
       .order("assists", { ascending: false })
       .limit(12),
   ])
@@ -212,7 +220,11 @@ async function Content() {
   )
 }
 
-export default function Home() {
+export default function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ season?: string }>
+}) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
       <div className="relative z-10 mb-10 animate-fade-in">
@@ -244,7 +256,7 @@ export default function Home() {
           </>
         }
       >
-        <Content />
+        <Content searchParams={searchParams} />
       </Suspense>
     </div>
   )

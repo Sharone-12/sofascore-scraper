@@ -11,6 +11,7 @@ import {
   type StatMode,
 } from "@/lib/stats"
 import { LEAGUE_ABBR } from "@/lib/teams"
+import { resolveSeason } from "@/lib/seasons"
 import { PlayerSearch } from "@/components/player-search"
 import { PlayerAvatar, TeamCrest } from "@/components/player-avatar"
 import { useAsk, AskAnswer } from "@/components/ask-panel"
@@ -33,6 +34,7 @@ export default function CompareContent() {
   const verdict = useAsk()
 
   const slugParam = searchParams.get("players")
+  const season = resolveSeason(searchParams.get("season"))
   const slugs = slugParam?.split(",").filter(Boolean) || []
 
   useEffect(() => {
@@ -47,8 +49,14 @@ export default function CompareContent() {
       .in("slug", slugs)
       .order("season", { ascending: false })
       .then(({ data }) => {
+        // Rows arrive season-desc; prefer the selected season per player and
+        // fall back to their newest, since not everyone appears in both.
         const seen = new Set<string>()
-        const unique = (data || []).filter((p) => {
+        const rows = data || []
+        const unique = [
+          ...rows.filter((p) => p.season === season),
+          ...rows,
+        ].filter((p) => {
           const s = p.slug as string
           if (seen.has(s)) return false
           seen.add(s)
@@ -61,7 +69,7 @@ export default function CompareContent() {
         setLoading(false)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slugParam])
+  }, [slugParam, season])
 
   function addPlayer(p: { slug: string }) {
     if (slugs.includes(p.slug) || slugs.length >= 3) return
@@ -158,7 +166,7 @@ export default function CompareContent() {
                     <span className="truncate">{p.team as string}</span>
                   </p>
                   <p className="stat-label mt-1 truncate">
-                    {p.position as string} ·{" "}
+                    {(p.role as string) || (p.position as string)} ·{" "}
                     {LEAGUE_ABBR[p.league as string] ?? (p.league as string)} ·{" "}
                     {p.season as string}
                   </p>
