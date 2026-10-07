@@ -175,10 +175,21 @@ export function rankPlayers(rows: Row[], role: string, k?: number): Scored[] {
  * Role scores (from `rankPlayers`) answer "best winger" and are NOT comparable
  * across roles — different metrics, different pools.
  */
+/**
+ * Minimum share of available minutes to appear in the cross-role ranking.
+ * "Best player" is a headline answer — it should only include players with
+ * a real body of work, not a cameo with elite rates.
+ */
+export const IMPACT_MIN_SHARE = 0.6
+
 export function rankAllRoles(rows: Row[]): Scored[] {
   if (rows.length === 0) return []
   const k = confidenceK(rows)
-  const outfield = rows.filter((r) => String(r.role ?? "") !== "Goalkeeper")
+  const most = Math.max(0, ...rows.map((r) => Number(r.minutes) || 0))
+  const floor = most * IMPACT_MIN_SHARE
+  const outfield = rows.filter(
+    (r) => String(r.role ?? "") !== "Goalkeeper" && (Number(r.minutes) || 0) >= floor,
+  )
   const slugToRole = new Map(
     outfield.map((r) => [String(r.slug ?? ""), String(r.role ?? r.position ?? "")]),
   )
