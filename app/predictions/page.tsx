@@ -5,6 +5,7 @@ import { resolveSeason } from "@/lib/seasons"
 import { fetchTeamData, LEAGUE_ABBR, FULL_LEAGUES, SINGLE_CLUBS } from "@/lib/teams"
 import { predictMatches, computeAccuracy, type MatchPrediction, type AccuracyStats } from "@/lib/predictions"
 import { Skeleton } from "@/components/ui/skeleton"
+import { TeamCrest } from "@/components/player-avatar"
 
 const OUTCOME_COLORS = {
   home: "oklch(0.80 0.19 150)",
@@ -53,7 +54,10 @@ function MatchCard({ p }: { p: MatchPrediction }) {
       </div>
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-        <span className="text-[0.9rem] font-medium truncate text-right">{p.home}</span>
+        <span className="flex items-center gap-2 justify-end">
+          <span className="text-[0.9rem] font-medium truncate">{p.home}</span>
+          {p.home_id && <TeamCrest teamId={p.home_id} name={p.home} size={22} />}
+        </span>
         {isSettled ? (
           <span className="stat-figure text-lg px-2">
             {p.homeGoals} – {p.awayGoals}
@@ -61,7 +65,10 @@ function MatchCard({ p }: { p: MatchPrediction }) {
         ) : (
           <span className="stat-label px-2">vs</span>
         )}
-        <span className="text-[0.9rem] font-medium truncate">{p.away}</span>
+        <span className="flex items-center gap-2">
+          {p.away_id && <TeamCrest teamId={p.away_id} name={p.away} size={22} />}
+          <span className="text-[0.9rem] font-medium truncate">{p.away}</span>
+        </span>
       </div>
 
       <ProbBar homeWin={p.homeWin} draw={p.draw} awayWin={p.awayWin} />
@@ -190,14 +197,14 @@ async function Content({
     fetchTeamData(supabase, season, WANTED_STATS),
     supabase
       .from("matches")
-      .select("event_id, league, season, round, date, home, away, status, home_goals, away_goals")
+      .select("event_id, league, season, round, date, home, home_id, away, away_id, status, home_goals, away_goals")
       .eq("season", season)
       .limit(2000),
   ])
 
   const matches = (matchData || []) as {
     event_id: number; league: string; season: string; round: number
-    date: string; home: string; away: string; status: string
+    date: string; home: string; home_id: number | null; away: string; away_id: number | null; status: string
     home_goals: number | null; away_goals: number | null
   }[]
 
@@ -226,7 +233,9 @@ async function Content({
       round: m.round,
       date: m.date,
       home: m.home,
+      home_id: m.home_id,
       away: m.away,
+      away_id: m.away_id,
     })),
     finished,
     table,

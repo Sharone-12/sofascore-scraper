@@ -6,7 +6,9 @@ export type MatchPrediction = {
   round: number
   date: string
   home: string
+  home_id: number | null
   away: string
+  away_id: number | null
   homeWin: number
   draw: number
   awayWin: number
@@ -75,7 +77,9 @@ export function predictMatches(
     round: number
     date: string
     home: string
+    home_id: number | null
     away: string
+    away_id: number | null
   }[],
   finished: {
     event_id: number
@@ -155,7 +159,9 @@ export function predictMatches(
       round: m.round,
       date: m.date,
       home: m.home,
+      home_id: m.home_id,
       away: m.away,
+      away_id: m.away_id,
       homeWin: Math.round(probs.homeWin * 100),
       draw: Math.round(probs.draw * 100),
       awayWin: Math.round(probs.awayWin * 100),

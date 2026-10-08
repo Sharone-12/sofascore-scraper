@@ -16,6 +16,7 @@ import {
 import { predictMatches } from "@/lib/predictions"
 import { percentileRank } from "@/lib/stats"
 import { Skeleton } from "@/components/ui/skeleton"
+import { TeamCrest } from "@/components/player-avatar"
 
 const TEAM_COLORS = ["#4ade80", "#60a5fa"]
 
@@ -112,10 +113,12 @@ function ProbSection({
 
 function FormCard({
   team,
+  teamId,
   row,
   color,
 }: {
   team: string
+  teamId: number | null
   row: TeamTableRow | undefined
   color: string
 }) {
@@ -129,7 +132,10 @@ function FormCard({
       className="rounded-xl bg-white/[0.03] p-4"
       style={{ borderTop: `2px solid ${color}` }}
     >
-      <h3 className="font-semibold text-[0.95rem] truncate mb-3">{team}</h3>
+      <div className="flex items-center gap-2.5 mb-3">
+        {teamId && <TeamCrest teamId={teamId} name={team} size={24} />}
+        <h3 className="font-semibold text-[0.95rem] truncate">{team}</h3>
+      </div>
       <div className="grid grid-cols-3 gap-3">
         {([
           { label: "W-D-L", value: `${row.won}-${row.drawn}-${row.lost}` },
@@ -152,11 +158,15 @@ function FormCard({
 function StatCompare({
   home,
   away,
+  homeId,
+  awayId,
   byKey,
   allTeams,
 }: {
   home: string
   away: string
+  homeId: number | null
+  awayId: number | null
   byKey: Map<string, SeasonStatRow>
   allTeams: TeamTableRow[]
 }) {
@@ -170,6 +180,16 @@ function StatCompare({
           Stat Comparison
         </h2>
         <p className="stat-label mt-1">Per-match averages this season</p>
+        <div className="flex items-center justify-between mt-3 px-2">
+          <div className="flex items-center gap-2">
+            {homeId && <TeamCrest teamId={homeId} name={home} size={20} />}
+            <span className="text-sm font-medium" style={{ color: TEAM_COLORS[0] }}>{home}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium" style={{ color: TEAM_COLORS[1] }}>{away}</span>
+            {awayId && <TeamCrest teamId={awayId} name={away} size={20} />}
+          </div>
+        </div>
       </header>
 
       <div className="px-3 pb-4">
@@ -342,14 +362,14 @@ async function Content({
     fetchTeamData(supabase, season, ALL_STATS),
     supabase
       .from("matches")
-      .select("event_id, league, season, round, date, home, away, status, home_goals, away_goals")
+      .select("event_id, league, season, round, date, home, home_id, away, away_id, status, home_goals, away_goals")
       .eq("season", season)
       .limit(2000),
   ])
 
   const allMatches = (allMatchData || []) as {
     event_id: number; league: string; season: string; round: number
-    date: string; home: string; away: string; status: string
+    date: string; home: string; home_id: number | null; away: string; away_id: number | null; status: string
     home_goals: number | null; away_goals: number | null
   }[]
 
@@ -374,7 +394,9 @@ async function Content({
       round: match.round,
       date: match.date,
       home: match.home,
+      home_id: match.home_id,
       away: match.away,
+      away_id: match.away_id,
     }],
     finished,
     table,
@@ -409,15 +431,20 @@ async function Content({
         <div className="stat-label mb-5">{dateStr}</div>
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 max-w-lg mx-auto">
-          <div>
-            <Link
-              href={`/teams/compare?teams=${encodeURIComponent(match.home)}`}
-              className="text-lg sm:text-xl font-semibold hover:underline"
+          <Link
+            href={`/teams/compare?teams=${encodeURIComponent(match.home)}`}
+            className="flex flex-col items-center gap-2 group"
+          >
+            {match.home_id && (
+              <TeamCrest teamId={match.home_id} name={match.home} size={48} />
+            )}
+            <span
+              className="text-base sm:text-lg font-semibold group-hover:underline"
               style={{ color: TEAM_COLORS[0] }}
             >
               {match.home}
-            </Link>
-          </div>
+            </span>
+          </Link>
           {isSettled ? (
             <div className="stat-figure text-3xl px-3">
               {match.home_goals} – {match.away_goals}
@@ -425,15 +452,20 @@ async function Content({
           ) : (
             <div className="stat-label text-lg px-3">vs</div>
           )}
-          <div>
-            <Link
-              href={`/teams/compare?teams=${encodeURIComponent(match.away)}`}
-              className="text-lg sm:text-xl font-semibold hover:underline"
+          <Link
+            href={`/teams/compare?teams=${encodeURIComponent(match.away)}`}
+            className="flex flex-col items-center gap-2 group"
+          >
+            {match.away_id && (
+              <TeamCrest teamId={match.away_id} name={match.away} size={48} />
+            )}
+            <span
+              className="text-base sm:text-lg font-semibold group-hover:underline"
               style={{ color: TEAM_COLORS[1] }}
             >
               {match.away}
-            </Link>
-          </div>
+            </span>
+          </Link>
         </div>
 
         {isSettled && pred && (
@@ -468,14 +500,16 @@ async function Content({
       )}
 
       <div className="grid sm:grid-cols-2 gap-4 mb-6">
-        <FormCard team={match.home} row={homeRow} color={TEAM_COLORS[0]} />
-        <FormCard team={match.away} row={awayRow} color={TEAM_COLORS[1]} />
+        <FormCard team={match.home} teamId={match.home_id} row={homeRow} color={TEAM_COLORS[0]} />
+        <FormCard team={match.away} teamId={match.away_id} row={awayRow} color={TEAM_COLORS[1]} />
       </div>
 
       <div className="mb-6">
         <StatCompare
           home={match.home}
           away={match.away}
+          homeId={match.home_id}
+          awayId={match.away_id}
           byKey={byKey}
           allTeams={table}
         />
