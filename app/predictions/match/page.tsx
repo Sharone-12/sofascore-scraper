@@ -400,6 +400,7 @@ async function Content({
     }],
     finished,
     table,
+    stats,
   )
   const pred = predictions[0]
 

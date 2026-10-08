@@ -3,7 +3,7 @@ import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { resolveSeason } from "@/lib/seasons"
 import { fetchTeamData, LEAGUE_ABBR, FULL_LEAGUES, SINGLE_CLUBS } from "@/lib/teams"
-import { predictMatches, computeAccuracy, type MatchPrediction, type AccuracyStats } from "@/lib/predictions"
+import { predictMatches, computeAccuracy, PREDICTION_STATS, type MatchPrediction, type AccuracyStats } from "@/lib/predictions"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TeamCrest } from "@/components/player-avatar"
 
@@ -180,7 +180,7 @@ function AccuracyCard({ acc }: { acc: AccuracyStats }) {
   )
 }
 
-const WANTED_STATS = ["Expected goals"]
+const WANTED_STATS = PREDICTION_STATS
 const trackedTeams = new Set([
   ...FULL_LEAGUES,
   ...SINGLE_CLUBS.map((c) => c.league),
@@ -193,7 +193,7 @@ async function Content({
 }) {
   const season = resolveSeason((await searchParams).season)
 
-  const [{ table }, { data: matchData }] = await Promise.all([
+  const [{ table, stats }, { data: matchData }] = await Promise.all([
     fetchTeamData(supabase, season, WANTED_STATS),
     supabase
       .from("matches")
@@ -239,6 +239,7 @@ async function Content({
     })),
     finished,
     table,
+    stats,
   )
 
   const upcomingPredictions = predictions.filter((p) => p.actual === null)
