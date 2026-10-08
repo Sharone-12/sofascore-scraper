@@ -57,6 +57,7 @@ export default function RootLayout({
               {[
                 { href: "/", label: "Players" },
                 { href: "/teams", label: "Teams" },
+                { href: "/predictions", label: "Predict" },
                 { href: "/compare", label: "Compare" },
               ].map((l) => (
                 <Link
