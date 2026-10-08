@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { resolveSeason } from "@/lib/seasons"
 import { fetchTeamData, LEAGUE_ABBR, FULL_LEAGUES, SINGLE_CLUBS } from "@/lib/teams"
@@ -35,7 +36,10 @@ function ProbBar({ homeWin, draw, awayWin }: { homeWin: number; draw: number; aw
 function MatchCard({ p }: { p: MatchPrediction }) {
   const isSettled = p.actual !== null
   return (
-    <div className="surface rounded-xl bg-card px-4 py-3.5 space-y-3">
+    <Link
+      href={`/predictions/match?id=${p.event_id}`}
+      className="surface rounded-xl bg-card px-4 py-3.5 space-y-3 block hover:-translate-y-px transition-transform duration-200"
+    >
       <div className="flex items-center justify-between gap-2">
         <span className="stat-label shrink-0">{LEAGUE_ABBR[p.league] ?? p.league}</span>
         <span className="stat-label">R{p.round}</span>
@@ -100,7 +104,7 @@ function MatchCard({ p }: { p: MatchPrediction }) {
           </span>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 
