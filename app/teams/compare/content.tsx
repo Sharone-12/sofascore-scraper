@@ -8,6 +8,7 @@ import {
   FULL_LEAGUES,
   SINGLE_CLUBS,
   LEAGUE_ABBR,
+  LEAGUE_TOURNAMENT_ID,
   TEAM_STAT_GROUPS,
   TEAM_RADAR_STATS,
   TEAM_COLORS,
@@ -19,7 +20,7 @@ import {
 } from "@/lib/teams"
 import { resolveSeason } from "@/lib/seasons"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
-import { TeamCrest } from "@/components/player-avatar"
+import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const MAX_TEAMS = 3
@@ -103,7 +104,10 @@ function TeamPicker({
                 className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-colors text-left"
               >
                 <span className="text-sm font-medium">{t.team}</span>
-                <span className="stat-label">
+                <span className="stat-label flex items-center gap-1">
+                  {LEAGUE_TOURNAMENT_ID[t.league] && (
+                    <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[t.league]} name={t.league} size={13} />
+                  )}
                   {LEAGUE_ABBR[t.league] ?? t.league} · {t.points}pts
                 </span>
               </button>

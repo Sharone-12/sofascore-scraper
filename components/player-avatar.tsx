@@ -6,6 +6,8 @@ import {
   playerImageFallback,
   teamImage,
   teamImageFallback,
+  leagueImage,
+  leagueImageFallback,
   initials,
 } from "@/lib/images"
 
@@ -80,6 +82,40 @@ export function PlayerAvatar({
         />
       )}
     </span>
+  )
+}
+
+export function LeagueCrest({
+  tournamentId,
+  name,
+  size = 18,
+}: {
+  tournamentId: number | string
+  name: string
+  size?: number
+}) {
+  const { ref, src, exhausted, next } = useFallbackChain([
+    leagueImage(tournamentId),
+    leagueImageFallback(tournamentId),
+  ])
+  if (exhausted) return null
+
+  return (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
+      key={src}
+      ref={ref}
+      src={src}
+      alt={name}
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      onError={next}
+      className="inline-block shrink-0 object-contain"
+      style={{ width: size, height: size }}
+    />
   )
 }
 

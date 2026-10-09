@@ -17,6 +17,14 @@ export const LEAGUE_SHORT: Record<LeagueCode, string> = {
   4: "UCL",
 }
 
+export const LEAGUE_TOURNAMENT: Record<LeagueCode, number> = {
+  0: 17,  // Premier League
+  1: 8,   // La Liga
+  2: 34,  // Ligue 1
+  3: 35,  // Bundesliga
+  4: 7,   // Champions League
+}
+
 export function leagueCode(name: string): LeagueCode {
   const i = LEAGUE_CODES.indexOf(name as (typeof LEAGUE_CODES)[number])
   return (i === -1 ? 0 : i) as LeagueCode

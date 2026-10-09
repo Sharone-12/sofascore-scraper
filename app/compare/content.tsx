@@ -11,10 +11,10 @@ import {
   formatStat,
   type StatMode,
 } from "@/lib/stats"
-import { LEAGUE_ABBR } from "@/lib/teams"
+import { LEAGUE_ABBR, LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
 import { resolveSeason } from "@/lib/seasons"
 import { PlayerSearch } from "@/components/player-search"
-import { PlayerAvatar, TeamCrest } from "@/components/player-avatar"
+import { PlayerAvatar, TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { useAsk, AskAnswer } from "@/components/ask-panel"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
 import {
@@ -172,8 +172,11 @@ export default function CompareContent() {
                     />
                     <span className="truncate">{p.team as string}</span>
                   </p>
-                  <p className="stat-label mt-1 truncate">
+                  <p className="stat-label mt-1 truncate flex items-center gap-1">
                     {(p.role as string) || (p.position as string)} ·{" "}
+                    {LEAGUE_TOURNAMENT_ID[p.league as string] && (
+                      <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[p.league as string]} name={p.league as string} size={13} />
+                    )}
                     {LEAGUE_ABBR[p.league as string] ?? (p.league as string)} ·{" "}
                     {p.season as string}
                   </p>

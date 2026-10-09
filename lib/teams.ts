@@ -96,6 +96,15 @@ export const LEAGUE_ABBR: Record<string, string> = {
   "Champions League": "UCL",
 }
 
+/** Sofascore tournament IDs, used for league crest images. */
+export const LEAGUE_TOURNAMENT_ID: Record<string, number> = {
+  "Premier League": 17,
+  "La Liga": 8,
+  "Ligue 1": 34,
+  Bundesliga: 35,
+  "Champions League": 7,
+}
+
 /** The three headline per-match numbers shown on a single-club card. */
 export const CLUB_CARD_STATS: TeamStat[] = [
   { stat: "Ball possession", label: "Possession", pct: true },

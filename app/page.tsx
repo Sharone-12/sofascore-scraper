@@ -1,7 +1,9 @@
 import { Suspense } from "react"
 import { supabase } from "@/lib/supabase"
 import { resolveSeason } from "@/lib/seasons"
+import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
 import { PlayerSearch } from "@/components/player-search"
+import { LeagueCrest } from "@/components/player-avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 
@@ -66,12 +68,15 @@ function LeagueTag({ league }: { league: string }) {
   const tag = LEAGUE_TAG[league] ?? LEAGUE_TAG["Premier League"]
   return (
     <span
-      className="stat-label text-[0.6rem] px-1.5 py-0.5 rounded"
+      className="stat-label text-[0.6rem] px-1.5 py-0.5 rounded flex items-center gap-1"
       style={{
         color: `oklch(${tag.hue})`,
         background: `oklch(${tag.hue} / 13%)`,
       }}
     >
+      {LEAGUE_TOURNAMENT_ID[league] && (
+        <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[league]} name={league} size={13} />
+      )}
       {tag.short}
     </span>
   )

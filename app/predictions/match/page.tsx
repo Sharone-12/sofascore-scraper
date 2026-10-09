@@ -5,6 +5,7 @@ import { resolveSeason } from "@/lib/seasons"
 import {
   fetchTeamData,
   LEAGUE_ABBR,
+  LEAGUE_TOURNAMENT_ID,
   TEAM_STAT_GROUPS,
   TEAM_RADAR_STATS,
   statValue,
@@ -16,7 +17,7 @@ import {
 import { predictMatches } from "@/lib/predictions"
 import { percentileRank } from "@/lib/stats"
 import { Skeleton } from "@/components/ui/skeleton"
-import { TeamCrest } from "@/components/player-avatar"
+import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 
 const TEAM_COLORS = ["#4ade80", "#60a5fa"]
 
@@ -411,6 +412,7 @@ async function Content({
   const isSettled = match.status === "finished" && match.home_goals != null
 
   const leagueLabel = LEAGUE_ABBR[match.league] ?? match.league
+  const leagueTournamentId = LEAGUE_TOURNAMENT_ID[match.league]
   const dateStr = new Date(match.date + "T12:00:00").toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
@@ -428,7 +430,12 @@ async function Content({
       </Link>
 
       <section className="surface rounded-2xl bg-card px-5 py-6 mb-6 text-center">
-        <div className="stat-label mb-2">{leagueLabel} · Round {match.round}</div>
+        <div className="stat-label mb-2 flex items-center justify-center gap-1.5">
+          {leagueTournamentId && (
+            <LeagueCrest tournamentId={leagueTournamentId} name={match.league} size={16} />
+          )}
+          {leagueLabel} · Round {match.round}
+        </div>
         <div className="stat-label mb-5">{dateStr}</div>
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 max-w-lg mx-auto">

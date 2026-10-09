@@ -30,6 +30,14 @@ export function teamImageFallback(teamId: number | string): string {
   return `${SOURCE}/team/${teamId}/image`
 }
 
+export function leagueImage(tournamentId: number | string): string {
+  return `${MIRROR}/leagues/${tournamentId}.png`
+}
+
+export function leagueImageFallback(tournamentId: number | string): string {
+  return `${SOURCE}/unique-tournament/${tournamentId}/image`
+}
+
 /** Initials shown when neither source has an image. */
 export function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean)

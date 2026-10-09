@@ -2,10 +2,10 @@ import { Suspense } from "react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { resolveSeason } from "@/lib/seasons"
-import { fetchTeamData, LEAGUE_ABBR, FULL_LEAGUES, SINGLE_CLUBS } from "@/lib/teams"
+import { fetchTeamData, LEAGUE_ABBR, LEAGUE_TOURNAMENT_ID, FULL_LEAGUES, SINGLE_CLUBS } from "@/lib/teams"
 import { predictMatches, computeAccuracy, PREDICTION_STATS, type MatchPrediction, type AccuracyStats } from "@/lib/predictions"
 import { Skeleton } from "@/components/ui/skeleton"
-import { TeamCrest } from "@/components/player-avatar"
+import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 
 const OUTCOME_COLORS = {
   home: "oklch(0.80 0.19 150)",
@@ -42,7 +42,12 @@ function MatchCard({ p }: { p: MatchPrediction }) {
       className="surface rounded-xl bg-card px-4 py-3.5 space-y-3 block hover:-translate-y-px transition-transform duration-200"
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="stat-label shrink-0">{LEAGUE_ABBR[p.league] ?? p.league}</span>
+        <span className="shrink-0 flex items-center gap-1.5">
+          {LEAGUE_TOURNAMENT_ID[p.league] && (
+            <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[p.league]} name={p.league} size={16} />
+          )}
+          <span className="stat-label">{LEAGUE_ABBR[p.league] ?? p.league}</span>
+        </span>
         <span className="stat-label">R{p.round}</span>
         <span className="stat-label ml-auto">
           {new Date(p.date + "T12:00:00").toLocaleDateString("en-GB", {
@@ -187,7 +192,7 @@ const trackedTeams = new Set([
 ])
 
 const LEAGUE_FILTERS = [
-  { key: "all", label: "All" },
+  { key: "all", label: "All", full: "" },
   { key: "PL", label: "PL", full: "Premier League" },
   { key: "LL", label: "La Liga", full: "La Liga" },
   { key: "UCL", label: "UCL", full: "Champions League" },
@@ -209,12 +214,15 @@ function LeagueToggle({ active, season }: { active: string; season?: string }) {
           <Link
             key={f.key}
             href={href}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${
               active === f.key
                 ? "bg-card text-foreground"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
+            {f.full && LEAGUE_TOURNAMENT_ID[f.full] && (
+              <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[f.full]} name={f.full} size={14} />
+            )}
             {f.label}
           </Link>
         )
@@ -231,7 +239,7 @@ async function Content({
   const sp = await searchParams
   const season = resolveSeason(sp.season)
   const leagueFilter = sp.league || "all"
-  const leagueFullName = (LEAGUE_FILTERS.find((f) => f.key === leagueFilter) as { full?: string } | undefined)?.full
+  const leagueFullName = LEAGUE_FILTERS.find((f) => f.key === leagueFilter)?.full || null
 
   const [{ table, stats }, { data: matchData }] = await Promise.all([
     fetchTeamData(supabase, season, WANTED_STATS),
