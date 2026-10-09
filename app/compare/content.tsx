@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import {
   STAT_GROUPS,
+  RADAR_STATS,
   PLAYER_COLORS,
   statKey,
   formatStat,
@@ -15,7 +16,7 @@ import { resolveSeason } from "@/lib/seasons"
 import { PlayerSearch } from "@/components/player-search"
 import { PlayerAvatar, TeamCrest } from "@/components/player-avatar"
 import { useAsk, AskAnswer } from "@/components/ask-panel"
-import { StatBarChart } from "@/components/charts"
+import { PlayerRadar, StatBarChart } from "@/components/charts"
 import {
   Card,
   CardContent,
@@ -88,6 +89,16 @@ export default function CompareContent() {
   const playerNames = players.map((p) => p.player as string)
 
   const modeLabel = mode === "p90" ? "per 90 minutes" : "season total"
+
+  const radarData = RADAR_STATS.map((s) => {
+    const vals = players.map((p) => Number(p[statKey(s.key, mode)]) || 0)
+    const max = Math.max(...vals, 0.01)
+    const row: Record<string, string | number> = { stat: s.label }
+    players.forEach((p, i) => {
+      row[p.player as string] = Math.round((vals[i] / max) * 100)
+    })
+    return row
+  })
 
   const barGroups = STAT_GROUPS.map((group) => ({
     label: group.label,
@@ -266,6 +277,17 @@ export default function CompareContent() {
 
       {players.length >= 2 && (
         <>
+          <Card className="surface border-0 mb-8 animate-slide-up">
+            <CardHeader>
+              <CardTitle className="stat-label text-sm">
+                Player Radar · {modeLabel}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PlayerRadar data={radarData} players={playerNames} />
+            </CardContent>
+          </Card>
+
           <div className="grid md:grid-cols-2 gap-6 mb-8 stagger">
             {barGroups.map((group) => (
               <Card key={group.label} className="surface border-0">
