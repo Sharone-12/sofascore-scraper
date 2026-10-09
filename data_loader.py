@@ -52,6 +52,7 @@ LEAGUES = {
     # Names must match Sofascore exactly: 'Paris FC' is a different Ligue 1 club.
     "Ligue 1": {"tournament": 34, "slug": "ligue_1", "teams": {"Paris Saint-Germain"}},
     "Bundesliga": {"tournament": 35, "slug": "bundesliga", "teams": {"FC Bayern München"}},
+    "Champions League": {"tournament": 7, "slug": "champions_league"},
 }
 
 
@@ -573,7 +574,7 @@ def build(
     leagues = LEAGUES
     if league_filter:
         key = league_filter.lower()
-        aliases = {"pl": "premier", "liga": "la liga", "laliga": "la liga"}
+        aliases = {"pl": "premier", "liga": "la liga", "laliga": "la liga", "ucl": "champions", "cl": "champions"}
         key = aliases.get(key, key)
         leagues = {k: v for k, v in LEAGUES.items() if key in k.lower() or key in v["slug"]}
         if not leagues:

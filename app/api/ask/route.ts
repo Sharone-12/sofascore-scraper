@@ -38,7 +38,7 @@ Hard rules:
 - There are two kinds of score, and the DATA block says which you were given:
   1. ROLE score — percentile against players in the SAME role only. Use it for "best winger", "best striker", etc. Role scores are NOT comparable across roles: a striker on 70 is not better than a centre-back on 64, because they are different pools measured on different metrics. Never rank different roles against each other using role scores.
   2. ATTACKING IMPACT — percentile against every outfield player in one cohort on the same attacking metrics (goals, xG, assists, xA, key passes, chances created, dribbles, shots on target). This IS comparable across roles, so use it to answer "best player" and "top N players". It measures attacking production only; note that when a defender appears it is because they contribute going forward, and a dominant defender who rarely attacks will rank low here.
-- A high score means "dominant relative to that cohort this season", not "world class in absolute terms". Coverage is two leagues plus two clubs.
+- A high score means "dominant relative to that cohort this season", not "world class in absolute terms". Coverage is three competitions plus two clubs.
 - Judge the season in front of you, never a reputation. A famous player having a quiet season ranks low, and that is the correct answer — say so rather than defending them.
 
 Comparing players of DIFFERENT roles:

@@ -19,6 +19,7 @@ const LEAGUE_HUE: Record<number, string> = {
   1: "0.80 0.14 60", // La Liga — amber
   2: "0.78 0.13 240", // Ligue 1 — blue
   3: "0.78 0.14 15", // Bundesliga — red
+  4: "0.78 0.14 230", // Champions League — blue
 }
 
 type SearchResult = {

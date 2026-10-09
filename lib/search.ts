@@ -4,15 +4,17 @@ export const LEAGUE_CODES = [
   "La Liga",
   "Ligue 1",
   "Bundesliga",
+  "Champions League",
 ] as const
 
-export type LeagueCode = 0 | 1 | 2 | 3
+export type LeagueCode = 0 | 1 | 2 | 3 | 4
 
 export const LEAGUE_SHORT: Record<LeagueCode, string> = {
   0: "PL",
   1: "LL",
   2: "L1",
   3: "BL",
+  4: "UCL",
 }
 
 export function leagueCode(name: string): LeagueCode {

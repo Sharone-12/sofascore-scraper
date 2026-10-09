@@ -80,11 +80,11 @@ const WORD_NUMBERS: Record<string, number> = {
 
 /**
  * Stated verbatim to the model so it never implies worldwide coverage. The
- * data is two full leagues plus two clubs — "best in the world" can only
+ * data is three competitions plus two clubs — "best in the world" can only
  * honestly mean "best in here".
  */
 export const DATA_SCOPE =
-  "Premier League and La Liga (every club), plus Paris Saint-Germain and " +
+  "Premier League, La Liga, and Champions League (every club), plus Paris Saint-Germain and " +
   "FC Bayern München only. No Serie A, and no other Ligue 1 or Bundesliga clubs."
 
 export function parseIntent(question: string, hasPlayers = false): Intent {

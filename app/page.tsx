@@ -59,6 +59,7 @@ const LEAGUE_TAG: Record<string, { short: string; hue: string }> = {
   "La Liga": { short: "LL", hue: "0.80 0.14 60" },
   "Ligue 1": { short: "L1", hue: "0.78 0.13 240" },
   Bundesliga: { short: "BL", hue: "0.78 0.14 15" },
+  "Champions League": { short: "UCL", hue: "0.78 0.14 230" },
 }
 
 function LeagueTag({ league }: { league: string }) {
@@ -239,7 +240,7 @@ export default function Home({
         </h1>
         <p className="text-muted-foreground text-base max-w-md mb-7">
           Per-90 stats and percentile ranks for every player in the Premier
-          League and La Liga.
+          League, La Liga, and Champions League.
         </p>
         <div className="max-w-md">
           <PlayerSearch linkToProfile placeholder="Search for a player..." />

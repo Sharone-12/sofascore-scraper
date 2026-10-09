@@ -1,7 +1,7 @@
 export const CURRENT_SEASON = "2026/27"
 
 /** Leagues ingested in full, so their `team_table` is a real standings table. */
-export const FULL_LEAGUES = ["Premier League", "La Liga"] as const
+export const FULL_LEAGUES = ["Premier League", "La Liga", "Champions League"] as const
 
 /**
  * Clubs tracked on their own, without the rest of their league. Only these
@@ -93,6 +93,7 @@ export const LEAGUE_ABBR: Record<string, string> = {
   "La Liga": "LL",
   "Ligue 1": "L1",
   Bundesliga: "BL",
+  "Champions League": "UCL",
 }
 
 /** The three headline per-match numbers shown on a single-club card. */
