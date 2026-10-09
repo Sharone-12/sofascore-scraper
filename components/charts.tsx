@@ -8,25 +8,8 @@ import {
   Radar,
   Legend,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  LabelList,
 } from "recharts"
 import { PLAYER_COLORS } from "@/lib/stats"
-
-const TOOLTIP_STYLE = {
-  backgroundColor: "oklch(0.19 0.042 257)",
-  border: "1px solid oklch(1 0 0 / 12%)",
-  borderRadius: "0.75rem",
-  color: "oklch(0.95 0 0)",
-  fontSize: 12,
-  padding: "8px 12px",
-  boxShadow: "0 8px 24px oklch(0 0 0 / 40%)",
-} as const
 
 export function PlayerRadar({
   data,
@@ -72,33 +55,6 @@ export function PlayerRadar({
   )
 }
 
-/**
- * Each row is scaled to the largest value in that row, not to one axis shared
- * by every row. Possession (68) and Accurate Passes (600) used to sit on the
- * same 0-800 scale, which rendered possession as an invisible sliver and made
- * it look like the data was missing. Bars show relative size; the real number
- * is printed on the bar and in the tooltip, so nothing is lost.
- */
-const NORM = "__n"
-
-function normalise(
-  data: Record<string, string | number>[],
-  players: string[],
-): Record<string, string | number>[] {
-  return data.map((row) => {
-    const max = Math.max(
-      ...players.map((p) => Math.abs(Number(row[p]) || 0)),
-      0,
-    )
-    const out: Record<string, string | number> = { ...row }
-    for (const p of players) {
-      const v = Number(row[p]) || 0
-      out[p + NORM] = max ? (v / max) * 100 : 0
-    }
-    return out
-  })
-}
-
 const fmt = (v: number) =>
   Number.isInteger(v) ? String(v) : v.toFixed(v < 10 ? 2 : 1)
 
@@ -109,70 +65,64 @@ export function StatBarChart({
   data: Record<string, string | number>[]
   players: string[]
 }) {
-  // With a single series every row would normalise to 100%, which says nothing,
-  // so one player keeps the plain absolute axis.
-  const scaled = players.length > 1
-  const rows = scaled ? normalise(data, players) : data
-
   return (
-    <ResponsiveContainer width="100%" height={Math.max(180, data.length * 36)}>
-      <BarChart
-        data={rows}
-        layout="vertical"
-        margin={{ left: 0, right: scaled ? 44 : 16, top: 4, bottom: 4 }}
-      >
-        <CartesianGrid
-          strokeDasharray="3 3"
-          stroke="oklch(1 0 0 / 6%)"
-          horizontal={false}
-        />
-        <XAxis
-          type="number"
-          domain={scaled ? [0, 118] : undefined}
-          hide={scaled}
-          tick={{ fill: "oklch(0.65 0 0)", fontSize: 11 }}
-          axisLine={false}
-        />
-        <YAxis
-          type="category"
-          dataKey="stat"
-          width={130}
-          tick={{ fill: "oklch(0.65 0 0)", fontSize: 11 }}
-          axisLine={false}
-          tickLine={false}
-        />
-        <Tooltip
-          contentStyle={TOOLTIP_STYLE}
-          cursor={{ fill: "oklch(1 0 0 / 4%)" }}
-          formatter={(value, name, item) => {
-            const key = String(name)
-            const raw = item?.payload?.[key]
-            return [fmt(Number(raw ?? value) || 0), key]
-          }}
-        />
-        {players.map((name, i) => (
-          <Bar
-            key={name}
-            dataKey={scaled ? name + NORM : name}
-            name={name}
-            fill={PLAYER_COLORS[i % PLAYER_COLORS.length]}
-            radius={[0, 4, 4, 0]}
-            barSize={players.length > 1 ? 12 : 18}
-          >
-            {scaled && (
-              <LabelList
-                dataKey={name}
-                position="right"
-                fontSize={10}
-                fill="oklch(0.70 0 0)"
-                formatter={(v: unknown) => fmt(Number(v) || 0)}
+    <div className="space-y-3">
+      {data.map((row) => {
+        const vals = players.map((p) => Number(row[p]) || 0)
+        const max = Math.max(...vals, 0.01)
+
+        return (
+          <div key={row.stat as string}>
+            <div className="text-[0.7rem] text-[oklch(0.55_0_0)] uppercase tracking-wider mb-1.5">
+              {row.stat}
+            </div>
+            <div className="space-y-1">
+              {players.map((name, i) => {
+                const v = vals[i]
+                const pct = (v / max) * 100
+                return (
+                  <div key={name} className="flex items-center gap-2">
+                    <div className="flex-1 h-[10px] rounded-full overflow-hidden bg-white/[0.04]">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${Math.max(pct, 1)}%`,
+                          background: PLAYER_COLORS[i % PLAYER_COLORS.length],
+                          opacity: v === max && players.length > 1 ? 0.9 : 0.45,
+                        }}
+                      />
+                    </div>
+                    <span
+                      className="text-xs tabular-nums font-medium w-10 text-right shrink-0"
+                      style={{
+                        color: v === max && players.length > 1
+                          ? PLAYER_COLORS[i % PLAYER_COLORS.length]
+                          : "oklch(0.55 0 0)",
+                      }}
+                    >
+                      {fmt(v)}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })}
+
+      {players.length > 1 && (
+        <div className="flex items-center gap-4 pt-2 border-t border-white/[0.04]">
+          {players.map((name, i) => (
+            <div key={name} className="flex items-center gap-1.5">
+              <span
+                className="w-2.5 h-2.5 rounded-full shrink-0"
+                style={{ background: PLAYER_COLORS[i % PLAYER_COLORS.length] }}
               />
-            )}
-          </Bar>
-        ))}
-        {players.length > 1 && <Legend />}
-      </BarChart>
-    </ResponsiveContainer>
+              <span className="text-[0.65rem] text-[oklch(0.6_0_0)] truncate">{name}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
-
