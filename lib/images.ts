@@ -31,11 +31,11 @@ export function teamImageFallback(teamId: number | string): string {
 }
 
 export function leagueImage(tournamentId: number | string): string {
-  return `${MIRROR}/leagues/${tournamentId}.png`
+  return `${SOURCE}/unique-tournament/${tournamentId}/image`
 }
 
 export function leagueImageFallback(tournamentId: number | string): string {
-  return `${SOURCE}/unique-tournament/${tournamentId}/image`
+  return `${MIRROR}/leagues/${tournamentId}.png`
 }
 
 /** Initials shown when neither source has an image. */
