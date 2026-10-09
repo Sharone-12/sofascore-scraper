@@ -31,10 +31,16 @@ const TOOLTIP_STYLE = {
 export function PlayerRadar({
   data,
   players,
+  domain,
 }: {
   data: Record<string, string | number>[]
   players: string[]
+  domain?: [number, number] | "auto"
 }) {
+  const resolvedDomain: [number, number] = domain === "auto"
+    ? [0, Math.ceil(Math.max(...data.flatMap((row) => players.map((p) => Number(row[p]) || 0))) * 1.15) || 1]
+    : domain ?? [0, 100]
+
   return (
     <ResponsiveContainer width="100%" height={350}>
       <RadarChart data={data} cx="50%" cy="50%" outerRadius="75%">
@@ -45,8 +51,8 @@ export function PlayerRadar({
         />
         <PolarRadiusAxis
           angle={90}
-          domain={[0, 100]}
-          tick={{ fill: "oklch(0.5 0 0)", fontSize: 10 }}
+          domain={resolvedDomain}
+          tick={domain === "auto" ? false : { fill: "oklch(0.5 0 0)", fontSize: 10 }}
           tickCount={5}
         />
         {players.map((name, i) => (
