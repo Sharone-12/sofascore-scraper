@@ -9,6 +9,7 @@ import {
   PLAYER_COLORS,
   statKey,
   formatStat,
+  percentileRank,
   type StatMode,
 } from "@/lib/stats"
 import { LEAGUE_ABBR } from "@/lib/teams"
@@ -30,6 +31,7 @@ export default function CompareContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [players, setPlayers] = useState<Player[]>([])
+  const [peersByRole, setPeersByRole] = useState<Map<string, Player[]>>(new Map())
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState<StatMode>("p90")
   const verdict = useAsk()
@@ -41,6 +43,7 @@ export default function CompareContent() {
   useEffect(() => {
     if (slugs.length === 0) {
       setPlayers([])
+      setPeersByRole(new Map())
       return
     }
     setLoading(true)
@@ -49,9 +52,7 @@ export default function CompareContent() {
       .select("*")
       .in("slug", slugs)
       .order("season", { ascending: false })
-      .then(({ data }) => {
-        // Rows arrive season-desc; prefer the selected season per player and
-        // fall back to their newest, since not everyone appears in both.
+      .then(async ({ data }) => {
         const seen = new Set<string>()
         const rows = data || []
         const unique = [
@@ -67,6 +68,21 @@ export default function CompareContent() {
           .map((s) => unique.find((p) => p.slug === s))
           .filter(Boolean) as Player[]
         setPlayers(ordered)
+
+        const roles = [...new Set(ordered.map((p) => (p.role as string) || (p.position as string)).filter(Boolean))]
+        const peerMap = new Map<string, Player[]>()
+        const cols = RADAR_STATS.map((s) => s.key).join(",")
+        await Promise.all(
+          roles.map(async (role) => {
+            const { data: peers } = await supabase
+              .from("players")
+              .select(cols)
+              .eq("role", role)
+              .eq("season", season)
+            peerMap.set(role, (peers || []) as unknown as Player[])
+          }),
+        )
+        setPeersByRole(peerMap)
         setLoading(false)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,11 +107,13 @@ export default function CompareContent() {
   const modeLabel = mode === "p90" ? "per 90 minutes" : "season total"
 
   const radarData = RADAR_STATS.map((s) => {
-    const vals = players.map((p) => Number(p[statKey(s.key, mode)]) || 0)
-    const max = Math.max(...vals, 0.01)
     const row: Record<string, string | number> = { stat: s.label }
-    players.forEach((p, i) => {
-      row[p.player as string] = Math.round((vals[i] / max) * 100)
+    players.forEach((p) => {
+      const role = (p.role as string) || (p.position as string)
+      const peers = peersByRole.get(role) || []
+      const allValues = peers.map((peer) => Number(peer[s.key]) || 0)
+      const val = Number(p[s.key]) || 0
+      row[p.player as string] = allValues.length > 0 ? percentileRank(val, allValues) : 0
     })
     return row
   })
@@ -280,8 +298,11 @@ export default function CompareContent() {
           <Card className="surface border-0 mb-8 animate-slide-up">
             <CardHeader>
               <CardTitle className="stat-label text-sm">
-                Player Radar · {modeLabel}
+                Percentile Ranks
               </CardTitle>
+              <p className="text-xs text-muted-foreground/60">
+                vs all players in the same position
+              </p>
             </CardHeader>
             <CardContent>
               <PlayerRadar data={radarData} players={playerNames} />
