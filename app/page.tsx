@@ -65,18 +65,19 @@ const LEAGUE_TAG: Record<string, { short: string; hue: string }> = {
 }
 
 function LeagueTag({ league }: { league: string }) {
+  const tid = LEAGUE_TOURNAMENT_ID[league]
+  if (tid) {
+    return <LeagueCrest tournamentId={tid} name={league} size={20} />
+  }
   const tag = LEAGUE_TAG[league] ?? LEAGUE_TAG["Premier League"]
   return (
     <span
-      className="stat-label text-[0.6rem] px-1.5 py-0.5 rounded flex items-center gap-1"
+      className="stat-label text-[0.6rem] px-1.5 py-0.5 rounded"
       style={{
         color: `oklch(${tag.hue})`,
         background: `oklch(${tag.hue} / 13%)`,
       }}
     >
-      {LEAGUE_TOURNAMENT_ID[league] && (
-        <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[league]} name={league} size={13} />
-      )}
       {tag.short}
     </span>
   )

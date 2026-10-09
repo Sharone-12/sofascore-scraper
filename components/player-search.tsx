@@ -240,16 +240,7 @@ export function PlayerSearch({
                           )}
                         </div>
                       </div>
-                      <span
-                        className="stat-label shrink-0 px-1.5 py-0.5 rounded flex items-center gap-1"
-                        style={{
-                          color: `oklch(${LEAGUE_HUE[p.l] ?? LEAGUE_HUE[0]})`,
-                          background: `oklch(${LEAGUE_HUE[p.l] ?? LEAGUE_HUE[0]} / 13%)`,
-                        }}
-                      >
-                        <LeagueCrest tournamentId={LEAGUE_TOURNAMENT[p.l] ?? LEAGUE_TOURNAMENT[0]} name={LEAGUE_CODES[p.l]} size={13} />
-                        {LEAGUE_SHORT[p.l] ?? LEAGUE_SHORT[0]}
-                      </span>
+                      <LeagueCrest tournamentId={LEAGUE_TOURNAMENT[p.l] ?? LEAGUE_TOURNAMENT[0]} name={LEAGUE_CODES[p.l]} size={20} />
                     </div>
                   )
 

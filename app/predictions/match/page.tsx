@@ -430,11 +430,11 @@ async function Content({
       </Link>
 
       <section className="surface rounded-2xl bg-card px-5 py-6 mb-6 text-center">
-        <div className="stat-label mb-2 flex items-center justify-center gap-1.5">
+        <div className="stat-label mb-2 flex items-center justify-center gap-2">
           {leagueTournamentId && (
-            <LeagueCrest tournamentId={leagueTournamentId} name={match.league} size={16} />
+            <LeagueCrest tournamentId={leagueTournamentId} name={match.league} size={22} />
           )}
-          {leagueLabel} · Round {match.round}
+          Round {match.round}
         </div>
         <div className="stat-label mb-5">{dateStr}</div>
 

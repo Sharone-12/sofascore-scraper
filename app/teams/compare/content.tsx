@@ -104,11 +104,11 @@ function TeamPicker({
                 className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-colors text-left"
               >
                 <span className="text-sm font-medium">{t.team}</span>
-                <span className="stat-label flex items-center gap-1">
+                <span className="stat-label flex items-center gap-1.5">
                   {LEAGUE_TOURNAMENT_ID[t.league] && (
-                    <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[t.league]} name={t.league} size={13} />
+                    <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[t.league]} name={t.league} size={18} />
                   )}
-                  {LEAGUE_ABBR[t.league] ?? t.league} · {t.points}pts
+                  {t.points}pts
                 </span>
               </button>
             ))}

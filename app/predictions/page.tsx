@@ -43,10 +43,11 @@ function MatchCard({ p }: { p: MatchPrediction }) {
     >
       <div className="flex items-center justify-between gap-2">
         <span className="shrink-0 flex items-center gap-1.5">
-          {LEAGUE_TOURNAMENT_ID[p.league] && (
-            <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[p.league]} name={p.league} size={16} />
+          {LEAGUE_TOURNAMENT_ID[p.league] ? (
+            <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[p.league]} name={p.league} size={20} />
+          ) : (
+            <span className="stat-label">{LEAGUE_ABBR[p.league] ?? p.league}</span>
           )}
-          <span className="stat-label">{LEAGUE_ABBR[p.league] ?? p.league}</span>
         </span>
         <span className="stat-label">R{p.round}</span>
         <span className="stat-label ml-auto">
@@ -221,9 +222,10 @@ function LeagueToggle({ active, season }: { active: string; season?: string }) {
             }`}
           >
             {f.full && LEAGUE_TOURNAMENT_ID[f.full] && (
-              <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[f.full]} name={f.full} size={14} />
+              <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[f.full]} name={f.full} size={18} />
             )}
-            {f.label}
+            {!f.full && f.label}
+            {f.full && !LEAGUE_TOURNAMENT_ID[f.full] && f.label}
           </Link>
         )
       })}

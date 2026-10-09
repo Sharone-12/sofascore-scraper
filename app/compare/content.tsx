@@ -172,13 +172,14 @@ export default function CompareContent() {
                     />
                     <span className="truncate">{p.team as string}</span>
                   </p>
-                  <p className="stat-label mt-1 truncate flex items-center gap-1">
+                  <p className="stat-label mt-1 truncate flex items-center gap-1.5">
                     {(p.role as string) || (p.position as string)} ·{" "}
-                    {LEAGUE_TOURNAMENT_ID[p.league as string] && (
-                      <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[p.league as string]} name={p.league as string} size={13} />
+                    {LEAGUE_TOURNAMENT_ID[p.league as string] ? (
+                      <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[p.league as string]} name={p.league as string} size={16} />
+                    ) : (
+                      <span>{LEAGUE_ABBR[p.league as string] ?? (p.league as string)}</span>
                     )}
-                    {LEAGUE_ABBR[p.league as string] ?? (p.league as string)} ·{" "}
-                    {p.season as string}
+                    · {p.season as string}
                   </p>
                 </div>
               </div>

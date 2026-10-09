@@ -250,11 +250,12 @@ function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
                 <span className="font-semibold text-[0.95rem] truncate group-hover:text-white transition-colors">
                   {t.team}
                 </span>
-                <span className="stat-label shrink-0 flex items-center gap-1">
-                  {LEAGUE_TOURNAMENT_ID[t.league] && (
-                    <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[t.league]} name={t.league} size={13} />
+                <span className="shrink-0">
+                  {LEAGUE_TOURNAMENT_ID[t.league] ? (
+                    <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[t.league]} name={t.league} size={20} />
+                  ) : (
+                    <span className="stat-label">{LEAGUE_ABBR[t.league] ?? t.league}</span>
                   )}
-                  {LEAGUE_ABBR[t.league] ?? t.league}
                 </span>
               </div>
               <div className="flex items-center gap-3 mt-1.5">
