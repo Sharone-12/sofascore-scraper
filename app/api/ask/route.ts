@@ -41,6 +41,12 @@ Hard rules:
 - A high score means "dominant relative to that cohort this season", not "world class in absolute terms". Coverage is two leagues plus two clubs.
 - Judge the season in front of you, never a reputation. A famous player having a quiet season ranks low, and that is the correct answer — say so rather than defending them.
 
+Comparing players of DIFFERENT roles:
+- The ROLE score is the PRIMARY measure — it says how well each player performs the job their position demands. A central midfielder scoring 82 among central midfielders is outperforming his role more than an attacking midfielder scoring 75 among attacking midfielders.
+- Judge each player by THEIR role's key metrics. A central mid should be evaluated on passing, recoveries, tackles, progression — not goals. An attacking mid on chance creation, key passes, final third impact. A striker on goals and xG. The METRICS block tells you what matters for each role.
+- ATTACKING IMPACT is supplementary context for cross-role comparisons, not the main verdict. A central mid with low attacking impact but elite role performance is doing his job brilliantly — say that.
+- When roles differ, frame the answer around "who is better at what they're asked to do" using role scores and role-specific percentiles, not who scores more goals.
+
 Style: direct and confident, like a good analyst. Lead with the answer, then the two or three numbers that justify it. Short paragraphs or a tight list. No preamble, no restating the question, no hedging about being an AI, and never show your reasoning steps — give the finished answer only. Write the numbers inline as plain prose: never emit citation markers, bracket references or raw JSON.`
 
 /**
@@ -149,8 +155,9 @@ export async function POST(req: Request) {
         .filter(Boolean) as Scored[]
 
       if (cited.length) {
+        const sameRole = new Set(cited.map((c) => c.position)).size === 1
         sections.push(
-          `PLAYERS BEING COMPARED — "score" here is their ROLE score, against their own role only in ${season}:\n` +
+          `PLAYERS BEING COMPARED — "score" is their ROLE score (percentile within their own role's cohort, ${season}). ${sameRole ? "Same role, so scores are directly comparable." : "DIFFERENT ROLES — each score measures how well they perform their specific position's job. Judge each player by their role's metrics below, not by who scores more goals."}:\n` +
             JSON.stringify(cited.map(brief), null, 1),
         )
         const { data: all } = await supabase
@@ -174,13 +181,13 @@ export async function POST(req: Request) {
           .filter(Boolean)
         if (theirs.length) {
           sections.push(
-            `ATTACKING IMPACT — the same players scored on attacking production against ALL outfield players (one pool, one set of metrics, comparable across roles):\n` +
+            `ATTACKING IMPACT (supplementary) — attacking production against ALL outfield players. ${sameRole ? "Comparable since same role." : "Use as context only — role scores above are the primary measure for different positions."}:\n` +
               JSON.stringify(theirs, null, 1),
           )
         }
         const positions = [...new Set(cited.map((c) => c.position))]
         sections.push(
-          `METRICS THAT DEFINE THESE POSITIONS (weight = importance):\n` +
+          `METRICS THAT DEFINE EACH ROLE (weight = importance in that role's score). ${sameRole ? "" : "Each player should be judged on THEIR role's metrics:"}:\n` +
             JSON.stringify(
               Object.fromEntries(
                 positions.map((p) => [p, ROLE_PROFILES[p]]),
