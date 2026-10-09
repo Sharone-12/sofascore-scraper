@@ -186,12 +186,52 @@ const trackedTeams = new Set([
   ...SINGLE_CLUBS.map((c) => c.league),
 ])
 
+const LEAGUE_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "PL", label: "PL", full: "Premier League" },
+  { key: "LL", label: "La Liga", full: "La Liga" },
+  { key: "UCL", label: "UCL", full: "Champions League" },
+] as const
+
+function LeagueToggle({ active, season }: { active: string; season?: string }) {
+  return (
+    <div
+      className="inline-flex rounded-lg p-0.5 bg-secondary/40 mb-6"
+      role="group"
+      aria-label="League filter"
+    >
+      {LEAGUE_FILTERS.map((f) => {
+        const params = new URLSearchParams()
+        if (f.key !== "all") params.set("league", f.key)
+        if (season) params.set("season", season)
+        const href = `/predictions${params.size ? `?${params}` : ""}`
+        return (
+          <Link
+            key={f.key}
+            href={href}
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              active === f.key
+                ? "bg-card text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {f.label}
+          </Link>
+        )
+      })}
+    </div>
+  )
+}
+
 async function Content({
   searchParams,
 }: {
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; league?: string }>
 }) {
-  const season = resolveSeason((await searchParams).season)
+  const sp = await searchParams
+  const season = resolveSeason(sp.season)
+  const leagueFilter = sp.league || "all"
+  const leagueFullName = (LEAGUE_FILTERS.find((f) => f.key === leagueFilter) as { full?: string } | undefined)?.full
 
   const [{ table, stats }, { data: matchData }] = await Promise.all([
     fetchTeamData(supabase, season, WANTED_STATS),
@@ -242,9 +282,13 @@ async function Content({
     stats,
   )
 
-  const upcomingPredictions = predictions.filter((p) => p.actual === null)
-  const settledPredictions = predictions.filter((p) => p.actual !== null)
-  const accuracy = computeAccuracy(predictions)
+  const filtered = leagueFullName
+    ? predictions.filter((p) => p.league === leagueFullName)
+    : predictions
+
+  const upcomingPredictions = filtered.filter((p) => p.actual === null)
+  const settledPredictions = filtered.filter((p) => p.actual !== null)
+  const accuracy = computeAccuracy(filtered)
 
   const nextRound = upcomingPredictions[0]?.round
   const nextRoundPredictions = upcomingPredictions.filter((p) => p.round === nextRound)
@@ -256,6 +300,7 @@ async function Content({
 
   return (
     <>
+      <LeagueToggle active={leagueFilter} season={sp.season} />
       <AccuracyCard acc={accuracy} />
 
       {nextRoundPredictions.length > 0 && (
@@ -312,7 +357,7 @@ async function Content({
 export default function PredictionsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; league?: string }>
 }) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
