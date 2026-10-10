@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase"
 import { rankPlayers, rankAllRoles, ROLE_PROFILES, ATTACKING_IMPACT, type Scored } from "@/lib/rank"
 import { parseIntent, DATA_SCOPE } from "@/lib/ask"
 import { resolveSeason } from "@/lib/seasons"
+import { resolveCompetition, scopeLeague, type Competition } from "@/lib/competition"
 
 // The model gets facts, never a database. Everything it is allowed to assert is
 // computed here first, so it ranks nothing and recalls nothing on its own.
@@ -63,7 +64,7 @@ function clean(text: string): string {
     .trim()
 }
 
-type Body = { question?: string; slugs?: string[]; season?: string }
+type Body = { question?: string; slugs?: string[]; season?: string; comp?: string }
 
 /** Only the fields the model should see — keeps the prompt small and factual. */
 function brief(s: Scored) {
@@ -81,12 +82,13 @@ function brief(s: Scored) {
   }
 }
 
-async function cohort(role: string, season: string): Promise<Scored[]> {
-  const { data, error } = await supabase
-    .from("players")
-    .select("*")
-    .eq("role", role)
-    .eq("season", season)
+// Every pool is one competition: league rows and Champions League rows for the
+// same player would otherwise be ranked against each other.
+async function cohort(role: string, season: string, comp: Competition): Promise<Scored[]> {
+  const { data, error } = await scopeLeague(
+    supabase.from("players").select("*").eq("role", role).eq("season", season),
+    comp,
+  )
   if (error) throw new Error(error.message)
   return rankPlayers(data ?? [], role)
 }
@@ -125,6 +127,9 @@ export async function POST(req: Request) {
   // A season named in the question wins; otherwise whatever the page is
   // showing; otherwise the default (26/27).
   const season = intent.season ?? resolveSeason(body.season)
+  const comp = resolveCompetition(body.comp)
+  // Shown to the model so it says which competition its numbers cover.
+  const scope = `${season}, ${comp === "ucl" ? "Champions League only" : "domestic leagues only"}`
 
   try {
     const sections: string[] = []
@@ -133,16 +138,19 @@ export async function POST(req: Request) {
     if (slugs.length) {
       // Compare mode: score each named player inside their own position cohort,
       // so "who is better" is answered against their real peers.
-      const { data, error } = await supabase
-        .from("players")
-        .select("player, slug, role, season")
-        .in("slug", slugs)
-        .eq("season", season)
+      const { data, error } = await scopeLeague(
+        supabase
+          .from("players")
+          .select("player, slug, role, season")
+          .in("slug", slugs)
+          .eq("season", season),
+        comp,
+      )
       if (error) throw new Error(error.message)
 
       const byPosition = new Map<string, Scored[]>()
       for (const pos of new Set((data ?? []).map((r) => r.role as string))) {
-        byPosition.set(pos, await cohort(pos, season))
+        byPosition.set(pos, await cohort(pos, season, comp))
       }
       cited = slugs
         .map((slug) => {
@@ -157,13 +165,13 @@ export async function POST(req: Request) {
       if (cited.length) {
         const sameRole = new Set(cited.map((c) => c.position)).size === 1
         sections.push(
-          `PLAYERS BEING COMPARED — "score" is their ROLE score (percentile within their own role's cohort, ${season}). ${sameRole ? "Same role, so scores are directly comparable." : "DIFFERENT ROLES — each score measures how well they perform their specific position's job. Judge each player by their role's metrics below, not by who scores more goals."}:\n` +
+          `PLAYERS BEING COMPARED — "score" is their ROLE score (percentile within their own role's cohort, ${scope}). ${sameRole ? "Same role, so scores are directly comparable." : "DIFFERENT ROLES — each score measures how well they perform their specific position's job. Judge each player by their role's metrics below, not by who scores more goals."}:\n` +
             JSON.stringify(cited.map(brief), null, 1),
         )
-        const { data: all } = await supabase
-          .from("players")
-          .select("*")
-          .eq("season", season)
+        const { data: all } = await scopeLeague(
+          supabase.from("players").select("*").eq("season", season),
+          comp,
+        )
         const overall = rankAllRoles(all ?? [])
         const theirs = cited
           .map((c) => {
@@ -202,10 +210,10 @@ export async function POST(req: Request) {
     if (!cited.length && intent.positions.length) {
       // A role was named: rank inside that role's cohort.
       for (const role of intent.positions) {
-        const top = (await cohort(role, season)).slice(0, intent.limit)
+        const top = (await cohort(role, season, comp)).slice(0, intent.limit)
         cited.push(...top)
         sections.push(
-          `TOP ${top.length} ${role.toUpperCase()}S, ${season} (percentile within this role, minutes-adjusted):\n` +
+          `TOP ${top.length} ${role.toUpperCase()}S, ${scope} (percentile within this role, minutes-adjusted):\n` +
             JSON.stringify(top.map(brief), null, 1),
         )
       }
@@ -220,15 +228,15 @@ export async function POST(req: Request) {
     } else if (!cited.length) {
       // No role named — "best player", "top 3". Everyone is scored inside their
       // own role first, then ranked against each other.
-      const { data, error } = await supabase
-        .from("players")
-        .select("*")
-        .eq("season", season)
+      const { data, error } = await scopeLeague(
+        supabase.from("players").select("*").eq("season", season),
+        comp,
+      )
       if (error) throw new Error(error.message)
       const top = rankAllRoles(data ?? []).slice(0, intent.limit)
       cited.push(...top)
       sections.push(
-        `TOP ${top.length} PLAYERS BY ATTACKING IMPACT, ${season} — every outfield player scored on the SAME attacking metrics in one pool. "score" IS comparable across roles:\n` +
+        `TOP ${top.length} PLAYERS BY ATTACKING IMPACT, ${scope} — every outfield player scored on the SAME attacking metrics in one pool. "score" IS comparable across roles:\n` +
           JSON.stringify(top.map(brief), null, 1),
       )
       sections.push(

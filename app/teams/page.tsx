@@ -17,6 +17,8 @@ import {
   type TeamStat,
 } from "@/lib/teams"
 import { resolveSeason } from "@/lib/seasons"
+import { resolveCompetition, inCompetition, scopeQuery, UCL, type Competition } from "@/lib/competition"
+import { CompetitionToggle } from "@/components/competition-toggle"
 import { LeagueCrest } from "@/components/player-avatar"
 
 const POWER_STAT = { stat: "Expected goals", label: "xG" } as TeamStat
@@ -41,9 +43,11 @@ function formBar({ won, drawn, lost, played }: TeamTableRow) {
 function LeagueTable({
   league,
   rows,
+  link,
 }: {
   league: string
   rows: TeamTableRow[]
+  link: (team: string) => string
 }) {
   const topPoints = rows[0]?.points || 1
   return (
@@ -71,7 +75,7 @@ function LeagueTable({
         {rows.map((t, i) => (
           <Link
             key={t.team}
-            href={`/teams/compare?teams=${encodeURIComponent(t.team)}`}
+            href={link(t.team)}
             className="group grid grid-cols-[1.5rem_1fr_2rem_2.5rem_2.25rem] sm:grid-cols-[1.5rem_1fr_2rem_4.5rem_2.5rem_2.25rem] gap-2 items-center px-3 py-2 rounded-xl hover:bg-white/[0.04] transition-colors duration-150"
           >
             <span
@@ -215,7 +219,13 @@ function displayRating(raw: number, max: number): number {
   return 60 + (raw / max) * 39
 }
 
-function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
+function PowerRankings({
+  ranked,
+  link,
+}: {
+  ranked: RankedTeam[]
+  link: (team: string) => string
+}) {
   const top = ranked.slice(0, 5)
   const maxScore = top[0]?.score ?? 1
   return (
@@ -233,10 +243,15 @@ function PowerRankings({ ranked }: { ranked: RankedTeam[] }) {
       </header>
 
       <div className="px-3 pb-4 space-y-1">
+        {top.length === 0 && (
+          <p className="stat-label px-4 py-3">
+            Needs three matches per club — check back after round 3.
+          </p>
+        )}
         {top.map((t, i) => (
           <Link
             key={t.team}
-            href={`/teams/compare?teams=${encodeURIComponent(t.team)}`}
+            href={link(t.team)}
             className="group relative flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/[0.04] transition-colors"
           >
             <span
@@ -367,23 +382,28 @@ const WANTED_STATS = Array.from(
 async function Tables({
   searchParams,
 }: {
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; comp?: string }>
 }) {
-  const season = resolveSeason((await searchParams).season)
-  const { table: all, stats } = await fetchTeamData(supabase, season, WANTED_STATS)
+  const sp = await searchParams
+  const season = resolveSeason(sp.season)
+  const comp: Competition = resolveCompetition(sp.comp)
+  const { table: all, stats } = await fetchTeamData(supabase, season, WANTED_STATS, comp)
   const clubStats = indexStats(stats)
   const ranked = computePowerRankings(primaryRows(all), stats)
+  const link = (team: string) => `/teams/compare${scopeQuery(season, comp, { teams: team })}`
+  const clubLeague = (league: string) => (comp === "ucl" ? UCL : league)
 
   return (
     <div className="stagger space-y-5">
-      <PowerRankings ranked={ranked} />
+      <PowerRankings ranked={ranked} link={link} />
 
       <div className="grid lg:grid-cols-2 gap-5">
-        {FULL_LEAGUES.map((lg) => (
+        {FULL_LEAGUES.filter((lg) => inCompetition(lg, comp)).map((lg) => (
           <LeagueTable
             key={lg}
             league={lg}
             rows={all.filter((t) => t.league === lg)}
+            link={link}
           />
         ))}
       </div>
@@ -393,8 +413,8 @@ async function Tables({
           <ClubCard
             key={c.team}
             short={c.short}
-            league={c.league}
-            row={all.find((t) => t.team === c.team && t.league === c.league)}
+            league={clubLeague(c.league)}
+            row={all.find((t) => t.team === c.team && t.league === clubLeague(c.league))}
             stats={clubStats}
           />
         ))}
@@ -406,7 +426,7 @@ async function Tables({
 export default function TeamsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; comp?: string }>
 }) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
@@ -423,6 +443,7 @@ export default function TeamsPage({
         <p className="text-muted-foreground text-base max-w-md mb-6">
           League standings and per-match team profiles.
         </p>
+        <div className="flex flex-wrap items-center gap-3">
         <Link
           href="/teams/compare"
           className="surface-raised inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-transform duration-200 hover:-translate-y-px"
@@ -431,6 +452,10 @@ export default function TeamsPage({
           Compare teams
           <span aria-hidden>→</span>
         </Link>
+        <Suspense fallback={null}>
+          <CompetitionToggle />
+        </Suspense>
+        </div>
       </div>
 
       <Suspense

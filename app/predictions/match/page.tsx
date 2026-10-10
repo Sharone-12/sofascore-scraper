@@ -359,7 +359,7 @@ async function Content({
     )
   }
 
-  const [{ table, stats }, { data: allMatchData }] = await Promise.all([
+  const [{ table, stats, xg }, { data: allMatchData }] = await Promise.all([
     fetchTeamData(supabase, season, ALL_STATS),
     supabase
       .from("matches")
@@ -402,6 +402,7 @@ async function Content({
     finished,
     table,
     stats,
+    xg,
   )
   const pred = predictions[0]
 

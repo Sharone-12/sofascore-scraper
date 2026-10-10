@@ -1,3 +1,5 @@
+import { scopeLeague, type Competition } from "@/lib/competition"
+
 export const CURRENT_SEASON = "2026/27"
 
 /** Leagues ingested in full, so their `team_table` is a real standings table. */
@@ -167,13 +169,16 @@ export async function fetchTeamData(
   supabase: { from: (t: string) => any },
   season: string,
   wantedStats: string[],
-): Promise<{ table: TeamTableRow[]; stats: SeasonStatRow[] }> {
-  const { data: matchData } = await supabase
+  /** Omit for every competition (predictions need all of them). */
+  comp?: Competition,
+): Promise<{ table: TeamTableRow[]; stats: SeasonStatRow[]; xg: MatchXg }> {
+  let query = supabase
     .from("matches")
     .select("event_id, league, season, home, away, status, home_goals, away_goals")
     .eq("season", season)
     .eq("status", "finished")
-    .limit(1000)
+  if (comp) query = scopeLeague(query, comp)
+  const { data: matchData } = await query.limit(1000)
 
   const matchRows = (matchData || []) as {
     event_id: number; league: string; season: string
@@ -185,14 +190,25 @@ export async function fetchTeamData(
   const eventIds = matchRows.map((m: any) => m.event_id)
 
   const rawStats: { event_id: number; stat: string; home: string; away: string }[] = []
-  for (let i = 0; i < eventIds.length; i += 50) {
-    const batch = eventIds.slice(i, i + 50)
-    const { data } = await supabase
-      .from("match_stats")
-      .select("event_id, stat, home, away")
-      .in("event_id", batch)
-      .in("stat", wantedStats)
-      .limit(5000)
+  // PostgREST caps every response at 1000 rows and truncates silently, so a
+  // batch must hold at most 1000 / wantedStats rows' worth of matches. A flat
+  // 50 lost most of the match page's stats (50 matches x ~40 stats).
+  const perBatch = Math.max(1, Math.min(50, Math.floor(1000 / Math.max(1, wantedStats.length))))
+  const batches: number[][] = []
+  for (let i = 0; i < eventIds.length; i += perBatch) {
+    batches.push(eventIds.slice(i, i + perBatch))
+  }
+  const results = await Promise.all(
+    batches.map((batch) =>
+      supabase
+        .from("match_stats")
+        .select("event_id, stat, home, away")
+        .in("event_id", batch)
+        .in("stat", wantedStats)
+        .limit(1000),
+    ),
+  )
+  for (const { data } of results) {
     if (data) rawStats.push(...data)
   }
 
@@ -272,8 +288,21 @@ export async function fetchTeamData(
     })
   }
 
-  return { table, stats }
+  // Per-match xG, kept unaggregated: the Champions League model needs each
+  // side's xG against as well as for, which the per-team averages lose.
+  const xg: MatchXg = new Map()
+  for (const rs of rawStats) {
+    if (rs.stat !== "Expected goals" || xg.has(rs.event_id)) continue
+    const h = parseRaw(rs.home).value
+    const a = parseRaw(rs.away).value
+    if (h != null && a != null) xg.set(rs.event_id, [h, a])
+  }
+
+  return { table, stats, xg }
 }
+
+/** event_id -> [home xG, away xG]. */
+export type MatchXg = Map<number, [number, number]>
 
 /**
  * One row per club, for views that list clubs rather than a competition:

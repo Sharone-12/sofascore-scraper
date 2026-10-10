@@ -1,6 +1,15 @@
 import { Suspense } from "react"
 import { supabase } from "@/lib/supabase"
 import { resolveSeason } from "@/lib/seasons"
+import {
+  resolveCompetition,
+  inCompetition,
+  scopeLeague,
+  scopeQuery,
+  UCL,
+  type Competition,
+} from "@/lib/competition"
+import { CompetitionToggle } from "@/components/competition-toggle"
 import { notFound } from "next/navigation"
 import { RADAR_STATS, STAT_GROUPS, percentileRank } from "@/lib/stats"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
@@ -35,32 +44,45 @@ async function PlayerContent({
   searchParams,
 }: {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; comp?: string }>
 }) {
   const { slug } = await params
-  const season = resolveSeason((await searchParams).season)
+  const sp = await searchParams
+  const season = resolveSeason(sp.season)
+  const comp = resolveCompetition(sp.comp)
 
+  // Up to one row per season per competition, so no limit of 2: that dropped
+  // the Champions League row whenever a player had both.
   const { data: players } = await supabase
     .from("players")
     .select("*")
     .eq("slug", slug)
     .order("season", { ascending: false })
-    .limit(2)
+    .order("minutes", { ascending: false })
 
   if (!players || players.length === 0) notFound()
 
-  // Prefer the selected season; fall back to the newest one we hold for them,
-  // since a player may not appear in both.
-  const player = ((players.find((p) => p.season === season) ??
-    players[0]) as unknown) as Record<string, unknown>
+  // Prefer the chosen competition, then the selected season; fall back to the
+  // newest row we hold, since a player may not appear in both.
+  const inComp = players.filter((p) => inCompetition(p.league as string, comp))
+  const pool = inComp.length ? inComp : players
+  const player = ((pool.find((p) => p.season === season) ??
+    pool[0]) as unknown) as Record<string, unknown>
+  const shown: Competition = player.league === UCL ? "ucl" : "league"
+  const playsUcl = players.some((p) => p.league === UCL)
 
-  const { data: positionPeers } = await supabase
-    .from("players")
-    .select(RADAR_STATS.map((s) => s.key).join(","))
-    // Peers in the same ROLE, not the same broad bucket: a winger compared
-    // against every midfielder is measured on the wrong job.
-    .eq("role", (player.role as string) || (player.position as string))
-    .eq("season", player.season as string)
+  const { data: positionPeers } = await scopeLeague(
+    supabase
+      .from("players")
+      .select(RADAR_STATS.map((s) => s.key).join(","))
+      // Peers in the same ROLE, not the same broad bucket: a winger compared
+      // against every midfielder is measured on the wrong job.
+      .eq("role", (player.role as string) || (player.position as string))
+      .eq("season", player.season as string),
+    // ...and the same competition, or a full league season is ranked against
+    // a handful of Champions League games.
+    shown,
+  )
 
   const peers = (positionPeers as unknown) as Record<string, unknown>[] | null
 
@@ -137,9 +159,10 @@ async function PlayerContent({
             <span className="opacity-40">·</span>
             {player.season as string}
           </p>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            {playsUcl && <CompetitionToggle />}
             <Link
-              href={`/compare?players=${player.slug}`}
+              href={`/compare${scopeQuery(season, comp, { players: player.slug as string })}`}
               className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline transition-colors"
               style={{ color: "var(--brand)" }}
             >
@@ -175,7 +198,7 @@ async function PlayerContent({
           </CardTitle>
           <p className="text-xs text-muted-foreground/70">
             vs. all {(player.role as string) || (player.position as string)}s
-            · {player.season as string}
+            · {player.league as string} · {player.season as string}
           </p>
         </CardHeader>
         <CardContent>
@@ -207,7 +230,7 @@ export default function PlayerPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; comp?: string }>
 }) {
   return (
     <Suspense fallback={<Loading />}>

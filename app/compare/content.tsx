@@ -13,6 +13,8 @@ import {
 } from "@/lib/stats"
 import { LEAGUE_ABBR, LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
 import { resolveSeason } from "@/lib/seasons"
+import { resolveCompetition, inCompetition, scopeQuery, UCL } from "@/lib/competition"
+import { CompetitionToggle } from "@/components/competition-toggle"
 import { PlayerSearch } from "@/components/player-search"
 import { PlayerAvatar, TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { useAsk, AskAnswer } from "@/components/ask-panel"
@@ -36,6 +38,7 @@ export default function CompareContent() {
 
   const slugParam = searchParams.get("players")
   const season = resolveSeason(searchParams.get("season"))
+  const comp = resolveCompetition(searchParams.get("comp"))
   const slugs = slugParam?.split(",").filter(Boolean) || []
 
   useEffect(() => {
@@ -51,7 +54,9 @@ export default function CompareContent() {
       .order("season", { ascending: false })
       .then(({ data }) => {
         const seen = new Set<string>()
-        const rows = data || []
+        // Only the chosen competition: a player holds a league row and a
+        // Champions League row, and either could win the dedupe otherwise.
+        const rows = (data || []).filter((p) => inCompetition(p.league, comp))
         const unique = [
           ...rows.filter((p) => p.season === season),
           ...rows,
@@ -68,23 +73,26 @@ export default function CompareContent() {
         setLoading(false)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slugParam, season])
+  }, [slugParam, season, comp])
 
   function addPlayer(p: { slug: string }) {
     if (slugs.includes(p.slug) || slugs.length >= 3) return
     const next = [...slugs, p.slug]
-    router.push(`/compare?players=${next.join(",")}`, { scroll: false })
+    router.push(`/compare${scopeQuery(season, comp, { players: next.join(",") })}`, {
+      scroll: false,
+    })
   }
 
   function removePlayer(slug: string) {
     const next = slugs.filter((s) => s !== slug)
     router.push(
-      next.length ? `/compare?players=${next.join(",")}` : "/compare",
+      `/compare${scopeQuery(season, comp, next.length ? { players: next.join(",") } : {})}`,
       { scroll: false },
     )
   }
 
   const playerNames = players.map((p) => p.player as string)
+  const missing = slugs.filter((s) => !players.some((p) => p.slug === s))
 
   const modeLabel = mode === "p90" ? "per 90 minutes" : "season total"
 
@@ -122,6 +130,15 @@ export default function CompareContent() {
           Side-by-side {mode === "p90" ? "per-90" : "season total"} stats for up
           to 3 players
         </p>
+      </div>
+
+      <div className="mb-4">
+        <CompetitionToggle />
+        {!loading && missing.length > 0 && (
+          <p className="stat-label mt-3">
+            No {comp === "ucl" ? UCL : "league"} stats for {missing.join(", ")}
+          </p>
+        )}
       </div>
 
       <div className="max-w-md mb-6">

@@ -1,6 +1,8 @@
 import { Suspense } from "react"
 import { supabase } from "@/lib/supabase"
 import { resolveSeason } from "@/lib/seasons"
+import { resolveCompetition, scopeLeague, scopeQuery, COMPETITION_LABEL } from "@/lib/competition"
+import { CompetitionToggle } from "@/components/competition-toggle"
 import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
 import { PlayerSearch } from "@/components/player-search"
 import { LeagueCrest } from "@/components/player-avatar"
@@ -87,10 +89,14 @@ function Board({
   title,
   rows,
   statKey,
+  label,
+  scope,
 }: {
   title: string
   rows: Row[]
   statKey: "goals" | "assists"
+  label: string
+  scope: string
 }) {
   return (
     <section className="surface rounded-2xl bg-card overflow-hidden">
@@ -101,13 +107,13 @@ function Board({
         >
           {title}
         </h2>
-        <span className="stat-label">2026/27</span>
+        <span className="stat-label">{label}</span>
       </header>
       <div className="px-2 pb-2">
         {rows.map((p, i) => (
           <Link
             key={`${p.slug}-${i}`}
-            href={`/player/${p.slug}`}
+            href={`/player/${p.slug}${scope}`}
             className="group flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.04] transition-colors duration-150"
           >
             <span
@@ -141,22 +147,32 @@ function Board({
 async function Content({
   searchParams,
 }: {
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; comp?: string }>
 }) {
   // Awaited here, inside the Suspense boundary: cacheComponents won't let a
   // prerendered route read request data at the top level.
-  const season = resolveSeason((await searchParams).season)
+  const sp = await searchParams
+  const season = resolveSeason(sp.season)
+  const comp = resolveCompetition(sp.comp)
+  const scope = scopeQuery(season, comp)
+  const label = `${season} · ${COMPETITION_LABEL[comp]}`
   const [{ data: scorers }, { data: assisters }] = await Promise.all([
-    supabase
-      .from("players")
-      .select("player, slug, team, league, goals")
-      .eq("season", season)
+    scopeLeague(
+      supabase
+        .from("players")
+        .select("player, slug, team, league, goals")
+        .eq("season", season),
+      comp,
+    )
       .order("goals", { ascending: false })
       .limit(12),
-    supabase
-      .from("players")
-      .select("player, slug, team, league, assists")
-      .eq("season", season)
+    scopeLeague(
+      supabase
+        .from("players")
+        .select("player, slug, team, league, assists")
+        .eq("season", season),
+      comp,
+    )
       .order("assists", { ascending: false })
       .limit(12),
   ])
@@ -193,7 +209,7 @@ async function Content({
         {headline.map((s) => (
           <Link
             key={s.label}
-            href={s.slug ? `/player/${s.slug}` : "/"}
+            href={s.slug ? `/player/${s.slug}${scope}` : "/"}
             className="surface-raised rounded-2xl bg-card px-5 py-4 flex items-center gap-4 hover:-translate-y-px transition-transform duration-200"
           >
             <span style={{ color: "var(--pitch)" }}>{s.icon}</span>
@@ -220,8 +236,8 @@ async function Content({
       </div>
 
       <div className="grid md:grid-cols-2 gap-5 stagger">
-        <Board title="TOP SCORERS" rows={topScorers} statKey="goals" />
-        <Board title="TOP ASSISTS" rows={topAssisters} statKey="assists" />
+        <Board title="TOP SCORERS" rows={topScorers} statKey="goals" label={label} scope={scope} />
+        <Board title="TOP ASSISTS" rows={topAssisters} statKey="assists" label={label} scope={scope} />
       </div>
     </>
   )
@@ -230,7 +246,7 @@ async function Content({
 export default function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ season?: string }>
+  searchParams: Promise<{ season?: string; comp?: string }>
 }) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
@@ -250,6 +266,11 @@ export default function Home({
         </p>
         <div className="max-w-md">
           <PlayerSearch linkToProfile placeholder="Search for a player..." />
+        </div>
+        <div className="mt-4">
+          <Suspense fallback={null}>
+            <CompetitionToggle />
+          </Suspense>
         </div>
       </div>
 

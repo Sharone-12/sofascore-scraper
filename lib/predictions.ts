@@ -1,5 +1,6 @@
-import type { TeamTableRow, SeasonStatRow } from "@/lib/teams"
-import { indexStats, statValue } from "@/lib/teams"
+import type { TeamTableRow, SeasonStatRow, MatchXg } from "@/lib/teams"
+import { indexStats, statValue, FULL_LEAGUES, SINGLE_CLUBS } from "@/lib/teams"
+import { UCL } from "@/lib/competition"
 
 export type MatchPrediction = {
   event_id: number
@@ -70,6 +71,175 @@ function matchProbabilities(
 }
 
 const HOME_ADVANTAGE = 0.2
+
+// ── Champions League model ──
+//
+// A club plays one or two Champions League games before its odds matter, far
+// too few to rate it on. So each club's attack and defence blend three things:
+//   - its Champions League games this season,
+//   - its domestic league games this season (where we hold that league),
+//   - an average Champions League side, so a thin record is pulled to the mean.
+// Backtested point-in-time on the 2025/26 league phase (144 matches), log-loss:
+//   Champions League record alone, unshrunk ..... 1.109
+//   every team rated average .................... 1.028
+//   Champions League record, shrunk ............. 0.976
+//   + domestic league form (this model) ......... 0.959
+// and on 2026/27 round 1, which the settings never saw: 0.879 vs 0.962.
+
+/** Share of a goal-rate that comes from xG; the rest from goals actually scored. */
+const UCL_XG_WEIGHT = 0.6
+/** A domestic league game counts as this much of a Champions League game. */
+const UCL_DOMESTIC_WEIGHT = 0.75
+/** Pseudo-games of an exactly average side mixed into every rating. */
+const UCL_PRIOR_GAMES = 4
+/** Home goals 1.93 vs away 1.45 per match in 2025/26: sqrt of the ratio each way. */
+const UCL_HOME_MULT = 1.15
+/** Goals per team-match before any are played (2025/26 league phase: 1.69). */
+const UCL_PRIOR_AVG = 1.69
+/** Ligue 1 / Bundesliga average: we hold only PSG's and Bayern's games there. */
+const SINGLE_LEAGUE_AVG = 1.4
+
+export type FinishedMatch = {
+  event_id: number
+  league: string
+  date: string
+  home: string
+  away: string
+  home_goals: number | null
+  away_goals: number | null
+}
+
+export type UclStrength = {
+  team: string
+  /** Goal rates relative to an average Champions League side (1 = average). */
+  attack: number
+  defence: number
+  /** Expected goal margin per match against an average side, neutral venue. */
+  rating: number
+  uclPlayed: number
+  domesticPlayed: number
+  domesticLeague: string | null
+}
+
+export type UclModel = { avg: number; teams: Map<string, UclStrength> }
+
+type Tally = { n: number; gf: number; ga: number; xf: number; xa: number; nx: number }
+
+function rates(t: Tally, avg: number): [number, number] {
+  let f = t.gf / t.n
+  let a = t.ga / t.n
+  if (t.nx) {
+    f = UCL_XG_WEIGHT * (t.xf / t.nx) + (1 - UCL_XG_WEIGHT) * f
+    a = UCL_XG_WEIGHT * (t.xa / t.nx) + (1 - UCL_XG_WEIGHT) * a
+  }
+  return [f / avg, a / avg]
+}
+
+/**
+ * Rate every Champions League club from matches played before `before`
+ * (exclusive, "YYYY-MM-DD"), or from all of them when it is omitted. Point in
+ * time matters for settled matches: rating a game with its own result in the
+ * data flatters the accuracy tracker.
+ */
+export function uclStrengths(
+  finished: FinishedMatch[],
+  xg: MatchXg | undefined,
+  uclTeams: Iterable<string>,
+  before?: string,
+): UclModel {
+  const full = new Set<string>(FULL_LEAGUES)
+  const single = new Map<string, string>(SINGLE_CLUBS.map((c) => [c.team, c.league]))
+  const tallies = new Map<string, Tally>()
+  const goals = new Map<string, [number, number]>()
+
+  for (const m of finished) {
+    if (before && m.date >= before) continue
+    if (m.home_goals == null || m.away_goals == null) continue
+    const x = xg?.get(m.event_id)
+    const sides: [string, number, number, number | undefined, number | undefined][] = [
+      [m.home, m.home_goals, m.away_goals, x?.[0], x?.[1]],
+      [m.away, m.away_goals, m.home_goals, x?.[1], x?.[0]],
+    ]
+    for (const [team, gf, ga, xf, xa] of sides) {
+      if (!full.has(m.league) && single.get(team) !== m.league) continue
+      const key = `${m.league}|${team}`
+      const t = tallies.get(key) ?? { n: 0, gf: 0, ga: 0, xf: 0, xa: 0, nx: 0 }
+      t.n++
+      t.gf += gf
+      t.ga += ga
+      if (xf != null && xa != null) {
+        t.xf += xf
+        t.xa += xa
+        t.nx++
+      }
+      tallies.set(key, t)
+    }
+    if (full.has(m.league)) {
+      const g = goals.get(m.league) ?? [0, 0]
+      g[0] += m.home_goals + m.away_goals
+      g[1] += 2
+      goals.set(m.league, g)
+    }
+  }
+
+  // Shrunk toward the prior too, so round 1's average isn't one evening's noise.
+  const [ug, un] = goals.get(UCL) ?? [0, 0]
+  const avg = (ug + UCL_PRIOR_AVG * 20) / (un + 20)
+
+  const teams = new Map<string, UclStrength>()
+  for (const team of uclTeams) {
+    let att = UCL_PRIOR_GAMES
+    let def = UCL_PRIOR_GAMES
+    let weight = UCL_PRIOR_GAMES
+    const u = tallies.get(`${UCL}|${team}`)
+    if (u?.n) {
+      const [a, d] = rates(u, avg)
+      att += u.n * a
+      def += u.n * d
+      weight += u.n
+    }
+    let domesticLeague: string | null = null
+    let domesticPlayed = 0
+    for (const [key, t] of tallies) {
+      const [league, name] = key.split("|")
+      if (name !== team || league === UCL || !t.n) continue
+      const [lg, ln] = goals.get(league) ?? [0, 0]
+      const leagueAvg = ln ? lg / ln : SINGLE_LEAGUE_AVG
+      // A club's rate against its own league, taken as its rate against the
+      // Champions League field. Fitting a per-league conversion did no better
+      // in the backtest, so none is applied.
+      const [a, d] = rates(t, leagueAvg)
+      const w = UCL_DOMESTIC_WEIGHT * t.n
+      att += w * a
+      def += w * d
+      weight += w
+      domesticLeague = league
+      domesticPlayed = t.n
+    }
+    const attack = att / weight
+    const defence = def / weight
+    teams.set(team, {
+      team,
+      attack,
+      defence,
+      rating: avg * (attack - defence),
+      uclPlayed: u?.n ?? 0,
+      domesticPlayed,
+      domesticLeague,
+    })
+  }
+  return { avg, teams }
+}
+
+function uclExpectedGoals(home: string, away: string, model: UclModel): [number, number] {
+  const h = model.teams.get(home)
+  const a = model.teams.get(away)
+  const ha = h?.attack ?? 1
+  const hd = h?.defence ?? 1
+  const aa = a?.attack ?? 1
+  const ad = a?.defence ?? 1
+  return [ha * ad * model.avg * UCL_HOME_MULT, (aa * hd * model.avg) / UCL_HOME_MULT]
+}
 
 type TeamProfile = {
   xG: number
@@ -182,15 +352,10 @@ export function predictMatches(
     away: string
     away_id: number | null
   }[],
-  finished: {
-    event_id: number
-    home: string
-    away: string
-    home_goals: number | null
-    away_goals: number | null
-  }[],
+  finished: FinishedMatch[],
   table: TeamTableRow[],
   stats?: SeasonStatRow[],
+  xg?: MatchXg,
 ): MatchPrediction[] {
   // A club has one row per competition, so look it up in the match's own.
   const teamMap = new Map(table.map((t) => [`${t.league}|${t.team}`, t]))
@@ -224,6 +389,22 @@ export function predictMatches(
 
   const finishedMap = new Map(finished.map((m) => [m.event_id, m]))
 
+  // Champions League ratings as of each match date, computed once per date.
+  const uclTeams = new Set(
+    upcoming.filter((m) => m.league === UCL).flatMap((m) => [m.home, m.away]),
+  )
+  const uclAsOf = new Map<string, UclModel>()
+  const uclNow = uclStrengths(finished, xg, uclTeams)
+  const uclModel = (m: { event_id: number; date: string }) => {
+    if (!finishedMap.has(m.event_id)) return uclNow
+    let model = uclAsOf.get(m.date)
+    if (!model) {
+      model = uclStrengths(finished, xg, uclTeams, m.date)
+      uclAsOf.set(m.date, model)
+    }
+    return model
+  }
+
   return upcoming.map((m) => {
     const homeTeam = teamMap.get(`${m.league}|${m.home}`)
     const awayTeam = teamMap.get(`${m.league}|${m.away}`)
@@ -235,7 +416,9 @@ export function predictMatches(
     let homeExpected: number
     let awayExpected: number
 
-    if (homeProfile && awayProfile) {
+    if (m.league === UCL) {
+      ;[homeExpected, awayExpected] = uclExpectedGoals(m.home, m.away, uclModel(m))
+    } else if (homeProfile && awayProfile) {
       const homeAttack = estimateAttack(homeProfile, avg.goals)
       const homeDefence = estimateDefence(homeProfile, avg.goals)
       const awayAttack = estimateAttack(awayProfile, avg.goals)

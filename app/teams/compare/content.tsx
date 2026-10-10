@@ -18,6 +18,8 @@ import {
   type TeamTableRow,
 } from "@/lib/teams"
 import { resolveSeason } from "@/lib/seasons"
+import { resolveCompetition, scopeQuery, UCL } from "@/lib/competition"
+import { CompetitionToggle } from "@/components/competition-toggle"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -123,6 +125,7 @@ export default function TeamCompareContent() {
   const searchParams = useSearchParams()
   const teamsParam = searchParams.get("teams")
   const season = resolveSeason(searchParams.get("season"))
+  const comp = resolveCompetition(searchParams.get("comp"))
 
   const selected = useMemo(
     () => teamsParam?.split(",").filter(Boolean) ?? [],
@@ -138,7 +141,7 @@ export default function TeamCompareContent() {
     let cancelled = false
     async function load() {
       const [{ table: built, stats: builtStats }, idsRes] = await Promise.all([
-        fetchTeamData(supabase, season, WANTED_STATS),
+        fetchTeamData(supabase, season, WANTED_STATS, comp),
         supabase
           .from("players")
           .select("team, team_id")
@@ -158,13 +161,12 @@ export default function TeamCompareContent() {
     return () => {
       cancelled = true
     }
-  }, [season])
+  }, [season, comp])
 
   function setTeams(next: string[]) {
+    // Keep season and competition: dropping them reset the view on every pick.
     router.push(
-      next.length
-        ? `/teams/compare?teams=${next.map(encodeURIComponent).join(",")}`
-        : "/teams/compare",
+      `/teams/compare${scopeQuery(season, comp, next.length ? { teams: next.join(",") } : {})}`,
       { scroll: false },
     )
   }
@@ -210,6 +212,7 @@ export default function TeamCompareContent() {
   const standings = selected
     .map((name) => table.find((t) => t.team === name))
     .filter(Boolean) as TeamTableRow[]
+  const missing = selected.filter((name) => !table.some((t) => t.team === name))
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
@@ -223,8 +226,18 @@ export default function TeamCompareContent() {
           <span className="font-bold">club.</span>
         </h1>
         <p className="text-muted-foreground text-base">
-          Per-match averages across {season}. Add up to {MAX_TEAMS}.
+          Per-match averages across {season}
+          {comp === "ucl" ? " in the Champions League" : " in league play"}. Add up
+          to {MAX_TEAMS}.
         </p>
+        <div className="mt-4">
+          <CompetitionToggle />
+        </div>
+        {!loading && missing.length > 0 && (
+          <p className="stat-label mt-3">
+            No {comp === "ucl" ? UCL : "league"} matches for {missing.join(", ")}
+          </p>
+        )}
       </div>
 
       <div className="mb-6">
