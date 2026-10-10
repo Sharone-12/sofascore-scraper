@@ -100,22 +100,31 @@ export function LeagueCrest({
   ])
   if (exhausted) return null
 
+  // The Premier League and Champions League marks are dark purple and navy,
+  // invisible on a dark card, so league crests sit on a light tile. Same outer
+  // size as before, so layouts don't shift.
+  const inner = Math.round(size * 0.78)
   return (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img
-      key={src}
-      ref={ref}
-      src={src}
-      alt={name}
-      width={size}
-      height={size}
-      loading="lazy"
-      decoding="async"
-      referrerPolicy="no-referrer"
-      onError={next}
-      className="inline-block shrink-0 object-contain"
-      style={{ width: size, height: size }}
-    />
+    <span
+      className="inline-flex shrink-0 items-center justify-center rounded-md"
+      style={{ width: size, height: size, background: "oklch(0.96 0 0)" }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        key={src}
+        ref={ref}
+        src={src}
+        alt={name}
+        width={inner}
+        height={inner}
+        loading="lazy"
+        decoding="async"
+        referrerPolicy="no-referrer"
+        onError={next}
+        className="object-contain"
+        style={{ width: inner, height: inner }}
+      />
+    </span>
   )
 }
 

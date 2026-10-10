@@ -240,7 +240,7 @@ export default function CompareContent() {
                 onClick={() => setMode(value)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   mode === value
-                    ? "bg-card text-foreground"
+                    ? "bg-white/10 text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >

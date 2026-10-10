@@ -447,7 +447,7 @@ export default function TeamsPage({
         <Link
           href="/teams/compare"
           className="surface-raised inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-transform duration-200 hover:-translate-y-px"
-          style={{ background: "var(--primary)" }}
+          style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}
         >
           Compare teams
           <span aria-hidden>→</span>

@@ -309,7 +309,7 @@ function LeagueToggle({ active, season }: { active: string; season?: string }) {
             href={href}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${
               active === f.key
-                ? "bg-card text-foreground"
+                ? "bg-white/10 text-foreground"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
