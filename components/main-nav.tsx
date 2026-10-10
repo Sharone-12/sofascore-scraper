@@ -18,6 +18,26 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
+/**
+ * SSR fallback — same shape as MainNav but with no active pill (needs
+ * usePathname, which blocks prerender under Next 16 Cache Components).
+ * Rendered until the client component streams in.
+ */
+export function MainNavFallback() {
+  return (
+    <div className="segment relative flex rounded-full p-1 gap-0.5">
+      {LINKS.map((l) => (
+        <span
+          key={l.href}
+          className="relative z-10 px-3.5 sm:px-4 py-1.5 rounded-full text-sm font-medium text-muted-foreground"
+        >
+          {l.label}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 export function MainNav() {
   const pathname = usePathname()
   const containerRef = useRef<HTMLDivElement>(null)

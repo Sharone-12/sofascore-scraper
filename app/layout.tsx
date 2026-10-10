@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 import { AskPanel } from "@/components/ask-panel"
 import { SeasonToggle } from "@/components/season-toggle"
-import { MainNav } from "@/components/main-nav"
+import { MainNav, MainNavFallback } from "@/components/main-nav"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import "./globals.css"
 
@@ -75,7 +75,9 @@ export default function RootLayout({
               <Suspense fallback={null}>
                 <SeasonToggle />
               </Suspense>
-              <MainNav />
+              <Suspense fallback={<MainNavFallback />}>
+                <MainNav />
+              </Suspense>
             </div>
           </div>
         </nav>
