@@ -177,7 +177,9 @@ async function PlayerContent({
         {keyStats.map((s) => (
           <div
             key={s.label}
-            className="surface rounded-2xl bg-card px-4 py-5 text-center"
+            className={`surface rounded-2xl px-4 py-5 text-center ${
+              player.team === "FC Barcelona" ? "barca-stripes" : "bg-card"
+            }`}
           >
             <div
               className="stat-figure text-4xl"

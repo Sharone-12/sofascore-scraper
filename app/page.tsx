@@ -117,7 +117,9 @@ function Board({
           <Link
             key={`${p.slug}-${i}`}
             href={`/player/${p.slug}${scope}`}
-            className="row-item flex items-center gap-3 px-3 py-2.5 rounded-xl"
+            className={`row-item flex items-center gap-3 px-3 py-2.5 rounded-xl ${
+              p.team === "FC Barcelona" ? "barca-stripes" : ""
+            }`}
           >
             <span className="rank-badge" data-rank={i + 1}>
               {i + 1}
@@ -235,7 +237,9 @@ async function Content({
           <Link
             key={s.label}
             href={s.slug ? `/player/${s.slug}${scope}` : "/"}
-            className="card-lift surface-raised rounded-2xl bg-card px-5 py-4 flex items-center gap-4"
+            className={`card-lift surface-raised rounded-2xl px-5 py-4 flex items-center gap-4 ${
+              s.team === "FC Barcelona" ? "barca-stripes" : "bg-card"
+            }`}
           >
             <span style={{ color: "var(--pitch)" }}>{s.icon}</span>
             <span className="flex-1 min-w-0">

@@ -46,7 +46,11 @@ export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
 
   return (
     <section
-      className="surface rounded-2xl bg-card overflow-hidden"
+      className={`surface rounded-2xl overflow-hidden ${
+        m.home === "FC Barcelona" || m.away === "FC Barcelona"
+          ? "barca-stripes"
+          : "bg-card"
+      }`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

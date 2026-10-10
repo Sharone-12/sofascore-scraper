@@ -80,7 +80,9 @@ function LeagueTable({
           <Link
             key={t.team}
             href={link(t.team)}
-            className="group grid grid-cols-[1.5rem_1fr_2rem_2.5rem_2.25rem] sm:grid-cols-[1.5rem_1fr_2rem_4.5rem_2.5rem_2.25rem] gap-2 items-center px-3 py-2 rounded-xl hover:bg-white/[0.04] transition-colors duration-150"
+            className={`group grid grid-cols-[1.5rem_1fr_2rem_2.5rem_2.25rem] sm:grid-cols-[1.5rem_1fr_2rem_4.5rem_2.5rem_2.25rem] gap-2 items-center px-3 py-2 rounded-xl hover:bg-white/[0.04] transition-colors duration-150 ${
+              t.team === "FC Barcelona" ? "barca-stripes" : ""
+            }`}
           >
             <span
               className="stat-figure text-sm text-right"
@@ -278,7 +280,9 @@ function PowerRankings({
           <Link
             key={t.team}
             href={link(t.team)}
-            className="group relative flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/[0.04] transition-colors"
+            className={`group relative flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/[0.04] transition-colors ${
+              t.team === "FC Barcelona" ? "barca-stripes" : ""
+            }`}
           >
             <span
               className="stat-figure text-2xl w-8 text-center shrink-0"

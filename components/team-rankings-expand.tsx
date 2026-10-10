@@ -98,7 +98,9 @@ export function TeamRankingsExpand({
                 <Link
                   key={`${t.team}-${t.league}`}
                   href={t.href}
-                  className="row-item flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                  className={`row-item flex items-center gap-3 px-3 py-2.5 rounded-xl ${
+                    t.team === "FC Barcelona" ? "barca-stripes" : ""
+                  }`}
                 >
                   <span className="rank-badge" data-rank={absoluteRank}>
                     {absoluteRank}
