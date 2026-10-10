@@ -49,7 +49,11 @@ function MatchCard({ p }: { p: MatchPrediction }) {
   return (
     <Link
       href={`/predictions/match?id=${p.event_id}`}
-      className="surface rounded-xl bg-card px-4 py-3.5 space-y-3 block hover:-translate-y-px transition-transform duration-200"
+      className={`surface rounded-xl px-4 py-3.5 space-y-3 block hover:-translate-y-px transition-transform duration-200 ${
+        p.home === "FC Barcelona" || p.away === "FC Barcelona"
+          ? "barca-stripes"
+          : "bg-card"
+      }`}
     >
       <div className="flex items-center justify-between gap-2">
         <span className="shrink-0 flex items-center gap-1.5">

@@ -430,7 +430,13 @@ async function Content({
         <span>←</span> Predictions
       </Link>
 
-      <section className="spark surface rounded-2xl bg-card px-5 py-6 mb-6 text-center">
+      <section
+        className={`spark surface rounded-2xl px-5 py-6 mb-6 text-center ${
+          match.home === "FC Barcelona" || match.away === "FC Barcelona"
+            ? "barca-stripes"
+            : "bg-card"
+        }`}
+      >
         <div className="stat-label mb-2 flex items-center justify-center gap-2">
           {leagueTournamentId && (
             <LeagueCrest tournamentId={leagueTournamentId} name={match.league} size={22} />

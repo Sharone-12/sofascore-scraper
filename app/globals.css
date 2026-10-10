@@ -396,6 +396,23 @@
   100% { transform: translateX(260%); opacity: 0; }
 }
 
+/* Blaugrana stripes — only for FC Barcelona cards. The dark overlay keeps
+   content readable; the stripes read as a textured accent, not a billboard. */
+.barca-stripes {
+  background-color: var(--card);
+  background-image:
+    linear-gradient(oklch(0.18 0 0 / 82%), oklch(0.18 0 0 / 88%)),
+    repeating-linear-gradient(
+      90deg,
+      oklch(0.22 0.08 265) 0 22px,
+      oklch(0.35 0.14 265) 22px 70px,
+      oklch(0.22 0.08 265) 70px 82px,
+      oklch(0.28 0.14 10) 82px 120px,
+      oklch(0.42 0.19 10) 120px 160px,
+      oklch(0.28 0.14 10) 160px 172px
+    );
+}
+
 @media (prefers-reduced-motion: reduce) {
   .stagger > *, .stat-pop, .shimmer-text, .card-lift, .row-item,
   .spark::before {
