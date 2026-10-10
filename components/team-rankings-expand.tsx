@@ -32,8 +32,8 @@ export function TeamRankingsExpand({
   teamIds: Map<string, number>
 }) {
   const [q, setQ] = useState("")
-  const maxScore = rows[0]?.score ?? 1
-  const displayRating = (raw: number) => 60 + (raw / maxScore) * 39
+  const displayRating = (score: number) =>
+    Math.max(50, Math.min(99, 55 + score * 0.5))
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase()

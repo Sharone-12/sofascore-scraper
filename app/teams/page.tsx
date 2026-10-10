@@ -233,8 +233,12 @@ type RankedTeam = {
   played: number
 }
 
-function displayRating(raw: number, max: number): number {
-  return 60 + (raw / max) * 39
+/**
+ * Absolute 50–99 rating. Only sustained near-perfect form reaches 99;
+ * leader-level teams naturally land in the mid-to-high 90s, not 99 by default.
+ */
+function displayRating(score: number): number {
+  return Math.max(50, Math.min(99, 55 + score * 0.5))
 }
 
 function PowerRankings({
@@ -247,7 +251,6 @@ function PowerRankings({
   teamIds: Map<string, number>
 }) {
   const top = ranked.slice(0, 5)
-  const maxScore = top[0]?.score ?? 1
   return (
     <section className="surface rounded-2xl bg-card overflow-hidden">
       <header className="px-5 pt-5 pb-4">
@@ -311,7 +314,7 @@ function PowerRankings({
                 <div
                   className="h-[5px] rounded-full"
                   style={{
-                    width: `${(displayRating(t.score, maxScore) / 99) * 100}%`,
+                    width: `${(displayRating(t.score) / 99) * 100}%`,
                     background: POWER_COLORS[i],
                     opacity: 0.7,
                     minWidth: "1rem",
@@ -326,7 +329,7 @@ function PowerRankings({
                   className="stat-figure text-lg"
                   style={{ color: POWER_COLORS[i] }}
                 >
-                  {displayRating(t.score, maxScore).toFixed(1)}
+                  {displayRating(t.score).toFixed(1)}
                 </div>
                 <div className="stat-label">rating</div>
               </div>
@@ -353,10 +356,6 @@ function PowerRankings({
   )
 }
 
-function normalize(v: number, min: number, max: number): number {
-  return max === min ? 0.5 : (v - min) / (max - min)
-}
-
 function computePowerRankings(
   table: TeamTableRow[],
   stats: SeasonStatRow[],
@@ -365,34 +364,28 @@ function computePowerRankings(
   const teams = table.filter((t) => t.played >= 3)
   if (teams.length === 0) return []
 
+  // Bayesian shrinkage toward league-average form, so a small sample doesn't
+  // let a 2-win-from-2 team top the chart over a proven leader.
   const PRIOR_PPG = 1.3
   const PRIOR_GDPG = 0
   const K = 4
 
-  const adjPpg = (t: TeamTableRow) =>
-    (t.points + PRIOR_PPG * K) / (t.played + K)
-  const adjGdpg = (t: TeamTableRow) =>
-    (t.goal_diff + PRIOR_GDPG * K) / (t.played + K)
-
-  const ppgVals = teams.map(adjPpg)
-  const gdVals = teams.map(adjGdpg)
-  const xgVals = teams.map((t) =>
-    statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT),
-  )
-
-  const ppgMin = Math.min(...ppgVals), ppgMax = Math.max(...ppgVals)
-  const gdMin = Math.min(...gdVals), gdMax = Math.max(...gdVals)
-  const xgMin = Math.min(...xgVals), xgMax = Math.max(...xgVals)
+  // Absolute anchors — a team is scored against football norms, not against
+  // the rest of this cohort. Each component → 0–100.
+  const ppgPts = (ppg: number) =>
+    Math.max(0, Math.min(100, (ppg / 3) * 100))         // 3 ppg = 100
+  const gdPts = (gdpg: number) =>
+    Math.max(0, Math.min(100, ((gdpg + 1) / 4) * 100))  // -1 = 0, +3 = 100
+  const xgPts = (xg: number) =>
+    Math.max(0, Math.min(100, (xg / 3) * 100))          // 3 xG/g = 100
 
   return teams
     .map((t) => {
-      const ppg = adjPpg(t)
-      const gdpg = adjGdpg(t)
+      const ppgRaw = (t.points + PRIOR_PPG * K) / (t.played + K)
+      const gdpgRaw = (t.goal_diff + PRIOR_GDPG * K) / (t.played + K)
       const xg = statValue(byKey.get(`${t.team}|${POWER_STAT.stat}`), POWER_STAT)
       const score =
-        normalize(ppg, ppgMin, ppgMax) * 60 +
-        normalize(gdpg, gdMin, gdMax) * 30 +
-        normalize(xg, xgMin, xgMax) * 10
+        ppgPts(ppgRaw) * 0.5 + gdPts(gdpgRaw) * 0.3 + xgPts(xg) * 0.2
       return {
         team: t.team,
         league: t.league,
