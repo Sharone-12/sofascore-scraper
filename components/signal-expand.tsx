@@ -135,9 +135,7 @@ export function SignalExpand({
                 <Link
                   key={`${p.slug}-${absoluteRank}`}
                   href={`/player/${p.slug}${scope}`}
-                  className={`row-item flex items-center gap-3 px-3 py-2.5 rounded-xl ${
-                    p.team === "FC Barcelona" ? "barca-stripes" : ""
-                  }`}
+                  className="row-item flex items-center gap-3 px-3 py-2.5 rounded-xl"
                 >
                   <span className="rank-badge" data-rank={absoluteRank}>
                     {absoluteRank}
