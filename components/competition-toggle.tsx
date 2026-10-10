@@ -7,6 +7,7 @@ import {
   DEFAULT_COMPETITION,
   resolveCompetition,
 } from "@/lib/competition"
+import { SlidingSegment } from "@/components/sliding-segment"
 
 /**
  * League / UCL switch. Rewrites ?comp= on the current page, keeping every other
@@ -28,26 +29,14 @@ export function CompetitionToggle() {
   }
 
   return (
-    <div
-      className="segment inline-flex rounded-full p-1 gap-0.5"
-      role="group"
-      aria-label="Competition"
-    >
-      {COMPETITIONS.map((c) => (
-        <button
-          key={c}
-          type="button"
-          aria-pressed={c === current}
-          onClick={() => pick(c)}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 ${
-            c === current
-              ? "bg-white/10 text-foreground"
-              : "text-muted-foreground hover:text-foreground hover:bg-white/5"
-          }`}
-        >
-          {COMPETITION_LABEL[c]}
-        </button>
-      ))}
-    </div>
+    <SlidingSegment
+      ariaLabel="Competition"
+      activeKey={current}
+      items={COMPETITIONS.map((c) => ({
+        key: c,
+        label: COMPETITION_LABEL[c],
+        onPick: () => pick(c),
+      }))}
+    />
   )
 }

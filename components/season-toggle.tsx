@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import { SEASONS, resolveSeason, shortSeason } from "@/lib/seasons"
+import { SlidingSegment } from "@/components/sliding-segment"
 
 /**
  * Switches season by rewriting ?season= on the current page, so it works on
@@ -24,26 +25,14 @@ export function SeasonToggle() {
   }
 
   return (
-    <div
-      className="segment flex rounded-full p-1 gap-0.5"
-      role="group"
-      aria-label="Season"
-    >
-      {SEASONS.map((s) => (
-        <button
-          key={s}
-          type="button"
-          aria-pressed={s === current}
-          onClick={() => pick(s)}
-          className={`px-2.5 py-1.5 rounded-full text-xs font-medium tabular-nums transition-colors duration-200 ${
-            s === current
-              ? "bg-white/10 text-foreground"
-              : "text-muted-foreground hover:text-foreground hover:bg-white/5"
-          }`}
-        >
-          {shortSeason(s)}
-        </button>
-      ))}
-    </div>
+    <SlidingSegment
+      ariaLabel="Season"
+      activeKey={current}
+      items={SEASONS.map((s) => ({
+        key: s,
+        label: shortSeason(s),
+        onPick: () => pick(s),
+      }))}
+    />
   )
 }
