@@ -363,37 +363,37 @@
 }
 
 /* Sparkle sweep: a thin pitch-green beam travels across the top edge of a
-   card every ~7s. Pure CSS, lives on ::before so markup stays clean.
-   Add the .spark class to any card that wants the effect. */
-.spark { position: relative; }
+   card every ~5s. Lives on ::before so markup stays clean. Plain oklch
+   values (not relative-color syntax) for broad browser support. */
+.spark { position: relative; isolation: isolate; }
 .spark::before {
   content: "";
   position: absolute;
-  top: 0;
+  top: -1px;
   left: 0;
-  height: 1px;
-  width: 35%;
+  height: 2px;
+  width: 50%;
   pointer-events: none;
-  border-radius: inherit;
+  z-index: 1;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    oklch(from var(--pitch) l c h / 85%) 50%,
+    oklch(0.95 0.17 150 / 95%) 50%,
     transparent 100%
   );
   box-shadow:
-    0 0 8px oklch(from var(--pitch) l c h / 60%),
-    0 0 14px oklch(from var(--pitch) l c h / 35%);
+    0 0 10px oklch(0.80 0.19 150 / 85%),
+    0 0 22px oklch(0.80 0.19 150 / 55%);
   opacity: 0;
   transform: translateX(-100%);
-  animation: spark-sweep 7s ease-in-out infinite;
+  animation: spark-sweep 5s ease-in-out infinite;
 }
 @keyframes spark-sweep {
   0%   { transform: translateX(-100%); opacity: 0; }
-  8%   { opacity: 1; }
-  48%  { opacity: 1; }
-  55%  { opacity: 0; }
-  100% { transform: translateX(285%); opacity: 0; }
+  6%   { opacity: 1; }
+  50%  { opacity: 1; }
+  58%  { opacity: 0; }
+  100% { transform: translateX(220%); opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
