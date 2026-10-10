@@ -299,7 +299,7 @@ export default function Home({
             </Suspense>
           </div>
         </div>
-        <Suspense fallback={<Skeleton className="h-[260px] rounded-2xl" />}>
+        <Suspense fallback={<Skeleton className="h-[230px] rounded-2xl" />}>
           <Upcoming />
         </Suspense>
       </div>

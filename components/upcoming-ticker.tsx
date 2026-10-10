@@ -34,7 +34,7 @@ export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
 
   if (matches.length === 0) {
     return (
-      <section className="surface rounded-2xl bg-card px-5 py-4 h-[108px] flex items-center">
+      <section className="surface rounded-2xl bg-card px-6 py-5 h-[230px] flex items-center justify-center">
         <span className="stat-label">No upcoming matches this week.</span>
       </section>
     )
@@ -49,36 +49,47 @@ export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <header className="flex items-baseline justify-between px-5 pt-4 pb-1">
+      <header className="flex items-baseline justify-between px-6 pt-5 pb-2">
         <h2
-          className="text-sm font-semibold tracking-tight uppercase"
+          className="text-lg font-semibold tracking-tight uppercase"
           style={{ fontFamily: "var(--font-condensed)" }}
         >
           This week
         </h2>
-        <span className="stat-label">
+        <span className="stat-label text-xs">
           {i + 1} / {matches.length}
         </span>
       </header>
-      <div className="px-2 pb-2 h-[68px]">
+      <div className="px-3 pb-4 h-[170px]">
         <Link
           key={m.event_id}
           href={`/predictions/match?event=${m.event_id}`}
-          className="row-item animate-in fade-in slide-in-from-right-3 duration-500 flex items-center gap-3 px-3 py-2.5 rounded-xl h-full"
+          className="row-item animate-in fade-in slide-in-from-right-3 duration-500 flex flex-col justify-center gap-3 px-4 py-4 rounded-xl h-full"
         >
-          <span className="stat-label w-14 shrink-0">{formatWhen(m.date)}</span>
-          <span className="flex-1 min-w-0 flex items-center gap-2">
-            {m.home_id != null && (
-              <TeamCrest teamId={m.home_id} name={m.home} size={20} />
-            )}
-            <span className="truncate text-sm font-medium">{m.home}</span>
-            <span className="text-muted-foreground text-xs">vs</span>
-            {m.away_id != null && (
-              <TeamCrest teamId={m.away_id} name={m.away} size={20} />
-            )}
-            <span className="truncate text-sm font-medium">{m.away}</span>
-          </span>
-          {tid && <LeagueCrest tournamentId={tid} name={m.league} size={16} />}
+          <div className="flex items-center justify-between gap-3">
+            <span className="stat-label text-xs">{formatWhen(m.date)}</span>
+            {tid && <LeagueCrest tournamentId={tid} name={m.league} size={20} />}
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex-1 min-w-0 flex items-center gap-2.5">
+              {m.home_id != null && (
+                <TeamCrest teamId={m.home_id} name={m.home} size={32} />
+              )}
+              <span className="truncate font-semibold text-[0.95rem]">{m.home}</span>
+            </div>
+            <span
+              className="stat-figure text-xl text-muted-foreground shrink-0"
+              style={{ color: "var(--pitch)" }}
+            >
+              vs
+            </span>
+            <div className="flex-1 min-w-0 flex items-center gap-2.5 justify-end text-right">
+              <span className="truncate font-semibold text-[0.95rem]">{m.away}</span>
+              {m.away_id != null && (
+                <TeamCrest teamId={m.away_id} name={m.away} size={32} />
+              )}
+            </div>
+          </div>
         </Link>
       </div>
     </section>
