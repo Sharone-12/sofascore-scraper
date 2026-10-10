@@ -15,6 +15,7 @@ import {
 import { UCL } from "@/lib/competition"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
+import { PredictionsLeagueToggle } from "@/components/predictions-league-toggle"
 
 const OUTCOME_COLORS = {
   home: "oklch(0.80 0.19 150)",
@@ -291,40 +292,6 @@ const LEAGUE_FILTERS = [
   { key: "UCL", label: "UCL", full: "Champions League" },
 ] as const
 
-function LeagueToggle({ active, season }: { active: string; season?: string }) {
-  return (
-    <div
-      className="inline-flex rounded-lg p-0.5 bg-secondary/40 mb-6"
-      role="group"
-      aria-label="League filter"
-    >
-      {LEAGUE_FILTERS.map((f) => {
-        const params = new URLSearchParams()
-        if (f.key !== "all") params.set("league", f.key)
-        if (season) params.set("season", season)
-        const href = `/predictions${params.size ? `?${params}` : ""}`
-        return (
-          <Link
-            key={f.key}
-            href={href}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${
-              active === f.key
-                ? "bg-white/10 text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {f.full && LEAGUE_TOURNAMENT_ID[f.full] && (
-              <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[f.full]} name={f.full} size={18} />
-            )}
-            {!f.full && f.label}
-            {f.full && !LEAGUE_TOURNAMENT_ID[f.full] && f.label}
-          </Link>
-        )
-      })}
-    </div>
-  )
-}
-
 async function Content({
   searchParams,
 }: {
@@ -412,7 +379,7 @@ async function Content({
 
   return (
     <>
-      <LeagueToggle active={leagueFilter} season={sp.season} />
+      <PredictionsLeagueToggle active={leagueFilter} />
       <AccuracyCard acc={accuracy} />
       {uclModel && <UclRatings model={uclModel} ids={uclIds} />}
 

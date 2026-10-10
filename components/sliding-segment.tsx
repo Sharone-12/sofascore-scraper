@@ -1,10 +1,12 @@
 "use client"
 
-import { useLayoutEffect, useRef, useState } from "react"
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react"
 
 export type SegmentItem = {
   key: string
   label: string
+  /** Optional custom content (e.g. an icon) rendered in place of label. */
+  node?: ReactNode
   onPick: () => void
 }
 
@@ -84,9 +86,9 @@ export function SlidingSegment({
             onBlur={() => setHoveredIdx(null)}
             onClick={it.onPick}
             data-active={active || undefined}
-            className="relative z-10 px-2.5 py-1.5 rounded-full text-xs font-medium tabular-nums text-muted-foreground hover:text-foreground transition-colors duration-200 data-[active]:text-foreground"
+            className="relative z-10 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium tabular-nums text-muted-foreground hover:text-foreground transition-colors duration-200 data-[active]:text-foreground"
           >
-            {it.label}
+            {it.node ?? it.label}
           </button>
         )
       })}
