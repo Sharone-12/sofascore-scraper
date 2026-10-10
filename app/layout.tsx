@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 import { AskPanel } from "@/components/ask-panel"
 import { SeasonToggle } from "@/components/season-toggle"
+import { MainNav } from "@/components/main-nav"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import "./globals.css"
 
@@ -37,40 +38,44 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <TooltipProvider delay={150}>
-        <nav className="sticky top-0 z-40 border-b border-white/5 bg-background/75 backdrop-blur-xl">
-          <div className="mx-auto max-w-6xl flex items-center justify-between px-4 h-16">
-            <Link href="/" className="flex items-baseline gap-2 group">
+        <nav className="sticky top-0 z-40 pointer-events-none">
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-24 -z-10 bg-gradient-to-b from-background via-background/85 to-transparent"
+          />
+          <div className="mx-auto max-w-6xl flex items-center justify-between px-4 pt-4 pb-2">
+            <Link
+              href="/"
+              className="pointer-events-auto nav-pill flex items-center gap-2 pl-3 pr-4 py-2 group"
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--pitch)"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="transition-transform duration-500 group-hover:rotate-180"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="9.5" />
+                <path d="M12 7.5 8.6 10l1.3 4h4.2l1.3-4z" fill="var(--pitch)" stroke="none" />
+                <path d="M12 3v4.5M4.2 9.6 8.6 10M19.8 9.6 15.4 10M7.1 19.3 9.9 14M16.9 19.3 14.1 14" />
+              </svg>
               <span
-                className="text-[1.6rem] font-bold tracking-[-0.03em] leading-none"
+                className="text-[1.4rem] font-bold tracking-[-0.03em] leading-none"
                 style={{ fontFamily: "var(--font-condensed)" }}
               >
                 FOOTYY
               </span>
-              <span
-                className="h-1.5 w-1.5 rounded-full transition-transform duration-200 group-hover:scale-125"
-                style={{ background: "var(--pitch)" }}
-              />
             </Link>
-            <div className="flex items-center gap-2">
-            <Suspense fallback={null}>
-              <SeasonToggle />
-            </Suspense>
-            <div className="segment flex rounded-full p-1 gap-0.5">
-              {[
-                { href: "/", label: "Players" },
-                { href: "/teams", label: "Teams" },
-                { href: "/predictions", label: "Predict" },
-                { href: "/compare", label: "Compare" },
-              ].map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="px-3.5 sm:px-4 py-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors duration-200"
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </div>
+            <div className="pointer-events-auto flex items-center gap-2">
+              <Suspense fallback={null}>
+                <SeasonToggle />
+              </Suspense>
+              <MainNav />
             </div>
           </div>
         </nav>

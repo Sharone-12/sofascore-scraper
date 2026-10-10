@@ -21,6 +21,7 @@ import { resolveSeason } from "@/lib/seasons"
 import { resolveCompetition, inCompetition, scopeQuery, UCL, type Competition } from "@/lib/competition"
 import { CompetitionToggle } from "@/components/competition-toggle"
 import { LeagueCrest, TeamCrest } from "@/components/player-avatar"
+import { TeamRankingsExpand } from "@/components/team-rankings-expand"
 
 const POWER_STAT = { stat: "Expected goals", label: "xG" } as TeamStat
 
@@ -248,12 +249,20 @@ function PowerRankings({
   return (
     <section className="surface rounded-2xl bg-card overflow-hidden">
       <header className="px-5 pt-5 pb-4">
-        <h2
-          className="text-lg font-semibold tracking-tight uppercase"
-          style={{ fontFamily: "var(--font-condensed)" }}
-        >
-          Power Rankings
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2
+            className="text-lg font-semibold tracking-tight uppercase"
+            style={{ fontFamily: "var(--font-condensed)" }}
+          >
+            Power Rankings
+          </h2>
+          {ranked.length > top.length && (
+            <TeamRankingsExpand
+              rows={ranked.map((r) => ({ ...r, href: link(r.team) }))}
+              teamIds={teamIds}
+            />
+          )}
+        </div>
         <p className="stat-label mt-1">
           Points per game, goal difference &amp; xG — weighted toward results
         </p>

@@ -115,13 +115,13 @@ function Board({
           <Link
             key={`${p.slug}-${i}`}
             href={`/player/${p.slug}${scope}`}
-            className="row-item group flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.04]"
+            className="row-item flex items-center gap-3 px-3 py-2.5 rounded-xl"
           >
             <span className="rank-badge" data-rank={i + 1}>
               {i + 1}
             </span>
             <span className="flex-1 min-w-0">
-              <span className="block text-[0.9rem] font-medium leading-tight truncate group-hover:text-white transition-colors">
+              <span className="block text-[0.9rem] font-medium leading-tight truncate">
                 {p.player}
               </span>
               <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -133,7 +133,7 @@ function Board({
             </span>
             <LeagueTag league={p.league} />
             <span
-              className="stat-figure text-xl w-9 text-right transition-transform duration-200 group-hover:scale-110"
+              className="stat-figure text-xl w-9 text-right"
               style={{ color: i < 3 ? "var(--pitch)" : undefined }}
             >
               {p[statKey]}

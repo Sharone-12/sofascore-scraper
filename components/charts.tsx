@@ -97,7 +97,7 @@ export function StatBarChart({
                       style={{
                         color: v === max && players.length > 1
                           ? PLAYER_COLORS[i % PLAYER_COLORS.length]
-                          : "oklch(0.55 0 0)",
+                          : "var(--foreground)",
                       }}
                     >
                       {fmt(v)}
