@@ -49,7 +49,7 @@ function MatchCard({ p }: { p: MatchPrediction }) {
   return (
     <Link
       href={`/predictions/match?id=${p.event_id}`}
-      className={`surface rounded-xl px-4 py-3.5 space-y-3 block hover:-translate-y-px transition-transform duration-200 ${
+      className={`card-lift surface rounded-xl px-4 py-3.5 space-y-3 block ${
         p.home === "FC Barcelona" || p.away === "FC Barcelona"
           ? "barca-stripes"
           : "bg-card"

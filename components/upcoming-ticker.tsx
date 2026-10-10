@@ -91,7 +91,7 @@ export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
         <Link
           key={m.event_id}
           href={`/predictions/match?id=${m.event_id}`}
-          className="row-item animate-in fade-in slide-in-from-right-3 duration-500 flex flex-col justify-center gap-3 px-4 py-4 rounded-xl h-full"
+          className="card-lift animate-in fade-in slide-in-from-right-3 duration-500 flex flex-col justify-center gap-3 px-4 py-4 rounded-xl h-full"
         >
           <div className="flex items-center justify-between gap-3">
             <span className="stat-label text-xs">{formatWhen(m.date)}</span>
