@@ -114,15 +114,9 @@ function Board({
           <Link
             key={`${p.slug}-${i}`}
             href={`/player/${p.slug}${scope}`}
-            className="group flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.04] transition-colors duration-150"
+            className="row-item group flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.04]"
           >
-            <span
-              className="stat-figure w-5 text-sm text-right"
-              style={{
-                color: i < 3 ? "var(--pitch)" : "var(--muted-foreground)",
-                opacity: i < 3 ? 1 : 0.55,
-              }}
-            >
+            <span className="rank-badge" data-rank={i + 1}>
               {i + 1}
             </span>
             <span className="flex-1 min-w-0">
@@ -134,7 +128,10 @@ function Board({
               </span>
             </span>
             <LeagueTag league={p.league} />
-            <span className="stat-figure text-xl w-9 text-right">
+            <span
+              className="stat-figure text-xl w-9 text-right transition-transform duration-200 group-hover:scale-110"
+              style={{ color: i < 3 ? "var(--pitch)" : undefined }}
+            >
               {p[statKey]}
             </span>
           </Link>
@@ -210,7 +207,7 @@ async function Content({
           <Link
             key={s.label}
             href={s.slug ? `/player/${s.slug}${scope}` : "/"}
-            className="surface-raised rounded-2xl bg-card px-5 py-4 flex items-center gap-4 hover:-translate-y-px transition-transform duration-200"
+            className="card-lift surface-raised rounded-2xl bg-card px-5 py-4 flex items-center gap-4"
           >
             <span style={{ color: "var(--pitch)" }}>{s.icon}</span>
             <span className="flex-1 min-w-0">
@@ -223,10 +220,7 @@ async function Content({
               </span>
             </span>
             <span className="text-right shrink-0">
-              <span
-                className="stat-figure block text-4xl"
-                style={{ color: "var(--pitch)" }}
-              >
+              <span className="stat-figure stat-pop shimmer-text block text-4xl">
                 {s.figure}
               </span>
               <span className="stat-label block mt-0.5">{s.unit}</span>
