@@ -6,6 +6,7 @@ import { CompetitionToggle } from "@/components/competition-toggle"
 import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
 import { PlayerSearch } from "@/components/player-search"
 import { LeagueCrest, TeamCrest } from "@/components/player-avatar"
+import { UpcomingTicker, type UpcomingMatch } from "@/components/upcoming-ticker"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 
@@ -145,6 +146,19 @@ function Board({
   )
 }
 
+async function Upcoming() {
+  // status="upcoming" is kept current by refresh.py, so no runtime date filter
+  // is needed — avoids Cache Components' blocking-prerender-current-time error.
+  const { data } = await supabase
+    .from("matches")
+    .select("event_id, league, date, home, home_id, away, away_id")
+    .eq("status", "upcoming")
+    .order("date", { ascending: true })
+    .limit(8)
+  const rows = (data || []) as unknown as UpcomingMatch[]
+  return <UpcomingTicker matches={rows} />
+}
+
 async function Content({
   searchParams,
 }: {
@@ -253,28 +267,33 @@ export default function Home({
 }) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
-      <div className="relative z-10 mb-10 animate-fade-in">
-        <h1
-          className="text-5xl sm:text-6xl tracking-[-0.035em] leading-[0.95] mb-4"
-          style={{ fontFamily: "var(--font-condensed)" }}
-        >
-          <span className="font-bold">Every touch.</span>{" "}
-          <span className="font-normal text-muted-foreground">
-            Every number.
-          </span>
-        </h1>
-        <p className="text-muted-foreground text-base max-w-md mb-7">
-          Per-90 stats and percentile ranks for every player in the Premier
-          League, La Liga, and Champions League.
-        </p>
-        <div className="max-w-md">
-          <PlayerSearch linkToProfile placeholder="Search for a player..." />
+      <div className="relative z-10 mb-10 grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-start animate-fade-in">
+        <div>
+          <h1
+            className="text-5xl sm:text-6xl tracking-[-0.035em] leading-[0.95] mb-4"
+            style={{ fontFamily: "var(--font-condensed)" }}
+          >
+            <span className="font-bold">Every touch.</span>{" "}
+            <span className="font-normal text-muted-foreground">
+              Every number.
+            </span>
+          </h1>
+          <p className="text-muted-foreground text-base max-w-md mb-7">
+            Per-90 stats and percentile ranks for every player in the Premier
+            League, La Liga, and Champions League.
+          </p>
+          <div className="max-w-md">
+            <PlayerSearch linkToProfile placeholder="Search for a player..." />
+          </div>
+          <div className="mt-4">
+            <Suspense fallback={null}>
+              <CompetitionToggle />
+            </Suspense>
+          </div>
         </div>
-        <div className="mt-4">
-          <Suspense fallback={null}>
-            <CompetitionToggle />
-          </Suspense>
-        </div>
+        <Suspense fallback={<Skeleton className="h-[260px] rounded-2xl" />}>
+          <Upcoming />
+        </Suspense>
       </div>
 
       <Suspense
