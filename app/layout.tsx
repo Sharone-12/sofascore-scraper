@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Suspense } from "react"
 import { AskPanel } from "@/components/ask-panel"
 import { SeasonToggle } from "@/components/season-toggle"
+import { TooltipProvider } from "@/components/ui/tooltip"
 import "./globals.css"
 
 const sans = Archivo({
@@ -35,6 +36,7 @@ export default function RootLayout({
       className={`${sans.variable} ${condensed.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <TooltipProvider delay={150}>
         <nav className="sticky top-0 z-40 border-b border-white/5 bg-background/75 backdrop-blur-xl">
           <div className="mx-auto max-w-6xl flex items-center justify-between px-4 h-16">
             <Link href="/" className="flex items-baseline gap-2 group">
@@ -78,6 +80,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <AskPanel />
         </Suspense>
+        </TooltipProvider>
       </body>
     </html>
   )

@@ -108,6 +108,7 @@ export function LeagueCrest({
     <span
       className="inline-flex shrink-0 items-center justify-center rounded-md"
       style={{ width: size, height: size, background: "oklch(0.96 0 0)" }}
+      title={name}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -150,6 +151,7 @@ export function TeamCrest({
       ref={ref}
       src={src}
       alt={name}
+      title={name}
       width={size}
       height={size}
       loading="lazy"

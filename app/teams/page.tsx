@@ -11,6 +11,7 @@ import {
   statValue,
   indexStats,
   fetchTeamData,
+  fetchTeamIdMap,
   primaryRows,
   type TeamTableRow,
   type SeasonStatRow,
@@ -19,7 +20,7 @@ import {
 import { resolveSeason } from "@/lib/seasons"
 import { resolveCompetition, inCompetition, scopeQuery, UCL, type Competition } from "@/lib/competition"
 import { CompetitionToggle } from "@/components/competition-toggle"
-import { LeagueCrest } from "@/components/player-avatar"
+import { LeagueCrest, TeamCrest } from "@/components/player-avatar"
 
 const POWER_STAT = { stat: "Expected goals", label: "xG" } as TeamStat
 
@@ -44,10 +45,12 @@ function LeagueTable({
   league,
   rows,
   link,
+  teamIds,
 }: {
   league: string
   rows: TeamTableRow[]
   link: (team: string) => string
+  teamIds: Map<string, number>
 }) {
   const topPoints = rows[0]?.points || 1
   return (
@@ -88,17 +91,22 @@ function LeagueTable({
               {i + 1}
             </span>
 
-            <span className="min-w-0">
-              <span className="block text-[0.9rem] font-medium truncate group-hover:text-white transition-colors">
-                {t.team}
-              </span>
-              <span className="flex h-[3px] gap-px mt-1.5 rounded-full overflow-hidden max-w-[7rem]">
-                {formBar(t).map((s) => (
-                  <span
-                    key={s.label}
-                    style={{ background: s.color, flexGrow: s.n, opacity: 0.75 }}
-                  />
-                ))}
+            <span className="min-w-0 flex items-center gap-2">
+              {teamIds.get(t.team) != null && (
+                <TeamCrest teamId={teamIds.get(t.team)!} name={t.team} size={20} />
+              )}
+              <span className="min-w-0">
+                <span className="block text-[0.9rem] font-medium truncate group-hover:text-white transition-colors">
+                  {t.team}
+                </span>
+                <span className="flex h-[3px] gap-px mt-1.5 rounded-full overflow-hidden max-w-[7rem]">
+                  {formBar(t).map((s) => (
+                    <span
+                      key={s.label}
+                      style={{ background: s.color, flexGrow: s.n, opacity: 0.75 }}
+                    />
+                  ))}
+                </span>
               </span>
             </span>
 
@@ -148,23 +156,30 @@ function ClubCard({
   league,
   row,
   stats,
+  teamId,
+  teamName,
 }: {
   short: string
   league: string
   row: TeamTableRow | undefined
   stats: Map<string, SeasonStatRow>
+  teamId: number | undefined
+  teamName: string
 }) {
   const played = row?.played ?? 0
   const perGame = (n: number) => (played ? (n / played).toFixed(1) : "—")
   return (
     <section className="surface rounded-2xl bg-card p-5">
-      <header className="flex items-baseline justify-between pb-3">
-        <h3
-          className="text-lg font-semibold tracking-tight uppercase"
-          style={{ fontFamily: "var(--font-condensed)" }}
-        >
-          {short}
-        </h3>
+      <header className="flex items-center justify-between pb-3">
+        <div className="flex items-center gap-2.5">
+          {teamId != null && <TeamCrest teamId={teamId} name={teamName} size={26} />}
+          <h3
+            className="text-lg font-semibold tracking-tight uppercase"
+            style={{ fontFamily: "var(--font-condensed)" }}
+          >
+            {short}
+          </h3>
+        </div>
         <span className="stat-label">
           {league} · {played} played
         </span>
@@ -222,9 +237,11 @@ function displayRating(raw: number, max: number): number {
 function PowerRankings({
   ranked,
   link,
+  teamIds,
 }: {
   ranked: RankedTeam[]
   link: (team: string) => string
+  teamIds: Map<string, number>
 }) {
   const top = ranked.slice(0, 5)
   const maxScore = top[0]?.score ?? 1
@@ -262,7 +279,10 @@ function PowerRankings({
             </span>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2">
+              <div className="flex items-center gap-2">
+                {teamIds.get(t.team) != null && (
+                  <TeamCrest teamId={teamIds.get(t.team)!} name={t.team} size={22} />
+                )}
                 <span className="font-semibold text-[0.95rem] truncate group-hover:text-white transition-colors">
                   {t.team}
                 </span>
@@ -387,7 +407,10 @@ async function Tables({
   const sp = await searchParams
   const season = resolveSeason(sp.season)
   const comp: Competition = resolveCompetition(sp.comp)
-  const { table: all, stats } = await fetchTeamData(supabase, season, WANTED_STATS, comp)
+  const [{ table: all, stats }, teamIds] = await Promise.all([
+    fetchTeamData(supabase, season, WANTED_STATS, comp),
+    fetchTeamIdMap(supabase, season),
+  ])
   const clubStats = indexStats(stats)
   const ranked = computePowerRankings(primaryRows(all), stats)
   const link = (team: string) => `/teams/compare${scopeQuery(season, comp, { teams: team })}`
@@ -395,7 +418,7 @@ async function Tables({
 
   return (
     <div className="stagger space-y-5">
-      <PowerRankings ranked={ranked} link={link} />
+      <PowerRankings ranked={ranked} link={link} teamIds={teamIds} />
 
       <div className="grid lg:grid-cols-2 gap-5">
         {FULL_LEAGUES.filter((lg) => inCompetition(lg, comp)).map((lg) => (
@@ -404,6 +427,7 @@ async function Tables({
             league={lg}
             rows={all.filter((t) => t.league === lg)}
             link={link}
+            teamIds={teamIds}
           />
         ))}
       </div>
@@ -416,6 +440,8 @@ async function Tables({
             league={clubLeague(c.league)}
             row={all.find((t) => t.team === c.team && t.league === clubLeague(c.league))}
             stats={clubStats}
+            teamId={teamIds.get(c.team)}
+            teamName={c.team}
           />
         ))}
       </div>

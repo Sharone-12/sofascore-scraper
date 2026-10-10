@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useMemo, Fragment } from "react"
+import { useState, useEffect, useMemo, Fragment } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { percentileRank } from "@/lib/stats"
@@ -23,6 +23,16 @@ import { CompetitionToggle } from "@/components/competition-toggle"
 import { PlayerRadar, StatBarChart } from "@/components/charts"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command"
+import { ChevronsUpDownIcon } from "lucide-react"
 
 const MAX_TEAMS = 3
 
@@ -35,88 +45,66 @@ const WANTED_STATS = Array.from(
 
 function TeamPicker({
   teams,
+  teamIds,
   selected,
   onPick,
   disabled,
 }: {
   teams: TeamTableRow[]
+  teamIds: Map<string, number>
   selected: string[]
   onPick: (team: string) => void
   disabled: boolean
 }) {
   const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState("")
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener("mousedown", onClickOutside)
-    return () => document.removeEventListener("mousedown", onClickOutside)
-  }, [])
-
-  const matches = teams.filter(
-    (t) =>
-      !selected.includes(t.team) &&
-      t.team.toLowerCase().includes(query.toLowerCase()),
-  )
+  const pool = teams.filter((t) => !selected.includes(t.team))
 
   return (
-    <div ref={ref} className="relative w-full max-w-md">
-      <button
-        type="button"
+    <Popover open={open && !disabled} onOpenChange={setOpen}>
+      <PopoverTrigger
         disabled={disabled}
-        onClick={() => setOpen((v) => !v)}
-        className="surface w-full rounded-xl bg-card px-4 py-3 text-left text-sm flex items-center justify-between disabled:opacity-45 disabled:cursor-not-allowed transition-colors hover:bg-white/[0.03]"
+        className="surface w-full max-w-md rounded-xl bg-card px-4 py-3 text-left text-sm flex items-center justify-between disabled:opacity-45 disabled:cursor-not-allowed transition-colors hover:bg-white/[0.03]"
       >
         <span className={disabled ? "text-muted-foreground" : ""}>
           {disabled ? `Maximum ${MAX_TEAMS} teams` : "Add a team…"}
         </span>
-        <span className="text-muted-foreground text-xs">▾</span>
-      </button>
-
-      {open && !disabled && (
-        <div className="surface-raised absolute z-50 mt-2 w-full rounded-xl bg-popover text-popover-foreground overflow-hidden animate-slide-down">
-          <div className="p-2 border-b border-white/5">
-            <input
-              autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Filter teams…"
-              className="w-full rounded-lg bg-white/[0.05] px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:bg-white/[0.08] transition-colors"
-            />
-          </div>
-          <div className="max-h-72 overflow-y-auto p-1">
-            {matches.length === 0 && (
-              <p className="px-3 py-4 text-sm text-muted-foreground">
-                No teams match.
-              </p>
-            )}
-            {matches.map((t) => (
-              <button
-                key={t.team}
-                type="button"
-                onClick={() => {
-                  onPick(t.team)
-                  setOpen(false)
-                  setQuery("")
-                }}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-colors text-left"
-              >
-                <span className="text-sm font-medium">{t.team}</span>
-                <span className="stat-label flex items-center gap-1.5">
-                  {LEAGUE_TOURNAMENT_ID[t.league] && (
-                    <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[t.league]} name={t.league} size={18} />
-                  )}
-                  {t.points}pts
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+        <ChevronsUpDownIcon className="size-4 text-muted-foreground" />
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-[min(28rem,calc(100vw-2rem))] p-0">
+        <Command>
+          <CommandInput placeholder="Filter teams…" />
+          <CommandList>
+            <CommandEmpty>No teams match.</CommandEmpty>
+            <CommandGroup>
+              {pool.map((t) => (
+                <CommandItem
+                  key={t.team}
+                  value={t.team}
+                  onSelect={() => {
+                    onPick(t.team)
+                    setOpen(false)
+                  }}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <span className="flex items-center gap-2 min-w-0">
+                    {teamIds.get(t.team) != null && (
+                      <TeamCrest teamId={teamIds.get(t.team)!} name={t.team} size={18} />
+                    )}
+                    <span className="truncate">{t.team}</span>
+                  </span>
+                  <span className="stat-label flex items-center gap-1.5 shrink-0">
+                    {LEAGUE_TOURNAMENT_ID[t.league] && (
+                      <LeagueCrest tournamentId={LEAGUE_TOURNAMENT_ID[t.league]} name={t.league} size={18} />
+                    )}
+                    {t.points}pts
+                  </span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -243,6 +231,7 @@ export default function TeamCompareContent() {
       <div className="mb-6">
         <TeamPicker
           teams={table}
+          teamIds={teamIds}
           selected={selected}
           onPick={(t) => setTeams([...selected, t])}
           disabled={selected.length >= MAX_TEAMS}

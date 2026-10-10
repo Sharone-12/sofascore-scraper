@@ -5,7 +5,7 @@ import { resolveCompetition, scopeLeague, scopeQuery, COMPETITION_LABEL } from "
 import { CompetitionToggle } from "@/components/competition-toggle"
 import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
 import { PlayerSearch } from "@/components/player-search"
-import { LeagueCrest } from "@/components/player-avatar"
+import { LeagueCrest, TeamCrest } from "@/components/player-avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 
@@ -52,6 +52,7 @@ type Row = {
   player: string
   slug: string
   team: string
+  team_id: number | null
   league: string
   goals?: number
   assists?: number
@@ -123,8 +124,11 @@ function Board({
               <span className="block text-[0.9rem] font-medium leading-tight truncate group-hover:text-white transition-colors">
                 {p.player}
               </span>
-              <span className="block text-xs text-muted-foreground truncate">
-                {p.team}
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                {p.team_id != null && (
+                  <TeamCrest teamId={p.team_id} name={p.team} size={14} />
+                )}
+                <span className="truncate">{p.team}</span>
               </span>
             </span>
             <LeagueTag league={p.league} />
@@ -157,7 +161,7 @@ async function Content({
     scopeLeague(
       supabase
         .from("players")
-        .select("player, slug, team, league, goals")
+        .select("player, slug, team, team_id, league, goals")
         .eq("season", season),
       comp,
     )
@@ -166,7 +170,7 @@ async function Content({
     scopeLeague(
       supabase
         .from("players")
-        .select("player, slug, team, league, assists")
+        .select("player, slug, team, team_id, league, assists")
         .eq("season", season),
       comp,
     )
@@ -187,6 +191,7 @@ async function Content({
       unit: "goals",
       name: leader?.player,
       team: leader?.team,
+      team_id: leader?.team_id,
       slug: leader?.slug,
     },
     {
@@ -196,6 +201,7 @@ async function Content({
       unit: "assists",
       name: creator?.player,
       team: creator?.team,
+      team_id: creator?.team_id,
       slug: creator?.slug,
     },
   ]
@@ -215,8 +221,11 @@ async function Content({
               <span className="block text-base font-semibold truncate leading-snug">
                 {s.name}
               </span>
-              <span className="block text-xs text-muted-foreground truncate">
-                {s.team}
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                {s.team_id != null && s.team && (
+                  <TeamCrest teamId={s.team_id} name={s.team} size={14} />
+                )}
+                <span className="truncate">{s.team}</span>
               </span>
             </span>
             <span className="text-right shrink-0">

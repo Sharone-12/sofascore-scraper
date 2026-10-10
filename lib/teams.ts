@@ -162,6 +162,27 @@ export function indexStats(rows: SeasonStatRow[]): Map<string, SeasonStatRow> {
 }
 
 /**
+ * Build a team-name → Sofascore team_id map for crest rendering. The team
+ * table (standings) is derived from `matches`, which has no team_id column,
+ * so the id comes from `players` — the only table that carries it.
+ */
+export async function fetchTeamIdMap(
+  supabase: { from: (t: string) => any },
+  season: string,
+): Promise<Map<string, number>> {
+  const { data } = await supabase
+    .from("players")
+    .select("team, team_id")
+    .eq("season", season)
+    .not("team_id", "is", null)
+  const map = new Map<string, number>()
+  for (const r of (data || []) as { team: string; team_id: number }[]) {
+    if (!map.has(r.team)) map.set(r.team, r.team_id)
+  }
+  return map
+}
+
+/**
  * Fetch matches + match_stats from base tables and compute standings + per-team
  * stat averages client-side, bypassing SQL views entirely.
  */
