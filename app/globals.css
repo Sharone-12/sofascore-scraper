@@ -396,20 +396,19 @@
   100% { transform: translateX(260%); opacity: 0; }
 }
 
-/* Blaugrana stripes — only for FC Barcelona cards. The dark overlay keeps
-   content readable; the stripes read as a textured accent, not a billboard. */
+/* Blaugrana stripes — vivid Barca palette. Darker overlay still lets the
+   bright blue/crimson read as a textured accent while keeping content legible. */
 .barca-stripes {
   background-color: var(--card);
   background-image:
-    linear-gradient(oklch(0.18 0 0 / 82%), oklch(0.18 0 0 / 88%)),
+    linear-gradient(oklch(0.15 0 0 / 70%), oklch(0.15 0 0 / 78%)),
     repeating-linear-gradient(
       90deg,
-      oklch(0.22 0.08 265) 0 22px,
-      oklch(0.35 0.14 265) 22px 70px,
-      oklch(0.22 0.08 265) 70px 82px,
-      oklch(0.28 0.14 10) 82px 120px,
-      oklch(0.42 0.19 10) 120px 160px,
-      oklch(0.28 0.14 10) 160px 172px
+      oklch(0.44 0.24 265) 0 42px,     /* bright royal blue */
+      oklch(0.22 0.10 265) 42px 70px,  /* dark navy */
+      oklch(0.32 0.18 10)  70px 110px, /* deep garnet */
+      oklch(0.55 0.22 25)  110px 150px,/* bright crimson */
+      oklch(0.32 0.18 10)  150px 180px /* deep garnet */
     );
 }
 
