@@ -362,8 +362,43 @@
   to   { background-position: -200% 0; }
 }
 
+/* Sparkle sweep: a thin pitch-green beam travels across the top edge of a
+   card every ~7s. Pure CSS, lives on ::before so markup stays clean.
+   Add the .spark class to any card that wants the effect. */
+.spark { position: relative; }
+.spark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 35%;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(from var(--pitch) l c h / 85%) 50%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 8px oklch(from var(--pitch) l c h / 60%),
+    0 0 14px oklch(from var(--pitch) l c h / 35%);
+  opacity: 0;
+  transform: translateX(-100%);
+  animation: spark-sweep 7s ease-in-out infinite;
+}
+@keyframes spark-sweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  8%   { opacity: 1; }
+  48%  { opacity: 1; }
+  55%  { opacity: 0; }
+  100% { transform: translateX(285%); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .stagger > *, .stat-pop, .shimmer-text, .card-lift, .row-item {
+  .stagger > *, .stat-pop, .shimmer-text, .card-lift, .row-item,
+  .spark::before {
     animation: none !important; transition: none !important;
   }
 }

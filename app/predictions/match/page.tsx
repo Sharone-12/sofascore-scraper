@@ -50,7 +50,7 @@ function ProbSection({
   predicted: "home" | "draw" | "away"
 }) {
   return (
-    <section className="surface rounded-2xl bg-card p-5">
+    <section className="spark surface rounded-2xl bg-card p-5">
       <h2
         className="stat-label text-sm mb-4"
         style={{ color: "var(--pitch)" }}
@@ -430,7 +430,7 @@ async function Content({
         <span>←</span> Predictions
       </Link>
 
-      <section className="surface rounded-2xl bg-card px-5 py-6 mb-6 text-center">
+      <section className="spark surface rounded-2xl bg-card px-5 py-6 mb-6 text-center">
         <div className="stat-label mb-2 flex items-center justify-center gap-2">
           {leagueTournamentId && (
             <LeagueCrest tournamentId={leagueTournamentId} name={match.league} size={22} />
