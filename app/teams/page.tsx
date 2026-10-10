@@ -11,6 +11,7 @@ import {
   statValue,
   indexStats,
   fetchTeamData,
+  primaryRows,
   type TeamTableRow,
   type SeasonStatRow,
   type TeamStat,
@@ -371,7 +372,7 @@ async function Tables({
   const season = resolveSeason((await searchParams).season)
   const { table: all, stats } = await fetchTeamData(supabase, season, WANTED_STATS)
   const clubStats = indexStats(stats)
-  const ranked = computePowerRankings(all, stats)
+  const ranked = computePowerRankings(primaryRows(all), stats)
 
   return (
     <div className="stagger space-y-5">
@@ -393,7 +394,7 @@ async function Tables({
             key={c.team}
             short={c.short}
             league={c.league}
-            row={all.find((t) => t.team === c.team)}
+            row={all.find((t) => t.team === c.team && t.league === c.league)}
             stats={clubStats}
           />
         ))}

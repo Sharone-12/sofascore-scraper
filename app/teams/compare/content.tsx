@@ -5,8 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { percentileRank } from "@/lib/stats"
 import {
-  FULL_LEAGUES,
-  SINGLE_CLUBS,
   LEAGUE_ABBR,
   LEAGUE_TOURNAMENT_ID,
   TEAM_STAT_GROUPS,
@@ -14,7 +12,8 @@ import {
   TEAM_COLORS,
   statValue,
   indexStats,
-  parseRaw,
+  fetchTeamData,
+  primaryRows,
   type SeasonStatRow,
   type TeamTableRow,
 } from "@/lib/teams"
@@ -138,13 +137,8 @@ export default function TeamCompareContent() {
   useEffect(() => {
     let cancelled = false
     async function load() {
-      const [matchesRes, idsRes] = await Promise.all([
-        supabase
-          .from("matches")
-          .select("event_id, league, season, home, away, status, home_goals, away_goals")
-          .eq("season", season)
-          .eq("status", "finished")
-          .limit(1000),
+      const [{ table: built, stats: builtStats }, idsRes] = await Promise.all([
+        fetchTeamData(supabase, season, WANTED_STATS),
         supabase
           .from("players")
           .select("team, team_id")
@@ -152,99 +146,8 @@ export default function TeamCompareContent() {
       ])
       if (cancelled) return
 
-      const matchRows = (matchesRes.data || []) as {
-        event_id: number; league: string; season: string
-        home: string; away: string; status: string
-        home_goals: number | null; away_goals: number | null
-      }[]
-
-      const matchById = new Map(matchRows.map((m) => [m.event_id, m]))
-      const eventIds = matchRows.map((m) => m.event_id)
-
-      // Fetch match_stats in batches of 50 event_ids to stay under URL/row limits
-      const rawStats: { event_id: number; stat: string; home: string; away: string }[] = []
-      for (let i = 0; i < eventIds.length; i += 50) {
-        const batch = eventIds.slice(i, i + 50)
-        const { data } = await supabase
-          .from("match_stats")
-          .select("event_id, stat, home, away")
-          .in("event_id", batch)
-          .in("stat", WANTED_STATS)
-          .limit(5000)
-        if (data) rawStats.push(...(data as typeof rawStats))
-      }
-      if (cancelled) return
-
-      const allowedTeams = new Set<string>()
-      const fullLeagueSet = new Set<string>(FULL_LEAGUES)
-      const singleClubNames = new Set<string>(SINGLE_CLUBS.map((c) => c.team))
-      for (const m of matchRows) {
-        if (fullLeagueSet.has(m.league)) {
-          allowedTeams.add(m.home)
-          allowedTeams.add(m.away)
-        } else {
-          if (singleClubNames.has(m.home)) allowedTeams.add(m.home)
-          if (singleClubNames.has(m.away)) allowedTeams.add(m.away)
-        }
-      }
-
-      const teamMap = new Map<string, { league: string; gf: number; ga: number; w: number; d: number; l: number; p: number }>()
-      function addSide(team: string, league: string, gf: number, ga: number) {
-        if (!allowedTeams.has(team)) return
-        let t = teamMap.get(team)
-        if (!t) { t = { league, gf: 0, ga: 0, w: 0, d: 0, l: 0, p: 0 }; teamMap.set(team, t) }
-        t.gf += gf; t.ga += ga; t.p++
-        if (gf > ga) t.w++; else if (gf === ga) t.d++; else t.l++
-      }
-      for (const m of matchRows) {
-        if (m.home_goals != null && m.away_goals != null) {
-          addSide(m.home, m.league, m.home_goals, m.away_goals)
-          addSide(m.away, m.league, m.away_goals, m.home_goals)
-        }
-      }
-      const builtTable: TeamTableRow[] = []
-      for (const [team, t] of teamMap) {
-        builtTable.push({
-          season, league: t.league, team, played: t.p,
-          won: t.w, drawn: t.d, lost: t.l,
-          goals_for: t.gf, goals_against: t.ga,
-          goal_diff: t.gf - t.ga,
-          points: t.w * 3 + t.d,
-        })
-      }
-      builtTable.sort((a, b) => b.points - a.points)
-
-      type Acc = { sum: number; pctSum: number; count: number }
-      const accMap = new Map<string, Acc>()
-      for (const rs of rawStats) {
-        const m = matchById.get(rs.event_id)
-        if (!m) continue
-        const sides: [string, string][] = [[m.home, rs.home], [m.away, rs.away]]
-        for (const [team, raw] of sides) {
-          if (!allowedTeams.has(team)) continue
-          const { value, pct } = parseRaw(raw)
-          if (value == null && pct == null) continue
-          const key = `${team}|${rs.stat}`
-          let acc = accMap.get(key)
-          if (!acc) { acc = { sum: 0, pctSum: 0, count: 0 }; accMap.set(key, acc) }
-          acc.sum += value ?? 0
-          acc.pctSum += pct ?? 0
-          acc.count++
-        }
-      }
-
-      const builtStats: SeasonStatRow[] = []
-      for (const [key, acc] of accMap) {
-        const [team, stat] = key.split("|")
-        builtStats.push({
-          team, stat,
-          per_match: Math.round((acc.sum / acc.count) * 100) / 100,
-          pct: Math.round((acc.pctSum / acc.count) * 10) / 10,
-          matches: acc.count,
-        })
-      }
-
-      setTable(builtTable)
+      // Clubs, not competitions: one entry each in the picker and standings.
+      setTable(primaryRows(built))
       setStats(builtStats)
       const idMap = new Map<string, number>()
       for (const r of idsRes.data || []) idMap.set(r.team, r.team_id)
@@ -408,7 +311,7 @@ export default function TeamCompareContent() {
           <CardHeader>
             <CardTitle className="stat-label text-sm">Style Profile</CardTitle>
             <p className="text-xs text-muted-foreground/60">
-              Percentile rank against all 40 clubs
+              Percentile rank against all {table.length} clubs
             </p>
           </CardHeader>
           <CardContent>

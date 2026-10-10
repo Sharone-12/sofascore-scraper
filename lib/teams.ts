@@ -196,24 +196,22 @@ export async function fetchTeamData(
     if (data) rawStats.push(...data)
   }
 
-  const allowedTeams = new Set<string>()
+  // Judged per match, not per club: Marseille is a real Champions League side
+  // but only a two-game fragment in Ligue 1, where we track PSG alone.
   const fullLeagueSet = new Set<string>(FULL_LEAGUES)
   const singleClubNames = new Set<string>(SINGLE_CLUBS.map((c) => c.team))
-  for (const m of matchRows) {
-    if (fullLeagueSet.has(m.league)) {
-      allowedTeams.add(m.home)
-      allowedTeams.add(m.away)
-    } else {
-      if (singleClubNames.has(m.home)) allowedTeams.add(m.home)
-      if (singleClubNames.has(m.away)) allowedTeams.add(m.away)
-    }
-  }
+  const allowed = (team: string, league: string) =>
+    fullLeagueSet.has(league) || singleClubNames.has(team)
 
-  const teamMap = new Map<string, { league: string; gf: number; ga: number; w: number; d: number; l: number; p: number }>()
+  // Keyed by league as well as club: Arsenal's Premier League and Champions
+  // League records are separate tables, and merging them dropped every club
+  // with a domestic league out of the Champions League table.
+  const teamMap = new Map<string, { team: string; league: string; gf: number; ga: number; w: number; d: number; l: number; p: number }>()
   function addSide(team: string, league: string, gf: number, ga: number) {
-    if (!allowedTeams.has(team)) return
-    let t = teamMap.get(team)
-    if (!t) { t = { league, gf: 0, ga: 0, w: 0, d: 0, l: 0, p: 0 }; teamMap.set(team, t) }
+    if (!allowed(team, league)) return
+    const key = `${league}|${team}`
+    let t = teamMap.get(key)
+    if (!t) { t = { team, league, gf: 0, ga: 0, w: 0, d: 0, l: 0, p: 0 }; teamMap.set(key, t) }
     t.gf += gf; t.ga += ga; t.p++
     if (gf > ga) t.w++; else if (gf === ga) t.d++; else t.l++
   }
@@ -224,16 +222,25 @@ export async function fetchTeamData(
     }
   }
   const table: TeamTableRow[] = []
-  for (const [team, t] of teamMap) {
+  for (const t of teamMap.values()) {
     table.push({
-      season, league: t.league, team, played: t.p,
+      season, league: t.league, team: t.team, played: t.p,
       won: t.w, drawn: t.d, lost: t.l,
       goals_for: t.gf, goals_against: t.ga,
       goal_diff: t.gf - t.ga,
       points: t.w * 3 + t.d,
     })
   }
-  table.sort((a, b) => b.points - a.points)
+  // Points alone leaves ties in arbitrary order — a whole round of 3-pointers
+  // early in the Champions League. Goal difference, then goals scored, is the
+  // first tie-break in every competition we show.
+  table.sort(
+    (a, b) =>
+      b.points - a.points ||
+      b.goal_diff - a.goal_diff ||
+      b.goals_for - a.goals_for ||
+      a.team.localeCompare(b.team),
+  )
 
   type Acc = { sum: number; pctSum: number; count: number }
   const accMap = new Map<string, Acc>()
@@ -242,7 +249,7 @@ export async function fetchTeamData(
     if (!m) continue
     const sides: [string, string][] = [[m.home, rs.home], [m.away, rs.away]]
     for (const [team, raw] of sides) {
-      if (!allowedTeams.has(team)) continue
+      if (!allowed(team, m.league)) continue
       const { value, pct } = parseRaw(raw)
       if (value == null && pct == null) continue
       const key = `${team}|${rs.stat}`
@@ -266,4 +273,17 @@ export async function fetchTeamData(
   }
 
   return { table, stats }
+}
+
+/**
+ * One row per club, for views that list clubs rather than a competition:
+ * its domestic league where it has one, else its Champions League row.
+ */
+export function primaryRows(table: TeamTableRow[]): TeamTableRow[] {
+  const byTeam = new Map<string, TeamTableRow>()
+  for (const t of table) {
+    const seen = byTeam.get(t.team)
+    if (!seen || seen.league === "Champions League") byTeam.set(t.team, t)
+  }
+  return [...byTeam.values()]
 }

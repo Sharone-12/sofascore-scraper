@@ -405,8 +405,8 @@ async function Content({
   )
   const pred = predictions[0]
 
-  const homeRow = table.find((t) => t.team === match.home)
-  const awayRow = table.find((t) => t.team === match.away)
+  const homeRow = table.find((t) => t.team === match.home && t.league === match.league)
+  const awayRow = table.find((t) => t.team === match.away && t.league === match.league)
 
   const byKey = indexStats(stats)
   const isSettled = match.status === "finished" && match.home_goals != null

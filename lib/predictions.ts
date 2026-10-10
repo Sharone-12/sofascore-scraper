@@ -192,7 +192,8 @@ export function predictMatches(
   table: TeamTableRow[],
   stats?: SeasonStatRow[],
 ): MatchPrediction[] {
-  const teamMap = new Map(table.map((t) => [t.team, t]))
+  // A club has one row per competition, so look it up in the match's own.
+  const teamMap = new Map(table.map((t) => [`${t.league}|${t.team}`, t]))
   const byKey = stats ? indexStats(stats) : new Map<string, SeasonStatRow>()
 
   const leagueAvg = new Map<string, { goals: number; sot: number; bc: number; sib: number }>()
@@ -224,8 +225,8 @@ export function predictMatches(
   const finishedMap = new Map(finished.map((m) => [m.event_id, m]))
 
   return upcoming.map((m) => {
-    const homeTeam = teamMap.get(m.home)
-    const awayTeam = teamMap.get(m.away)
+    const homeTeam = teamMap.get(`${m.league}|${m.home}`)
+    const awayTeam = teamMap.get(`${m.league}|${m.away}`)
     const avg = leagueAvg.get(m.league) ?? { goals: 1.3, sot: 4, bc: 1, sib: 5 }
 
     const homeProfile = buildProfile(m.home, homeTeam, byKey)
