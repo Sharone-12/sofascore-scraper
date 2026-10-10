@@ -396,12 +396,10 @@
   100% { transform: translateX(260%); opacity: 0; }
 }
 
-/* Blaugrana stripes — vivid Barca palette. Darker overlay still lets the
-   bright blue/crimson read as a textured accent while keeping content legible. */
+/* Blaugrana stripes — full-strength Barca palette, no overlay. Content on
+   top uses text-shadow to stay legible against the bright blue/crimson. */
 .barca-stripes {
-  background-color: var(--card);
-  background-image:
-    linear-gradient(oklch(0.15 0 0 / 70%), oklch(0.15 0 0 / 78%)),
+  background:
     repeating-linear-gradient(
       90deg,
       oklch(0.44 0.24 265) 0 42px,     /* bright royal blue */
@@ -410,6 +408,9 @@
       oklch(0.55 0.22 25)  110px 150px,/* bright crimson */
       oklch(0.32 0.18 10)  150px 180px /* deep garnet */
     );
+}
+.barca-stripes * {
+  text-shadow: 0 1px 2px oklch(0 0 0 / 70%);
 }
 
 @media (prefers-reduced-motion: reduce) {
