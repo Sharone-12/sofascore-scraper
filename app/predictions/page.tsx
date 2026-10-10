@@ -16,6 +16,7 @@ import { UCL } from "@/lib/competition"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { PredictionsLeagueToggle } from "@/components/predictions-league-toggle"
+import { BarcaTransitionLink } from "@/components/barca-transition-link"
 
 const OUTCOME_COLORS = {
   home: "oklch(0.80 0.19 150)",
@@ -46,15 +47,14 @@ function ProbBar({ homeWin, draw, awayWin }: { homeWin: number; draw: number; aw
 
 function MatchCard({ p }: { p: MatchPrediction }) {
   const isSettled = p.actual !== null
+  const isBarca = p.home === "FC Barcelona" || p.away === "FC Barcelona"
+  const href = `/predictions/match?id=${p.event_id}`
+  const cls = `card-lift surface rounded-xl px-4 py-3.5 space-y-3 block ${
+    isBarca ? "barca-stripes" : "bg-card"
+  }`
+  const Wrapper = isBarca ? BarcaTransitionLink : Link
   return (
-    <Link
-      href={`/predictions/match?id=${p.event_id}`}
-      className={`card-lift surface rounded-xl px-4 py-3.5 space-y-3 block ${
-        p.home === "FC Barcelona" || p.away === "FC Barcelona"
-          ? "barca-stripes"
-          : "bg-card"
-      }`}
-    >
+    <Wrapper href={href} className={cls}>
       <div className="flex items-center justify-between gap-2">
         <span className="shrink-0 flex items-center gap-1.5">
           {LEAGUE_TOURNAMENT_ID[p.league] ? (
@@ -131,7 +131,7 @@ function MatchCard({ p }: { p: MatchPrediction }) {
           </span>
         )}
       </div>
-    </Link>
+    </Wrapper>
   )
 }
 

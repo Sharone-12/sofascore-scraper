@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
+import { BarcaTransitionLink } from "@/components/barca-transition-link"
 
 export type UpcomingMatch = {
   event_id: number
@@ -88,10 +89,16 @@ export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
         </div>
       </header>
       <div className="px-3 pb-4 h-[170px]">
-        <Link
+        {(() => {
+          const isBarca = m.home === "FC Barcelona" || m.away === "FC Barcelona"
+          const href = `/predictions/match?id=${m.event_id}`
+          const cls = "card-lift animate-in fade-in slide-in-from-right-3 duration-500 flex flex-col justify-center gap-3 px-4 py-4 rounded-xl h-full"
+          const Wrapper = isBarca ? BarcaTransitionLink : Link
+          return (
+        <Wrapper
           key={m.event_id}
-          href={`/predictions/match?id=${m.event_id}`}
-          className="card-lift animate-in fade-in slide-in-from-right-3 duration-500 flex flex-col justify-center gap-3 px-4 py-4 rounded-xl h-full"
+          href={href}
+          className={cls}
         >
           <div className="flex items-center justify-between gap-3">
             <span className="stat-label text-xs">{formatWhen(m.date)}</span>
@@ -117,7 +124,9 @@ export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
               )}
             </div>
           </div>
-        </Link>
+        </Wrapper>
+          )
+        })()}
       </div>
     </section>
   )
