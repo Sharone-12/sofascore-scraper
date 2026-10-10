@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
 
@@ -49,16 +50,38 @@ export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <header className="flex items-baseline justify-between px-6 pt-5 pb-2">
+      <header className="flex items-center justify-between px-6 pt-5 pb-2">
         <h2
           className="text-lg font-semibold tracking-tight uppercase"
           style={{ fontFamily: "var(--font-condensed)" }}
         >
           This week
         </h2>
-        <span className="stat-label text-xs">
-          {i + 1} / {matches.length}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="stat-label text-xs tabular-nums">
+            {i + 1} / {matches.length}
+          </span>
+          <div className="flex items-center gap-0.5 ml-1">
+            <button
+              type="button"
+              aria-label="Previous match"
+              onClick={() =>
+                setI((x) => (x - 1 + matches.length) % matches.length)
+              }
+              className="inline-flex items-center justify-center size-6 rounded-full text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors"
+            >
+              <ChevronLeftIcon className="size-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next match"
+              onClick={() => setI((x) => (x + 1) % matches.length)}
+              className="inline-flex items-center justify-center size-6 rounded-full text-muted-foreground hover:text-foreground hover:bg-white/[0.06] transition-colors"
+            >
+              <ChevronRightIcon className="size-4" />
+            </button>
+          </div>
+        </div>
       </header>
       <div className="px-3 pb-4 h-[170px]">
         <Link
