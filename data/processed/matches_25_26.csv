@@ -831,3 +831,147 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 14065232,Bundesliga,2025/26,32,2026-05-02,FC Bayern München,2672,1. FC Heidenheim,5885,finished,3.0,3.0
 14065251,Bundesliga,2025/26,33,2026-05-09,VfL Wolfsburg,2524,FC Bayern München,2672,finished,0.0,1.0
 14065556,Bundesliga,2025/26,34,2026-05-16,FC Bayern München,2672,1. FC Köln,2671,finished,5.0,1.0
+14566909,Champions League,2025/26,1,2025-09-16,Athletic Club,2825,Arsenal,42,finished,0.0,2.0
+14566894,Champions League,2025/26,1,2025-09-16,PSV Eindhoven,2952,Royale Union Saint-Gilloise,4860,finished,1.0,3.0
+14566738,Champions League,2025/26,1,2025-09-16,Benfica,3006,Qarabağ FK,5962,finished,2.0,3.0
+14566764,Champions League,2025/26,1,2025-09-16,Juventus,2687,Borussia Dortmund,2673,finished,4.0,4.0
+14566597,Champions League,2025/26,1,2025-09-16,Real Madrid,2829,Olympique de Marseille,1641,finished,2.0,1.0
+14566827,Champions League,2025/26,1,2025-09-16,Tottenham Hotspur,33,Villarreal,2819,finished,1.0,0.0
+14566868,Champions League,2025/26,1,2025-09-17,Olympiacos FC,3245,Pafos FC,171626,finished,0.0,0.0
+14566884,Champions League,2025/26,1,2025-09-17,SK Slavia Praha,2216,Bodø/Glimt,656,finished,2.0,2.0
+14566873,Champions League,2025/26,1,2025-09-17,AFC Ajax,2953,Inter,2697,finished,0.0,2.0
+14566570,Champions League,2025/26,1,2025-09-17,FC Bayern München,2672,Chelsea,38,finished,3.0,1.0
+14566637,Champions League,2025/26,1,2025-09-17,Liverpool FC,44,Atlético Madrid,2836,finished,3.0,2.0
+14566657,Champions League,2025/26,1,2025-09-17,Paris Saint-Germain,1644,Atalanta,2686,finished,4.0,0.0
+14566748,Champions League,2025/26,1,2025-09-18,Club Brugge KV,2888,AS Monaco,1653,finished,4.0,1.0
+14566972,Champions League,2025/26,1,2025-09-18,FC København,1284,Bayer 04 Leverkusen,2681,finished,2.0,2.0
+14566757,Champions League,2025/26,1,2025-09-18,Eintracht Frankfurt,2674,Galatasaray,3061,finished,5.0,1.0
+14566664,Champions League,2025/26,1,2025-09-18,Manchester City,17,SSC Napoli,2714,finished,2.0,0.0
+14566955,Champions League,2025/26,1,2025-09-18,Newcastle United,39,FC Barcelona,2817,finished,1.0,2.0
+14566857,Champions League,2025/26,1,2025-09-18,Sporting CP,3001,FC Kairat Almaty,5172,finished,4.0,1.0
+14566727,Champions League,2025/26,2,2025-09-30,Atalanta,2686,Club Brugge KV,2888,finished,2.0,1.0
+14566983,Champions League,2025/26,2,2025-09-30,FC Kairat Almaty,5172,Real Madrid,2829,finished,0.0,5.0
+14566775,Champions League,2025/26,2,2025-09-30,Atlético Madrid,2836,Eintracht Frankfurt,2674,finished,5.0,1.0
+14566843,Champions League,2025/26,2,2025-09-30,Bodø/Glimt,656,Tottenham Hotspur,33,finished,2.0,2.0
+14566581,Champions League,2025/26,2,2025-09-30,Chelsea,38,Benfica,3006,finished,1.0,0.0
+14566934,Champions League,2025/26,2,2025-09-30,Galatasaray,3061,Liverpool FC,44,finished,1.0,0.0
+14566613,Champions League,2025/26,2,2025-09-30,Inter,2697,SK Slavia Praha,2216,finished,3.0,0.0
+14566823,Champions League,2025/26,2,2025-09-30,Olympique de Marseille,1641,AFC Ajax,2953,finished,4.0,0.0
+14566965,Champions League,2025/26,2,2025-09-30,Pafos FC,171626,FC Bayern München,2672,finished,1.0,5.0
+14566922,Champions League,2025/26,2,2025-10-01,Qarabağ FK,5962,FC København,1284,finished,2.0,0.0
+14566952,Champions League,2025/26,2,2025-10-01,Royale Union Saint-Gilloise,4860,Newcastle United,39,finished,0.0,4.0
+14566925,Champions League,2025/26,2,2025-10-01,AS Monaco,1653,Manchester City,17,finished,2.0,2.0
+14566719,Champions League,2025/26,2,2025-10-01,Arsenal,42,Olympiacos FC,3245,finished,2.0,0.0
+14566706,Champions League,2025/26,2,2025-10-01,Bayer 04 Leverkusen,2681,PSV Eindhoven,2952,finished,1.0,1.0
+14566622,Champions League,2025/26,2,2025-10-01,Borussia Dortmund,2673,Athletic Club,2825,finished,4.0,1.0
+14566650,Champions League,2025/26,2,2025-10-01,FC Barcelona,2817,Paris Saint-Germain,1644,finished,1.0,2.0
+14566901,Champions League,2025/26,2,2025-10-01,SSC Napoli,2714,Sporting CP,3001,finished,2.0,1.0
+14566782,Champions League,2025/26,2,2025-10-01,Villarreal,2819,Juventus,2687,finished,2.0,2.0
+14566652,Champions League,2025/26,3,2025-10-21,FC Barcelona,2817,Olympiacos FC,3245,finished,6.0,1.0
+14566986,Champions League,2025/26,3,2025-10-21,FC Kairat Almaty,5172,Pafos FC,171626,finished,0.0,0.0
+14566718,Champions League,2025/26,3,2025-10-21,Arsenal,42,Atlético Madrid,2836,finished,4.0,0.0
+14566704,Champions League,2025/26,3,2025-10-21,Bayer 04 Leverkusen,2681,Paris Saint-Germain,1644,finished,2.0,7.0
+14566971,Champions League,2025/26,3,2025-10-21,FC København,1284,Borussia Dortmund,2673,finished,2.0,4.0
+14566956,Champions League,2025/26,3,2025-10-21,Newcastle United,39,Benfica,3006,finished,3.0,0.0
+14566893,Champions League,2025/26,3,2025-10-21,PSV Eindhoven,2952,SSC Napoli,2714,finished,6.0,2.0
+14566949,Champions League,2025/26,3,2025-10-21,Royale Union Saint-Gilloise,4860,Inter,2697,finished,0.0,4.0
+14566781,Champions League,2025/26,3,2025-10-21,Villarreal,2819,Manchester City,17,finished,0.0,2.0
+14566911,Champions League,2025/26,3,2025-10-22,Athletic Club,2825,Qarabağ FK,5962,finished,3.0,1.0
+14566936,Champions League,2025/26,3,2025-10-22,Galatasaray,3061,Bodø/Glimt,656,finished,3.0,1.0
+14566927,Champions League,2025/26,3,2025-10-22,AS Monaco,1653,Tottenham Hotspur,33,finished,0.0,0.0
+14566728,Champions League,2025/26,3,2025-10-22,Atalanta,2686,SK Slavia Praha,2216,finished,0.0,0.0
+14566582,Champions League,2025/26,3,2025-10-22,Chelsea,38,AFC Ajax,2953,finished,5.0,1.0
+14566754,Champions League,2025/26,3,2025-10-22,Eintracht Frankfurt,2674,Liverpool FC,44,finished,1.0,5.0
+14566571,Champions League,2025/26,3,2025-10-22,FC Bayern München,2672,Club Brugge KV,2888,finished,4.0,0.0
+14566596,Champions League,2025/26,3,2025-10-22,Real Madrid,2829,Juventus,2687,finished,1.0,0.0
+14566856,Champions League,2025/26,3,2025-10-22,Sporting CP,3001,Olympique de Marseille,1641,finished,2.0,1.0
+14566883,Champions League,2025/26,4,2025-11-04,SK Slavia Praha,2216,Arsenal,42,finished,0.0,3.0
+14566900,Champions League,2025/26,4,2025-11-04,SSC Napoli,2714,Eintracht Frankfurt,2674,finished,0.0,0.0
+14566777,Champions League,2025/26,4,2025-11-04,Atlético Madrid,2836,Royale Union Saint-Gilloise,4860,finished,3.0,1.0
+14566844,Champions League,2025/26,4,2025-11-04,Bodø/Glimt,656,AS Monaco,1653,finished,0.0,1.0
+14566766,Champions League,2025/26,4,2025-11-04,Juventus,2687,Sporting CP,3001,finished,1.0,1.0
+14566636,Champions League,2025/26,4,2025-11-04,Liverpool FC,44,Real Madrid,2829,finished,1.0,0.0
+14566867,Champions League,2025/26,4,2025-11-04,Olympiacos FC,3245,PSV Eindhoven,2952,finished,1.0,1.0
+14566656,Champions League,2025/26,4,2025-11-04,Paris Saint-Germain,1644,FC Bayern München,2672,finished,1.0,2.0
+14566829,Champions League,2025/26,4,2025-11-04,Tottenham Hotspur,33,FC København,1284,finished,4.0,0.0
+14566966,Champions League,2025/26,4,2025-11-05,Pafos FC,171626,Villarreal,2819,finished,1.0,0.0
+14566919,Champions League,2025/26,4,2025-11-05,Qarabağ FK,5962,Chelsea,38,finished,2.0,2.0
+14566876,Champions League,2025/26,4,2025-11-05,AFC Ajax,2953,Galatasaray,3061,finished,0.0,3.0
+14566736,Champions League,2025/26,4,2025-11-05,Benfica,3006,Bayer 04 Leverkusen,2681,finished,0.0,1.0
+14566745,Champions League,2025/26,4,2025-11-05,Club Brugge KV,2888,FC Barcelona,2817,finished,3.0,3.0
+14566614,Champions League,2025/26,4,2025-11-05,Inter,2697,FC Kairat Almaty,5172,finished,2.0,1.0
+14566662,Champions League,2025/26,4,2025-11-05,Manchester City,17,Borussia Dortmund,2673,finished,4.0,1.0
+14566958,Champions League,2025/26,4,2025-11-05,Newcastle United,39,Athletic Club,2825,finished,2.0,0.0
+14566822,Champions League,2025/26,4,2025-11-05,Olympique de Marseille,1641,Atalanta,2686,finished,0.0,1.0
+14566874,Champions League,2025/26,5,2025-11-25,AFC Ajax,2953,Benfica,3006,finished,0.0,2.0
+14566937,Champions League,2025/26,5,2025-11-25,Galatasaray,3061,Royale Union Saint-Gilloise,4860,finished,0.0,1.0
+14566842,Champions League,2025/26,5,2025-11-25,Bodø/Glimt,656,Juventus,2687,finished,2.0,3.0
+14566620,Champions League,2025/26,5,2025-11-25,Borussia Dortmund,2673,Villarreal,2819,finished,4.0,0.0
+14566580,Champions League,2025/26,5,2025-11-25,Chelsea,38,FC Barcelona,2817,finished,3.0,0.0
+14566663,Champions League,2025/26,5,2025-11-25,Manchester City,17,Bayer 04 Leverkusen,2681,finished,0.0,2.0
+14566835,Champions League,2025/26,5,2025-11-25,Olympique de Marseille,1641,Newcastle United,39,finished,2.0,1.0
+14566885,Champions League,2025/26,5,2025-11-25,SK Slavia Praha,2216,Athletic Club,2825,finished,0.0,0.0
+14566902,Champions League,2025/26,5,2025-11-25,SSC Napoli,2714,Qarabağ FK,5962,finished,2.0,0.0
+14566974,Champions League,2025/26,5,2025-11-26,FC København,1284,FC Kairat Almaty,5172,finished,3.0,2.0
+14566968,Champions League,2025/26,5,2025-11-26,Pafos FC,171626,AS Monaco,1653,finished,2.0,2.0
+14566717,Champions League,2025/26,5,2025-11-26,Arsenal,42,FC Bayern München,2672,finished,3.0,1.0
+14566774,Champions League,2025/26,5,2025-11-26,Atlético Madrid,2836,Inter,2697,finished,2.0,1.0
+14566755,Champions League,2025/26,5,2025-11-26,Eintracht Frankfurt,2674,Atalanta,2686,finished,0.0,3.0
+14566638,Champions League,2025/26,5,2025-11-26,Liverpool FC,44,PSV Eindhoven,2952,finished,1.0,4.0
+14566865,Champions League,2025/26,5,2025-11-26,Olympiacos FC,3245,Real Madrid,2829,finished,3.0,4.0
+14566658,Champions League,2025/26,5,2025-11-26,Paris Saint-Germain,1644,Tottenham Hotspur,33,finished,5.0,3.0
+14566855,Champions League,2025/26,5,2025-11-26,Sporting CP,3001,Club Brugge KV,2888,finished,3.0,0.0
+14566985,Champions League,2025/26,6,2025-12-09,FC Kairat Almaty,5172,Olympiacos FC,3245,finished,0.0,1.0
+14566572,Champions League,2025/26,6,2025-12-09,FC Bayern München,2672,Sporting CP,3001,finished,3.0,1.0
+14566928,Champions League,2025/26,6,2025-12-09,AS Monaco,1653,Galatasaray,3061,finished,1.0,0.0
+14566726,Champions League,2025/26,6,2025-12-09,Atalanta,2686,Chelsea,38,finished,2.0,1.0
+14566651,Champions League,2025/26,6,2025-12-09,FC Barcelona,2817,Eintracht Frankfurt,2674,finished,2.0,1.0
+14566611,Champions League,2025/26,6,2025-12-09,Inter,2697,Liverpool FC,44,finished,0.0,1.0
+14566892,Champions League,2025/26,6,2025-12-09,PSV Eindhoven,2952,Atlético Madrid,2836,finished,2.0,3.0
+14566951,Champions League,2025/26,6,2025-12-09,Royale Union Saint-Gilloise,4860,Olympique de Marseille,1641,finished,2.0,3.0
+14566828,Champions League,2025/26,6,2025-12-09,Tottenham Hotspur,33,SK Slavia Praha,2216,finished,3.0,0.0
+14566921,Champions League,2025/26,6,2025-12-10,Qarabağ FK,5962,AFC Ajax,2953,finished,2.0,4.0
+14566784,Champions League,2025/26,6,2025-12-10,Villarreal,2819,FC København,1284,finished,2.0,3.0
+14566908,Champions League,2025/26,6,2025-12-10,Athletic Club,2825,Paris Saint-Germain,1644,finished,0.0,0.0
+14566707,Champions League,2025/26,6,2025-12-10,Bayer 04 Leverkusen,2681,Newcastle United,39,finished,2.0,2.0
+14566737,Champions League,2025/26,6,2025-12-10,Benfica,3006,SSC Napoli,2714,finished,2.0,0.0
+14566621,Champions League,2025/26,6,2025-12-10,Borussia Dortmund,2673,Bodø/Glimt,656,finished,2.0,2.0
+14566746,Champions League,2025/26,6,2025-12-10,Club Brugge KV,2888,Arsenal,42,finished,0.0,3.0
+14566767,Champions League,2025/26,6,2025-12-10,Juventus,2687,Pafos FC,171626,finished,2.0,0.0
+14566595,Champions League,2025/26,6,2025-12-10,Real Madrid,2829,Manchester City,17,finished,1.0,2.0
+14566984,Champions League,2025/26,7,2026-01-20,FC Kairat Almaty,5172,Club Brugge KV,2888,finished,1.0,4.0
+14566841,Champions League,2025/26,7,2026-01-20,Bodø/Glimt,656,Manchester City,17,finished,3.0,1.0
+14566973,Champions League,2025/26,7,2026-01-20,FC København,1284,SSC Napoli,2714,finished,1.0,1.0
+14566612,Champions League,2025/26,7,2026-01-20,Inter,2697,Arsenal,42,finished,1.0,3.0
+14566866,Champions League,2025/26,7,2026-01-20,Olympiacos FC,3245,Bayer 04 Leverkusen,2681,finished,2.0,0.0
+14566598,Champions League,2025/26,7,2026-01-20,Real Madrid,2829,AS Monaco,1653,finished,6.0,1.0
+14566854,Champions League,2025/26,7,2026-01-20,Sporting CP,3001,Paris Saint-Germain,1644,finished,2.0,1.0
+14566826,Champions League,2025/26,7,2026-01-20,Tottenham Hotspur,33,Borussia Dortmund,2673,finished,2.0,0.0
+14566783,Champions League,2025/26,7,2026-01-20,Villarreal,2819,AFC Ajax,2953,finished,1.0,2.0
+14566935,Champions League,2025/26,7,2026-01-21,Galatasaray,3061,Atlético Madrid,2836,finished,1.0,1.0
+14566920,Champions League,2025/26,7,2026-01-21,Qarabağ FK,5962,Eintracht Frankfurt,2674,finished,3.0,2.0
+14566729,Champions League,2025/26,7,2026-01-21,Atalanta,2686,Athletic Club,2825,finished,2.0,3.0
+14566583,Champions League,2025/26,7,2026-01-21,Chelsea,38,Pafos FC,171626,finished,1.0,0.0
+14566573,Champions League,2025/26,7,2026-01-21,FC Bayern München,2672,Royale Union Saint-Gilloise,4860,finished,2.0,0.0
+14566765,Champions League,2025/26,7,2026-01-21,Juventus,2687,Benfica,3006,finished,2.0,0.0
+14566957,Champions League,2025/26,7,2026-01-21,Newcastle United,39,PSV Eindhoven,2952,finished,3.0,0.0
+14566821,Champions League,2025/26,7,2026-01-21,Olympique de Marseille,1641,Liverpool FC,44,finished,0.0,3.0
+14566882,Champions League,2025/26,7,2026-01-21,SK Slavia Praha,2216,FC Barcelona,2817,finished,2.0,4.0
+14566875,Champions League,2025/26,8,2026-01-28,AFC Ajax,2953,Olympiacos FC,3245,finished,1.0,2.0
+14566926,Champions League,2025/26,8,2026-01-28,AS Monaco,1653,Juventus,2687,finished,0.0,0.0
+14566720,Champions League,2025/26,8,2026-01-28,Arsenal,42,FC Kairat Almaty,5172,finished,3.0,2.0
+14566910,Champions League,2025/26,8,2026-01-28,Athletic Club,2825,Sporting CP,3001,finished,2.0,3.0
+14566776,Champions League,2025/26,8,2026-01-28,Atlético Madrid,2836,Bodø/Glimt,656,finished,1.0,2.0
+14566705,Champions League,2025/26,8,2026-01-28,Bayer 04 Leverkusen,2681,Villarreal,2819,finished,3.0,0.0
+14566735,Champions League,2025/26,8,2026-01-28,Benfica,3006,Real Madrid,2829,finished,4.0,2.0
+14566619,Champions League,2025/26,8,2026-01-28,Borussia Dortmund,2673,Inter,2697,finished,0.0,2.0
+14566747,Champions League,2025/26,8,2026-01-28,Club Brugge KV,2888,Olympique de Marseille,1641,finished,3.0,0.0
+14566756,Champions League,2025/26,8,2026-01-28,Eintracht Frankfurt,2674,Tottenham Hotspur,33,finished,0.0,2.0
+14566653,Champions League,2025/26,8,2026-01-28,FC Barcelona,2817,FC København,1284,finished,4.0,1.0
+14566639,Champions League,2025/26,8,2026-01-28,Liverpool FC,44,Qarabağ FK,5962,finished,6.0,0.0
+14566665,Champions League,2025/26,8,2026-01-28,Manchester City,17,Galatasaray,3061,finished,2.0,0.0
+14566891,Champions League,2025/26,8,2026-01-28,PSV Eindhoven,2952,FC Bayern München,2672,finished,1.0,2.0
+14566967,Champions League,2025/26,8,2026-01-28,Pafos FC,171626,SK Slavia Praha,2216,finished,4.0,1.0
+14566659,Champions League,2025/26,8,2026-01-28,Paris Saint-Germain,1644,Newcastle United,39,finished,1.0,1.0
+14566950,Champions League,2025/26,8,2026-01-28,Royale Union Saint-Gilloise,4860,Atalanta,2686,finished,1.0,0.0
+14566899,Champions League,2025/26,8,2026-01-28,SSC Napoli,2714,Chelsea,38,finished,2.0,3.0
