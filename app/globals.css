@@ -386,14 +386,14 @@
     0 0 22px oklch(0.80 0.19 150 / 55%);
   opacity: 0;
   transform: translateX(-100%);
-  animation: spark-sweep 5s ease-in-out infinite;
+  animation: spark-sweep 5s linear infinite;
 }
 @keyframes spark-sweep {
   0%   { transform: translateX(-100%); opacity: 0; }
-  6%   { opacity: 1; }
-  50%  { opacity: 1; }
-  58%  { opacity: 0; }
-  100% { transform: translateX(220%); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { transform: translateX(220%); opacity: 1; }
+  90%  { transform: translateX(260%); opacity: 0; }
+  100% { transform: translateX(260%); opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
