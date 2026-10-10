@@ -365,14 +365,14 @@
 /* Sparkle sweep: a thin pitch-green beam travels across the top edge of a
    card every ~5s. Lives on ::before so markup stays clean. Plain oklch
    values (not relative-color syntax) for broad browser support. */
-.spark { position: relative; isolation: isolate; }
+.spark { position: relative; isolation: isolate; overflow: hidden; }
 .spark::before {
   content: "";
   position: absolute;
-  top: -1px;
+  top: 0;
   left: 0;
   height: 2px;
-  width: 50%;
+  width: 40%;
   pointer-events: none;
   z-index: 1;
   background: linear-gradient(
