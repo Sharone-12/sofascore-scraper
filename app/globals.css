@@ -362,16 +362,8 @@
   to   { background-position: -200% 0; }
 }
 
-/* Vertical ticker — translateY -50% works because the row list is doubled,
-   so the second half is identical to the first and the jump at loop end is
-   invisible. Pauses on hover so you can read a specific row. */
-@keyframes ticker {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-50%); }
-}
-.ticker-track:hover { animation-play-state: paused !important; }
-
 @media (prefers-reduced-motion: reduce) {
-  .stagger > *, .stat-pop, .shimmer-text, .card-lift, .row-item,
-  .ticker-track { animation: none !important; transition: none !important; }
+  .stagger > *, .stat-pop, .shimmer-text, .card-lift, .row-item {
+    animation: none !important; transition: none !important;
+  }
 }

@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
 import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
@@ -17,64 +20,66 @@ function formatWhen(iso: string) {
   return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })
 }
 
-function Row({ m }: { m: UpcomingMatch }) {
-  const tid = LEAGUE_TOURNAMENT_ID[m.league]
-  return (
-    <Link
-      href={`/predictions/match?event=${m.event_id}`}
-      className="row-item flex items-center gap-3 px-3 py-2.5 rounded-xl"
-    >
-      <span className="stat-label w-14 shrink-0">{formatWhen(m.date)}</span>
-      <span className="flex-1 min-w-0 flex items-center gap-2">
-        {m.home_id != null && <TeamCrest teamId={m.home_id} name={m.home} size={18} />}
-        <span className="truncate text-sm">{m.home}</span>
-        <span className="text-muted-foreground text-xs">vs</span>
-        {m.away_id != null && <TeamCrest teamId={m.away_id} name={m.away} size={18} />}
-        <span className="truncate text-sm">{m.away}</span>
-      </span>
-      {tid && <LeagueCrest tournamentId={tid} name={m.league} size={16} />}
-    </Link>
-  )
-}
+const SLOT_MS = 4000
 
-/**
- * Vertical ticker. Doubles the row list so the keyframe can translate -50%
- * for a seamless loop (jumps back to 0 at loop end, visually identical).
- * Pure CSS; the whole thing is server-rendered and interactive without JS.
- */
 export function UpcomingTicker({ matches }: { matches: UpcomingMatch[] }) {
-  if (matches.length === 0) return null
-  const loop = [...matches, ...matches]
-  const duration = `${matches.length * 2.6}s`
+  const [i, setI] = useState(0)
+  const [paused, setPaused] = useState(false)
+
+  useEffect(() => {
+    if (matches.length <= 1 || paused) return
+    const t = setInterval(() => setI((x) => (x + 1) % matches.length), SLOT_MS)
+    return () => clearInterval(t)
+  }, [matches.length, paused])
+
+  if (matches.length === 0) {
+    return (
+      <section className="surface rounded-2xl bg-card px-5 py-4 h-[108px] flex items-center">
+        <span className="stat-label">No upcoming matches this week.</span>
+      </section>
+    )
+  }
+
+  const m = matches[i]
+  const tid = LEAGUE_TOURNAMENT_ID[m.league]
 
   return (
-    <section className="surface rounded-2xl bg-card overflow-hidden h-[260px] relative">
-      <header className="flex items-baseline justify-between px-5 pt-4 pb-2">
+    <section
+      className="surface rounded-2xl bg-card overflow-hidden"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <header className="flex items-baseline justify-between px-5 pt-4 pb-1">
         <h2
           className="text-sm font-semibold tracking-tight uppercase"
           style={{ fontFamily: "var(--font-condensed)" }}
         >
-          Upcoming
+          This week
         </h2>
-        <span className="stat-label">next {matches.length}</span>
+        <span className="stat-label">
+          {i + 1} / {matches.length}
+        </span>
       </header>
-      <div
-        className="absolute inset-x-0 top-10 bottom-0 overflow-hidden"
-        style={{
-          maskImage:
-            "linear-gradient(to bottom, transparent 0, black 12%, black 88%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0, black 12%, black 88%, transparent 100%)",
-        }}
-      >
-        <div
-          className="px-2 ticker-track"
-          style={{ animation: `ticker ${duration} linear infinite` }}
+      <div className="px-2 pb-2 h-[68px]">
+        <Link
+          key={m.event_id}
+          href={`/predictions/match?event=${m.event_id}`}
+          className="row-item animate-in fade-in slide-in-from-right-3 duration-500 flex items-center gap-3 px-3 py-2.5 rounded-xl h-full"
         >
-          {loop.map((m, i) => (
-            <Row key={`${m.event_id}-${i}`} m={m} />
-          ))}
-        </div>
+          <span className="stat-label w-14 shrink-0">{formatWhen(m.date)}</span>
+          <span className="flex-1 min-w-0 flex items-center gap-2">
+            {m.home_id != null && (
+              <TeamCrest teamId={m.home_id} name={m.home} size={20} />
+            )}
+            <span className="truncate text-sm font-medium">{m.home}</span>
+            <span className="text-muted-foreground text-xs">vs</span>
+            {m.away_id != null && (
+              <TeamCrest teamId={m.away_id} name={m.away} size={20} />
+            )}
+            <span className="truncate text-sm font-medium">{m.away}</span>
+          </span>
+          {tid && <LeagueCrest tournamentId={tid} name={m.league} size={16} />}
+        </Link>
       </div>
     </section>
   )

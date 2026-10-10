@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import { connection } from "next/server"
 import { supabase } from "@/lib/supabase"
 import { resolveSeason } from "@/lib/seasons"
 import { resolveCompetition, scopeLeague, scopeQuery, COMPETITION_LABEL } from "@/lib/competition"
@@ -147,14 +148,21 @@ function Board({
 }
 
 async function Upcoming() {
-  // status="upcoming" is kept current by refresh.py, so no runtime date filter
-  // is needed — avoids Cache Components' blocking-prerender-current-time error.
+  // connection() opts this leaf into dynamic rendering so new Date() is
+  // allowed under Cache Components. The parent Suspense boundary lets the
+  // rest of the hero prerender while this streams in.
+  await connection()
+  const today = new Date()
+  const in7 = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
+  const iso = (d: Date) => d.toISOString().slice(0, 10)
   const { data } = await supabase
     .from("matches")
     .select("event_id, league, date, home, home_id, away, away_id")
     .eq("status", "upcoming")
+    .gte("date", iso(today))
+    .lte("date", iso(in7))
     .order("date", { ascending: true })
-    .limit(8)
+    .limit(50)
   const rows = (data || []) as unknown as UpcomingMatch[]
   return <UpcomingTicker matches={rows} />
 }
