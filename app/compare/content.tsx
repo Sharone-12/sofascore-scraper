@@ -159,7 +159,7 @@ export default function CompareContent() {
         )}
       </div>
 
-      <div className="max-w-md mb-6">
+      <div id="compare-player-search" className="max-w-md mb-6">
         <PlayerSearch
           onSelect={addPlayer}
           placeholder={
@@ -170,6 +170,27 @@ export default function CompareContent() {
 
       {players.length > 0 && (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 stagger">
+          {players.length < 3 && (
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.querySelector<HTMLInputElement>(
+                  "#compare-player-search input",
+                )
+                el?.scrollIntoView({ behavior: "smooth", block: "center" })
+                setTimeout(() => el?.focus(), 220)
+              }}
+              className="group surface rounded-xl bg-card min-h-[11rem] flex flex-col items-center justify-center gap-2 border-2 border-dashed border-white/10 hover:border-white/25 hover:bg-white/[0.03] transition-colors"
+            >
+              <span
+                className="flex items-center justify-center size-10 rounded-full border border-white/15 text-xl text-muted-foreground group-hover:text-foreground group-hover:border-white/30 transition-colors"
+                aria-hidden
+              >
+                +
+              </span>
+              <span className="stat-label">Add a player</span>
+            </button>
+          )}
           {players.map((p, i) => (
             <div
               key={p.slug as string}
