@@ -148,6 +148,9 @@ export type Scored = {
   confidence: number
   /** Per-stat percentiles, so the model can cite specifics. */
   percentiles: Record<string, number>
+  /** Raw season totals (not p90), so answers like "how many goals" don't
+   *  reduce to percentile prose. */
+  totals: Record<string, number>
 }
 
 /**
@@ -230,6 +233,19 @@ function score(
       const raw = acc / totalWeight
       const minutes = Number(r.minutes) || 0
       const c = confidence(minutes, k)
+      // Raw season totals the model can cite directly. Only the counts users
+      // ask about by name — "how many goals/assists did X have".
+      const totalKeys = [
+        "appearances", "goals", "assists",
+        "xg", "xa", "key_passes", "big_chances_created",
+        "shots", "shots_on_target", "dribbles",
+        "tackles_won", "interceptions", "yellows", "reds",
+      ]
+      const totals: Record<string, number> = {}
+      for (const key of totalKeys) {
+        const v = Number(r[key])
+        if (Number.isFinite(v)) totals[key] = Math.round(v * 100) / 100
+      }
       return {
         player: String(r.player ?? ""),
         slug: String(r.slug ?? ""),
@@ -243,6 +259,7 @@ function score(
         score: Math.round((50 + (raw - 50) * c) * 10) / 10,
         confidence: Math.round(c * 100) / 100,
         percentiles,
+        totals,
       }
     })
     .sort((a, b) => b.score - a.score)

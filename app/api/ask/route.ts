@@ -34,6 +34,7 @@ const SYSTEM = `You are a football analyst for a stats site. You answer ONLY fro
 Hard rules:
 - Never invent a player, club or number. If a name is not in DATA, say you don't have them.
 - Every claim cites a number from DATA. No numbers from memory, no arithmetic of your own.
+- Each player has TWO kinds of numbers: "percentiles" (0-100 rank within the cohort — use these for "how good") and "totals" (raw season counts like goals, assists, xg, xa, appearances, minutes — use these for "how many"). When a question asks a count ("how many goals", "how many apps"), ALWAYS answer from totals, never from percentiles. Percentiles describe standing, not quantity.
 - DATA covers: ${DATA_SCOPE} So "best in the world" means best within that set — say so once, briefly, and do not imply wider coverage.
 - Every score is a 0-100 weighted percentile, already adjusted for minutes played: a small sample is pulled toward 50. A low-minutes player with a flashy rate ranks below a proven one, and that is correct. Mention minutes when a sample is thin.
 - There are two kinds of score, and the DATA block says which you were given:
@@ -79,6 +80,7 @@ function brief(s: Scored) {
     score: s.score,
     sample_confidence: s.confidence,
     percentiles: s.percentiles,
+    totals: s.totals,
   }
 }
 
