@@ -133,8 +133,14 @@ export default function CompareContent() {
     }),
   }))
 
+  const hasYamal = players.some((p) =>
+    /yamal/i.test(String(p.player ?? "")),
+  )
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="relative mx-auto max-w-6xl px-4 py-10">
+      {hasYamal && <div className="yamal-bg" aria-hidden />}
+      <div className="relative z-10">
       <div className="mb-10 animate-fade-in">
         <h1
           className="text-5xl tracking-[-0.035em] leading-none mb-3"
@@ -460,6 +466,7 @@ export default function CompareContent() {
           </p>
         </div>
       )}
+      </div>
     </div>
   )
 }

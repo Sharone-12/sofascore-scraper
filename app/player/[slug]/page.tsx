@@ -124,8 +124,14 @@ async function PlayerContent({
     },
   ]
 
+  const isYamal =
+    /yamal/i.test(String(player.player ?? "")) ||
+    slug === "lamine-yamal"
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="relative mx-auto max-w-6xl px-4 py-10">
+      {isYamal && <div className="yamal-bg" aria-hidden />}
+      <div className="relative z-10">
       <div className="mb-10 animate-fade-in flex items-start gap-5">
         <PlayerAvatar
           playerId={player.player_id as number}
@@ -222,6 +228,7 @@ async function PlayerContent({
             </CardContent>
           </Card>
         ))}
+      </div>
       </div>
     </div>
   )

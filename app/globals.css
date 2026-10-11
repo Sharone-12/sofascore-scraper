@@ -436,6 +436,36 @@
     );
 }
 
+/* Yamal backdrop — fixed left-side photo that fades out across the viewport
+   so content on the right stays untouched. Shown only on pages that
+   explicitly opt in via <div className="yamal-bg" />. */
+.yamal-bg {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: min(44vw, 620px);
+  z-index: 0;
+  pointer-events: none;
+  background: url("/yamal.png") center / cover no-repeat;
+  opacity: 0.38;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 55%,
+    transparent 100%
+  );
+          mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 55%,
+    transparent 100%
+  );
+}
+@media (max-width: 720px) {
+  .yamal-bg { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .stagger > *, .stat-pop, .shimmer-text, .card-lift, .row-item,
   .spark::before {
