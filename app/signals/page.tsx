@@ -69,6 +69,23 @@ const SIGNALS: Signal[] = [
     higherIsBetter: true,
   },
   {
+    key: "press_resistance",
+    label: "Press Resistance",
+    hint: "Keeps the ball when pressed",
+    formula: "1 − (dispossessed ÷ touches)",
+    what: "The share of a player's touches where they don't get dispossessed — pure ball-retention rate.",
+    signifies: "High values = press-proof. The ball sticks to them in traffic. Low values = turnover-prone when squeezed.",
+    why: "Unlike raw touches-per-turnover, this normalizes by how often they get the ball, so a quiet #6 and a busy #10 are judged on the same per-touch standard. Elite retainers hit 97–99%; the most press-vulnerable sit at 85–90%.",
+    compute: (p) => {
+      const t = n(p.touches_p90)
+      if (t <= 0) return 0
+      return (1 - n(p.dispossessed_p90) / t) * 100
+    },
+    fmt: (v) => `${v.toFixed(1)}%`,
+    fmtKey: "pct1",
+    higherIsBetter: true,
+  },
+  {
     key: "progressive_touch_rate",
     label: "Progressive Touch %",
     hint: "Share of touches that drive play forward",
