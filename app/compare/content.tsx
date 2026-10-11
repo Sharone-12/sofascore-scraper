@@ -75,6 +75,24 @@ export default function CompareContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slugParam, season, comp])
 
+  // Auto-ask the verdict when the page is opened with ?ask=1 (set by the Ask
+  // panel's compare short-circuit) and 2+ players have loaded. One-shot: we
+  // strip the flag so navigating away and back doesn't re-fire.
+  const askFlag = searchParams.get("ask")
+  useEffect(() => {
+    if (askFlag !== "1" || players.length < 2 || verdict.loading || verdict.answer) return
+    verdict.ask(
+      `Who is the better player, and why? ${players
+        .map((p) => p.player as string)
+        .join(" vs ")}`,
+      players.map((p) => p.slug as string),
+    )
+    const next = new URLSearchParams(searchParams.toString())
+    next.delete("ask")
+    router.replace(`/compare${next.size ? `?${next}` : ""}`, { scroll: false })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [askFlag, players.length])
+
   function addPlayer(p: { slug: string }) {
     if (slugs.includes(p.slug) || slugs.length >= 3) return
     const next = [...slugs, p.slug]

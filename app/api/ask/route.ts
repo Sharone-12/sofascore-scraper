@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
 import { rankPlayers, rankAllRoles, ROLE_PROFILES, ATTACKING_IMPACT, type Scored } from "@/lib/rank"
-import { parseIntent, DATA_SCOPE } from "@/lib/ask"
+import { parseIntent, extractCompareNames, DATA_SCOPE } from "@/lib/ask"
 import { resolveSeason } from "@/lib/seasons"
 import { resolveCompetition, scopeLeague, type Competition } from "@/lib/competition"
 
@@ -123,6 +123,42 @@ export async function POST(req: Request) {
   }
   if (question.length > 500) {
     return NextResponse.json({ error: "Question too long." }, { status: 400 })
+  }
+
+  // Compare short-circuit: if the user typed "compare X and Y" (or similar)
+  // and we aren't already in compare mode, resolve the names to slugs and
+  // redirect to the compare page with ?ask=1 so it auto-fetches the verdict.
+  if (slugs.length === 0) {
+    const names = extractCompareNames(question)
+    if (names && names.length >= 2) {
+      const seasonForLookup = resolveSeason(body.season)
+      const compForLookup = resolveCompetition(body.comp)
+      const resolved: string[] = []
+      for (const name of names) {
+        const { data } = await scopeLeague(
+          supabase
+            .from("players")
+            .select("slug, player, minutes")
+            .ilike("player", `%${name}%`)
+            .eq("season", seasonForLookup),
+          compForLookup,
+        )
+          .order("minutes", { ascending: false })
+          .limit(1)
+        if (data?.[0]?.slug) resolved.push(data[0].slug as string)
+      }
+      if (resolved.length >= 2) {
+        const params = new URLSearchParams()
+        params.set("players", resolved.join(","))
+        params.set("ask", "1")
+        if (body.season) params.set("season", body.season)
+        if (body.comp) params.set("comp", body.comp)
+        return NextResponse.json({
+          redirect: `/compare?${params.toString()}`,
+          cited: [],
+        })
+      }
+    }
   }
 
   const intent = parseIntent(question, slugs.length > 0)

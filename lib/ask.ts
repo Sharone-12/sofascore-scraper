@@ -87,6 +87,28 @@ export const DATA_SCOPE =
   "Premier League, La Liga, and Champions League (every club), plus Paris Saint-Germain and " +
   "FC Bayern München only. No Serie A, and no other Ligue 1 or Bundesliga clubs."
 
+/**
+ * Pull candidate player names from a "compare X and Y" / "X vs Y" / "who is
+ * better X or Y" question. Returns 2–3 raw name strings for later DB lookup,
+ * or null if the question isn't a comparison.
+ */
+export function extractCompareNames(question: string): string[] | null {
+  const q = question.trim()
+  const compareRe = /\b(compare|vs\.?|versus|who['’]s? better|who is better|better[,:]?)\b/i
+  if (!compareRe.test(q)) return null
+  const stripped = q
+    .replace(compareRe, " ")
+    .replace(/^(and|or|is|of|between)\s+/i, " ")
+    .replace(/[?!.]+$/g, "")
+    .trim()
+  const parts = stripped
+    .split(/\s*(?:,|\band\b|\bor\b|\bvs\.?\b|\bversus\b|&)\s*/i)
+    .map((p) => p.trim())
+    .filter((p) => p.length >= 2 && !/^(the|a|an)$/i.test(p))
+  if (parts.length < 2) return null
+  return parts.slice(0, 3)
+}
+
 export function parseIntent(question: string, hasPlayers = false): Intent {
   const q = question.toLowerCase()
 

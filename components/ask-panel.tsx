@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { resolveSeason } from "@/lib/seasons"
 import { resolveCompetition } from "@/lib/competition"
@@ -26,6 +26,7 @@ const EMPTY: AskState = { loading: false, answer: null, cited: [], error: null }
 /** Shared by the floating panel and the compare page's "Who's better?" button. */
 export function useAsk() {
   const [state, setState] = useState<AskState>(EMPTY)
+  const router = useRouter()
   const params = useSearchParams()
   const season = resolveSeason(params.get("season"))
   const comp = resolveCompetition(params.get("comp"))
@@ -46,6 +47,14 @@ export function useAsk() {
         })
         return
       }
+      // Server short-circuited to a compare redirect — navigate instead of
+      // displaying an answer in the panel. The compare page's auto-ask fires
+      // the "who's better" verdict once it mounts.
+      if (typeof json.redirect === "string" && json.redirect) {
+        setState(EMPTY)
+        router.push(json.redirect)
+        return
+      }
       setState({
         loading: false,
         answer: json.answer ?? null,
@@ -58,7 +67,7 @@ export function useAsk() {
         error: e instanceof Error ? e.message : "Network error",
       })
     }
-  }, [season, comp])
+  }, [season, comp, router])
 
   return { ...state, ask }
 }
