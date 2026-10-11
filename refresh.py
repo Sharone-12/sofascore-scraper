@@ -10,8 +10,10 @@ so Cloudflare clearance carries over from the initial manual solve.
 from __future__ import annotations
 
 import os
+import socket
 import subprocess
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -19,12 +21,39 @@ ROOT = Path(__file__).resolve().parent
 LOG = ROOT / "refresh.log"
 OUTPUTS = ["data/processed"]
 
+# A laptop that wakes at 08:00 fires this before Wi-Fi is up: on 2026-10-08 both
+# `git pull` and the Sofascore fetch died on "Could not resolve host", three
+# minutes apart, and the whole day's run was lost. Wait for DNS first.
+NETWORK_HOSTS = ("github.com", "www.sofascore.com")
+NETWORK_WAIT = 900  # seconds; a wake-from-sleep usually reconnects within a minute
+
 
 def log(msg: str) -> None:
     line = f"{datetime.now():%Y-%m-%d %H:%M} {msg}"
     with LOG.open("a", encoding="utf-8") as fh:
         fh.write(line + "\n")
-    print(line, flush=True)
+    # Deliberately not printed: launchd redirects stdout into this same file,
+    # so printing wrote every line twice.
+
+
+def wait_for_network(timeout: int = NETWORK_WAIT) -> bool:
+    """Block until every host resolves, or give up after `timeout` seconds."""
+    deadline = time.time() + timeout
+    announced = False
+    while True:
+        try:
+            for host in NETWORK_HOSTS:
+                socket.getaddrinfo(host, 443)
+            if announced:
+                log("network is up")
+            return True
+        except OSError:
+            if time.time() >= deadline:
+                return False
+            if not announced:
+                log("no network yet, waiting...")
+                announced = True
+            time.sleep(15)
 
 
 def sh(*args: str) -> str:
@@ -55,23 +84,34 @@ def main() -> None:
         if "players" in line.lower() or "matches" in line.lower() or "saved" in line.lower():
             log(line.strip())
 
-    try:
-        from sync_db import sync
-        log("syncing to supabase")
-        sync()
+    # Supabase + image mirror calls routinely die mid-run when the laptop's
+    # Wi-Fi flickers. Retry with backoff and a network wait so the operator
+    # doesn't have to kick off a manual re-sync for a transient blip.
+    def with_retry(label: str, fn, attempts: int = 3) -> bool:
+        for i in range(1, attempts + 1):
+            try:
+                fn()
+                return True
+            except Exception as exc:
+                log(f"{label} attempt {i}/{attempts} failed: {exc}")
+                if i == attempts:
+                    log(f"{label} FAILED after {attempts} attempts")
+                    return False
+                wait_for_network(timeout=120)
+                time.sleep(5 * i)
+        return False
+
+    from sync_db import sync
+    log("syncing to supabase")
+    if with_retry("supabase sync", sync):
         log("supabase sync done")
-    except Exception as exc:
-        log(f"supabase sync failed: {exc}")
 
     # Images are cosmetic, and only new ids are fetched, so a failure here must
     # not stop the data commit below.
-    try:
-        from sync_images import sync_images
-        log("mirroring images")
-        sync_images()
+    from sync_images import sync_images
+    log("mirroring images")
+    if with_retry("image mirror", sync_images):
         log("image mirror done")
-    except Exception as exc:
-        log(f"image mirror failed: {exc}")
 
     changed = [
         line[3:] for line in sh("git", "status", "--porcelain", "--", *OUTPUTS).splitlines()
