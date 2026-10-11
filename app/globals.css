@@ -436,10 +436,23 @@
     );
 }
 
-/* Fixed left-side player backdrop that fades out across the viewport so
-   content on the right stays untouched. Pages opt in by rendering the
-   right class on an aria-hidden div. */
-.yamal-bg,
+/* Yamal backdrop — full-viewport photo with a dark overlay so the UI stays
+   legible on top. Pages opt in by rendering <div className="yamal-bg" />. */
+.yamal-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(oklch(0 0 0 / 60%), oklch(0 0 0 / 72%)),
+    url("/yamal.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Pedri backdrop — left-side portrait that fades out so content on the
+   right stays untouched. Pages opt in with <div className="pedri-bg" />. */
 .pedri-bg {
   position: fixed;
   left: 0;
@@ -448,9 +461,7 @@
   width: min(44vw, 620px);
   z-index: 0;
   pointer-events: none;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background: url("/pedri.png") center / cover no-repeat;
   opacity: 0.38;
   -webkit-mask-image: linear-gradient(
     to right,
@@ -465,10 +476,8 @@
     transparent 100%
   );
 }
-.yamal-bg { background-image: url("/yamal.png"); }
-.pedri-bg { background-image: url("/pedri.png"); }
 @media (max-width: 720px) {
-  .yamal-bg, .pedri-bg { display: none; }
+  .pedri-bg { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
