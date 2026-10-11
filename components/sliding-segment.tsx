@@ -1,13 +1,19 @@
 "use client"
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react"
+import Link from "next/link"
 
 export type SegmentItem = {
   key: string
   label: string
   /** Optional custom content (e.g. an icon) rendered in place of label. */
   node?: ReactNode
-  onPick: () => void
+  /** If set, item renders as a <Link>: Next.js prefetches and nav is soft, so
+   *  the pill locks and the URL updates in one frame. Prefer this over onPick
+   *  when the destination URL can be computed up-front. */
+  href?: string
+  /** Fallback for toggles whose destination isn't a plain URL. */
+  onPick?: () => void
 }
 
 /**
@@ -24,7 +30,7 @@ export function SlidingSegment({
   ariaLabel: string
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const itemRefs = useRef<Array<HTMLElement | null>>([])
   const [pill, setPill] = useState<{ x: number; w: number } | null>(null)
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
   // Optimistic selection: a click sets this immediately so the pill doesn't
@@ -81,26 +87,27 @@ export function SlidingSegment({
       )}
       {items.map((it, i) => {
         const active = i === activeIdx
-        return (
-          <button
-            key={it.key}
-            type="button"
-            aria-pressed={active}
-            ref={(el) => {
-              itemRefs.current[i] = el
-            }}
-            onMouseEnter={() => setHoveredIdx(i)}
-            onFocus={() => setHoveredIdx(i)}
-            onBlur={() => setHoveredIdx(null)}
-            onClick={() => {
-              setOptimisticKey(it.key)
-              it.onPick()
-            }}
-            data-active={active || undefined}
-            className="relative z-10 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium tabular-nums text-muted-foreground hover:text-foreground transition-colors duration-200 data-[active]:text-foreground"
-          >
-            {it.node ?? it.label}
-          </button>
+        const commonProps = {
+          ref: (el: HTMLButtonElement | HTMLAnchorElement | null) => {
+            itemRefs.current[i] = el as HTMLElement | null
+          },
+          onMouseEnter: () => setHoveredIdx(i),
+          onFocus: () => setHoveredIdx(i),
+          onBlur: () => setHoveredIdx(null),
+          onClick: () => {
+            setOptimisticKey(it.key)
+            it.onPick?.()
+          },
+          "data-active": active || undefined,
+          "aria-pressed": active,
+          className:
+            "relative z-10 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium tabular-nums text-muted-foreground hover:text-foreground transition-colors duration-200 data-[active]:text-foreground",
+          children: it.node ?? it.label,
+        }
+        return it.href ? (
+          <Link key={it.key} href={it.href} scroll={false} {...commonProps} />
+        ) : (
+          <button key={it.key} type="button" {...commonProps} />
         )
       })}
     </div>

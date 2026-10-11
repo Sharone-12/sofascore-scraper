@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { SlidingSegment } from "@/components/sliding-segment"
 import { LeagueCrest } from "@/components/player-avatar"
 import { LEAGUE_TOURNAMENT_ID } from "@/lib/teams"
@@ -13,16 +13,14 @@ const FILTERS = [
 ] as const
 
 export function PredictionsLeagueToggle({ active }: { active: string }) {
-  const router = useRouter()
   const params = useSearchParams()
 
-  function pick(key: string) {
-    if (key === active) return
+  function hrefFor(key: string): string {
     const next = new URLSearchParams(params.toString())
     if (key === "all") next.delete("league")
     else next.set("league", key)
     const qs = next.toString()
-    router.push(qs ? `/predictions?${qs}` : "/predictions", { scroll: false })
+    return qs ? `/predictions?${qs}` : "/predictions"
   }
 
   return (
@@ -41,7 +39,7 @@ export function PredictionsLeagueToggle({ active }: { active: string }) {
                 size={18}
               />
             ) : undefined,
-          onPick: () => pick(f.key),
+          href: hrefFor(f.key),
         }))}
       />
     </div>
