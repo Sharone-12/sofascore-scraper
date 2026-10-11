@@ -69,18 +69,20 @@ const SIGNALS: Signal[] = [
     higherIsBetter: true,
   },
   {
-    key: "progression_resistance",
-    label: "Progression Resistance",
-    hint: "Moves the ball forward without losing it",
-    formula: "(dribbles + final-third passes) ÷ (dispossessed + 0.5)",
-    what: "Advancing actions per turnover: successful dribbles and final-third passes divided by times dispossessed.",
-    signifies: "High values = the player moves play forward and keeps the ball. Low values = either doesn't progress play, or loses it when they try.",
-    why: "A plain touches-per-turnover ratio flatters centre-backs who recycle sideways in safe areas. This counts only progressive actions in the numerator, so the leaderboard surfaces midfielders and attackers who carry and pass through pressure.",
-    compute: (p) =>
-      (n(p.dribbles_p90) + n(p.final_third_passes_p90)) /
-      (n(p.dispossessed_p90) + 0.5),
-    fmt: (v) => v.toFixed(1),
-    fmtKey: "fixed1",
+    key: "progressive_touch_rate",
+    label: "Progressive Touch %",
+    hint: "Share of touches that drive play forward",
+    formula: "(dribbles + final-third passes) ÷ touches",
+    what: "What percentage of a player's touches are progressive — a successful dribble or a pass into the attacking third.",
+    signifies: "High values = every time they get the ball, something advances. Low values = lots of sideways/backwards recycling.",
+    why: "Raw progressive-action counts flatter players who simply get the ball more because of where they play (an advanced #8 vs. a deep #6). Dividing by touches removes that volume bias so a 97-touch Rodri and a 75-touch Kimmich are judged on the same per-touch standard.",
+    compute: (p) => {
+      const t = n(p.touches_p90)
+      if (t <= 0) return 0
+      return ((n(p.dribbles_p90) + n(p.final_third_passes_p90)) / t) * 100
+    },
+    fmt: (v) => `${v.toFixed(1)}%`,
+    fmtKey: "pct1",
     higherIsBetter: true,
   },
   {
