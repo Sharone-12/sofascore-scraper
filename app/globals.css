@@ -451,33 +451,19 @@
   background-repeat: no-repeat;
 }
 
-/* Pedri backdrop — left-side portrait that fades out so content on the
-   right stays untouched. Pages opt in with <div className="pedri-bg" />. */
+/* Pedri backdrop — full-viewport photo with the same dark overlay as the
+   Yamal one, so UI stays legible. */
 .pedri-bg {
   position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: min(44vw, 620px);
+  inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: url("/pedri.png") center / cover no-repeat;
-  opacity: 0.38;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    black 0%,
-    black 55%,
-    transparent 100%
-  );
-          mask-image: linear-gradient(
-    to right,
-    black 0%,
-    black 55%,
-    transparent 100%
-  );
-}
-@media (max-width: 720px) {
-  .pedri-bg { display: none; }
+  background-image:
+    linear-gradient(oklch(0 0 0 / 60%), oklch(0 0 0 / 72%)),
+    url("/pedri.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 @media (prefers-reduced-motion: reduce) {
