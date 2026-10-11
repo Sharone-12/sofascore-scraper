@@ -143,7 +143,7 @@ export default function CompareContent() {
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-10">
       {hasYamal && <div className="yamal-bg" aria-hidden />}
-      {hasPedri && <div className="pedri-bg" aria-hidden />}
+      {hasPedri && !hasYamal && <div className="pedri-bg" aria-hidden />}
       <div className="relative z-10">
       <div className="mb-10 animate-fade-in">
         <h1
