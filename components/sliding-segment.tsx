@@ -1,6 +1,6 @@
 "use client"
 
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react"
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react"
 
 export type SegmentItem = {
   key: string
@@ -27,8 +27,16 @@ export function SlidingSegment({
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
   const [pill, setPill] = useState<{ x: number; w: number } | null>(null)
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
+  // Optimistic selection: a click sets this immediately so the pill doesn't
+  // snap back to the old position during the router.push → re-render window.
+  // Cleared when the real prop catches up.
+  const [optimisticKey, setOptimisticKey] = useState<string | null>(null)
+  useEffect(() => {
+    if (optimisticKey && optimisticKey === activeKey) setOptimisticKey(null)
+  }, [activeKey, optimisticKey])
 
-  const activeIdx = items.findIndex((it) => it.key === activeKey)
+  const effectiveKey = optimisticKey ?? activeKey
+  const activeIdx = items.findIndex((it) => it.key === effectiveKey)
   const targetIdx = hoveredIdx ?? (activeIdx >= 0 ? activeIdx : 0)
 
   useLayoutEffect(() => {
@@ -84,7 +92,10 @@ export function SlidingSegment({
             onMouseEnter={() => setHoveredIdx(i)}
             onFocus={() => setHoveredIdx(i)}
             onBlur={() => setHoveredIdx(null)}
-            onClick={it.onPick}
+            onClick={() => {
+              setOptimisticKey(it.key)
+              it.onPick()
+            }}
             data-active={active || undefined}
             className="relative z-10 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium tabular-nums text-muted-foreground hover:text-foreground transition-colors duration-200 data-[active]:text-foreground"
           >
