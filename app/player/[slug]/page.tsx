@@ -124,13 +124,14 @@ async function PlayerContent({
     },
   ]
 
-  const isYamal =
-    /yamal/i.test(String(player.player ?? "")) ||
-    slug === "lamine-yamal"
+  const nameStr = String(player.player ?? "")
+  const isYamal = /yamal/i.test(nameStr) || slug === "lamine-yamal"
+  const isPedri = /\bpedri\b/i.test(nameStr) || slug === "pedri"
 
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-10">
       {isYamal && <div className="yamal-bg" aria-hidden />}
+      {isPedri && <div className="pedri-bg" aria-hidden />}
       <div className="relative z-10">
       <div className="mb-10 animate-fade-in flex items-start gap-5">
         <PlayerAvatar

@@ -436,10 +436,11 @@
     );
 }
 
-/* Yamal backdrop — fixed left-side photo that fades out across the viewport
-   so content on the right stays untouched. Shown only on pages that
-   explicitly opt in via <div className="yamal-bg" />. */
-.yamal-bg {
+/* Fixed left-side player backdrop that fades out across the viewport so
+   content on the right stays untouched. Pages opt in by rendering the
+   right class on an aria-hidden div. */
+.yamal-bg,
+.pedri-bg {
   position: fixed;
   left: 0;
   top: 0;
@@ -447,7 +448,9 @@
   width: min(44vw, 620px);
   z-index: 0;
   pointer-events: none;
-  background: url("/yamal.png") center / cover no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   opacity: 0.38;
   -webkit-mask-image: linear-gradient(
     to right,
@@ -462,8 +465,10 @@
     transparent 100%
   );
 }
+.yamal-bg { background-image: url("/yamal.png"); }
+.pedri-bg { background-image: url("/pedri.png"); }
 @media (max-width: 720px) {
-  .yamal-bg { display: none; }
+  .yamal-bg, .pedri-bg { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

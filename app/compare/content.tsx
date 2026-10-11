@@ -136,10 +136,14 @@ export default function CompareContent() {
   const hasYamal = players.some((p) =>
     /yamal/i.test(String(p.player ?? "")),
   )
+  const hasPedri = players.some((p) =>
+    /\bpedri\b/i.test(String(p.player ?? "")),
+  )
 
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-10">
       {hasYamal && <div className="yamal-bg" aria-hidden />}
+      {hasPedri && <div className="pedri-bg" aria-hidden />}
       <div className="relative z-10">
       <div className="mb-10 animate-fade-in">
         <h1
