@@ -76,7 +76,7 @@ def _trim_to_teams(df: pd.DataFrame, leagues: dict, cols: tuple[str, ...]) -> pd
         drop |= in_league & ~involved
     return df[~drop].copy()
 
-POSITIONS = {"D": "Defender", "M": "Midfielder", "F": "Forward"}
+POSITIONS = {"G": "Goalkeeper", "D": "Defender", "M": "Midfielder", "F": "Forward"}
 
 # Sofascore's three broad buckets put wingers in midfield and holding mids in
 # defence, so they can't be scored fairly against each other. /characteristics
@@ -97,6 +97,7 @@ ROLE_MAP = {
 
 # Fallback when /characteristics has nothing for a player.
 BROAD_TO_ROLE = {
+    "Goalkeeper": "Goalkeeper",
     "Defender": "Centre-Back",
     "Midfielder": "Central Mid",
     "Forward": "Striker",
@@ -150,78 +151,62 @@ ALL_FIELDS = {**COUNTING_STATS, **EXTRA_FIELDS}
 
 
 # ── Browser-based fetcher ──
+#
+# Sofascore enforces an IP+fingerprint-bound `sofa_captcha` JWT; curl, httpx and
+# even Playwright+stealth fail during token issue. Botasaurus (anti-detect
+# Chromium wrapper) passes it cleanly: headless, no manual click.
 
-_page = None
-_playwright = None
-_context = None
+from botasaurus.browser import browser as _bot_browser  # type: ignore
 
-BROWSER_PROFILE = ROOT / "data" / "browser_profile"
+
+@_bot_browser(
+    headless=True, block_images_and_css=True, reuse_driver=True,
+    output=None, create_error_logs=False,
+)
+def _bot_fetch(driver, url):  # type: ignore
+    driver.get(url)
+    return driver.page_text
 
 
 def _init_browser():
-    global _page, _playwright, _context
-    if _page is not None:
-        return
-    from playwright.sync_api import sync_playwright
-    _playwright = sync_playwright().start()
-    BROWSER_PROFILE.mkdir(parents=True, exist_ok=True)
-    # persistent context keeps cloudflare clearance between runs
-    _context = _playwright.chromium.launch_persistent_context(
-        user_data_dir=str(BROWSER_PROFILE),
-        headless=False,
-        args=["--disable-blink-features=AutomationControlled"],
-    )
-    _page = _context.pages[0] if _context.pages else _context.new_page()
-    _page.goto(f"{SOFASCORE}/football", wait_until="load", timeout=30000)
-    if "captcha" in _page.url:
-        print("  captcha detected — solve it in the browser window...")
-        _page.wait_for_function(
-            '!window.location.href.includes("captcha")', timeout=120000,
-        )
-        print("  captcha solved, clearance saved for future runs")
-    _page.wait_for_timeout(2000)
-    print("  browser ready")
+    pass
 
 
 def _close_browser():
-    global _page, _playwright, _context
-    if _context:
-        _context.close()
-    if _playwright:
-        _playwright.stop()
-    _page = _playwright = _context = None
+    pass
 
 
 def _get(url: str, cache_path: Path, refresh: bool = False) -> dict:
     if cache_path.exists() and not refresh:
         return json.loads(cache_path.read_text(encoding="utf-8"))
-    _init_browser()
-    api_path = url.replace(SOFASCORE, "")
     for attempt in range(4):
         try:
-            result = _page.evaluate(f"""async () => {{
-                const r = await fetch('{api_path}');
-                if (!r.ok) return {{__status: r.status}};
-                return await r.json();
-            }}""")
+            text = _bot_fetch(url)
         except Exception as e:
             if attempt < 3:
                 time.sleep(3 * (attempt + 1))
                 continue
-            raise RuntimeError(f"browser fetch failed for {api_path}: {e}")
-        status = result.get("__status") if isinstance(result, dict) else None
-        if status is None:
-            break
-        if status in (403, 429) or status >= 500:
-            # 403 here is Cloudflare rate limiting, not a permanent block, and it
-            # needs minutes not seconds — linear 5/10/15/20s never outlasts it.
-            wait = 15 * 2 ** attempt
-            print(f"  got {status}, waiting {wait}s...")
-            time.sleep(wait)
-            continue
-        raise RuntimeError(f"API returned {status} for {api_path}")
+            raise RuntimeError(f"browser fetch failed for {url}: {e}")
+        try:
+            result = json.loads(text) if text else None
+        except Exception:
+            result = None
+        if isinstance(result, dict) and "error" in result:
+            code = result["error"].get("code")
+            if code in (403, 429) or (isinstance(code, int) and code >= 500):
+                wait = 15 * 2 ** attempt
+                print(f"  got {code}, waiting {wait}s...")
+                time.sleep(wait)
+                continue
+            raise RuntimeError(f"API returned {code} for {url}")
+        if result is None:
+            if attempt < 3:
+                time.sleep(5 * (attempt + 1))
+                continue
+            raise RuntimeError(f"non-json response for {url}: {text[:200] if text else 'empty'}")
+        break
     else:
-        raise RuntimeError(f"gave up on {api_path} (last status {status})")
+        raise RuntimeError(f"gave up on {url}")
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(json.dumps(result), encoding="utf-8")
     time.sleep(0.3)
