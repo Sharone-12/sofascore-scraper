@@ -15,6 +15,7 @@ import {
   type TeamStat,
 } from "@/lib/teams"
 import { predictMatches } from "@/lib/predictions"
+import { withFrozenPredictions } from "@/lib/predictions-freeze"
 import { percentileRank } from "@/lib/stats"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
@@ -388,7 +389,7 @@ async function Content({
 
   const finished = allMatches.filter((m) => m.status === "finished")
 
-  const predictions = predictMatches(
+  const computed = predictMatches(
     [{
       event_id: match.event_id,
       league: match.league,
@@ -404,7 +405,7 @@ async function Content({
     stats,
     xg,
   )
-  const pred = predictions[0]
+  const [pred] = await withFrozenPredictions(computed)
 
   const homeRow = table.find((t) => t.team === match.home && t.league === match.league)
   const awayRow = table.find((t) => t.team === match.away && t.league === match.league)
@@ -483,7 +484,7 @@ async function Content({
           </Link>
         </div>
 
-        {isSettled && pred && (
+        {isSettled && pred && pred.frozen && (
           <div className="mt-4">
             <span
               className="stat-label text-[0.65rem] px-3 py-1 rounded-full"
@@ -499,9 +500,16 @@ async function Content({
             </span>
           </div>
         )}
+        {isSettled && pred && !pred.frozen && (
+          <div className="mt-4">
+            <span className="stat-label text-[0.65rem] px-3 py-1 rounded-full text-muted-foreground bg-white/[0.04]">
+              No kickoff prediction on record
+            </span>
+          </div>
+        )}
       </section>
 
-      {pred && (
+      {pred && (!isSettled || pred.frozen) && (
         <div className="mb-6">
           <ProbSection
             homeWin={pred.homeWin}

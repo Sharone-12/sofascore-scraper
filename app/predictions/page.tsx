@@ -12,6 +12,7 @@ import {
   type AccuracyStats,
   type UclModel,
 } from "@/lib/predictions"
+import { withFrozenPredictions } from "@/lib/predictions-freeze"
 import { UCL } from "@/lib/competition"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TeamCrest, LeagueCrest } from "@/components/player-avatar"
@@ -338,7 +339,7 @@ async function Content({
     (trackedTeamNames.has(m.home) || trackedTeamNames.has(m.away)),
   )]
 
-  const predictions = predictMatches(
+  const computed = predictMatches(
     allPredictable.map((m) => ({
       event_id: m.event_id,
       league: m.league,
@@ -354,6 +355,10 @@ async function Content({
     stats,
     xg,
   )
+  const withFrozen = await withFrozenPredictions(computed)
+  // Settled matches without a frozen row have no honest kickoff prediction;
+  // keep them out of the display and the accuracy count.
+  const predictions = withFrozen.filter((p) => p.actual === null || p.frozen)
 
   const uclIds = new Map<string, number>()
   for (const m of matches) {
