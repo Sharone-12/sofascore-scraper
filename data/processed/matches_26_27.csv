@@ -55,9 +55,9 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16363877,Premier League,2026/27,6,2026-10-10,Ipswich Town,32,Fulham,43,finished,2.0,1.0
 16363880,Premier League,2026/27,6,2026-10-10,Sunderland,41,Brighton & Hove Albion,30,finished,0.0,2.0
 16363879,Premier League,2026/27,6,2026-10-10,Manchester United,35,Tottenham Hotspur,33,finished,1.0,1.0
-16363875,Premier League,2026/27,6,2026-10-11,Crystal Palace,7,Nottingham Forest,14,upcoming,,
-16363876,Premier League,2026/27,6,2026-10-11,Hull City,96,Everton,48,upcoming,,
-16363878,Premier League,2026/27,6,2026-10-11,Liverpool FC,44,Manchester City,17,upcoming,,
+16363875,Premier League,2026/27,6,2026-10-11,Crystal Palace,7,Nottingham Forest,14,finished,3.0,1.0
+16363876,Premier League,2026/27,6,2026-10-11,Hull City,96,Everton,48,finished,2.0,2.0
+16363878,Premier League,2026/27,6,2026-10-11,Liverpool FC,44,Manchester City,17,finished,0.0,3.0
 16363874,Premier League,2026/27,6,2026-10-12,Coventry City,11,Newcastle United,39,upcoming,,
 16363884,Premier League,2026/27,7,2026-10-17,Everton,48,Chelsea,38,upcoming,,
 16363882,Premier League,2026/27,7,2026-10-17,Brentford,50,Liverpool FC,44,upcoming,,
@@ -455,10 +455,10 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16421056,La Liga,2026/27,8,2026-10-10,Deportivo Alavés,2885,Atlético Madrid,2836,finished,1.0,2.0
 16421060,La Liga,2026/27,8,2026-10-10,FC Barcelona,2817,Getafe,2859,finished,3.0,0.0
 16421066,La Liga,2026/27,8,2026-10-10,Real Madrid,2829,Villarreal,2819,finished,1.0,0.0
-16421058,La Liga,2026/27,8,2026-10-11,Elche,2846,Celta Vigo,2821,upcoming,,
-16421067,La Liga,2026/27,8,2026-10-11,Real Sociedad,2824,Deportivo de A Coruña,2832,upcoming,,
-16421054,La Liga,2026/27,8,2026-10-11,Real Betis,2816,Osasuna,2820,upcoming,,
-16421064,La Liga,2026/27,8,2026-10-11,Real Racing Club,2835,Valencia,2828,upcoming,,
+16421058,La Liga,2026/27,8,2026-10-11,Elche,2846,Celta Vigo,2821,finished,0.0,0.0
+16421067,La Liga,2026/27,8,2026-10-11,Real Sociedad,2824,Deportivo de A Coruña,2832,finished,3.0,2.0
+16421054,La Liga,2026/27,8,2026-10-11,Real Betis,2816,Osasuna,2820,finished,5.0,2.0
+16421064,La Liga,2026/27,8,2026-10-11,Real Racing Club,2835,Valencia,2828,finished,2.0,2.0
 16421063,La Liga,2026/27,8,2026-10-12,Levante UD,2849,Sevilla,2833,upcoming,,
 16421070,La Liga,2026/27,9,2026-10-16,Deportivo de A Coruña,2832,Levante UD,2849,upcoming,,
 16421071,La Liga,2026/27,9,2026-10-17,Espanyol,2814,Atlético Madrid,2836,upcoming,,
