@@ -58,7 +58,7 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16363875,Premier League,2026/27,6,2026-10-11,Crystal Palace,7,Nottingham Forest,14,finished,3.0,1.0
 16363876,Premier League,2026/27,6,2026-10-11,Hull City,96,Everton,48,finished,2.0,2.0
 16363878,Premier League,2026/27,6,2026-10-11,Liverpool FC,44,Manchester City,17,finished,0.0,3.0
-16363874,Premier League,2026/27,6,2026-10-12,Coventry City,11,Newcastle United,39,upcoming,,
+16363874,Premier League,2026/27,6,2026-10-12,Coventry City,11,Newcastle United,39,finished,4.0,1.0
 16363884,Premier League,2026/27,7,2026-10-17,Everton,48,Chelsea,38,upcoming,,
 16363882,Premier League,2026/27,7,2026-10-17,Brentford,50,Liverpool FC,44,upcoming,,
 16363885,Premier League,2026/27,7,2026-10-17,Fulham,43,Hull City,96,upcoming,,
@@ -459,7 +459,7 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16421067,La Liga,2026/27,8,2026-10-11,Real Sociedad,2824,Deportivo de A Coruña,2832,finished,3.0,2.0
 16421054,La Liga,2026/27,8,2026-10-11,Real Betis,2816,Osasuna,2820,finished,5.0,2.0
 16421064,La Liga,2026/27,8,2026-10-11,Real Racing Club,2835,Valencia,2828,finished,2.0,2.0
-16421063,La Liga,2026/27,8,2026-10-12,Levante UD,2849,Sevilla,2833,upcoming,,
+16421063,La Liga,2026/27,8,2026-10-12,Levante UD,2849,Sevilla,2833,finished,3.0,3.0
 16421070,La Liga,2026/27,9,2026-10-16,Deportivo de A Coruña,2832,Levante UD,2849,upcoming,,
 16421071,La Liga,2026/27,9,2026-10-17,Espanyol,2814,Atlético Madrid,2836,upcoming,,
 16421076,La Liga,2026/27,9,2026-10-17,Villarreal,2819,Elche,2846,upcoming,,
@@ -480,6 +480,7 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16421086,La Liga,2026/27,10,2026-10-25,Real Sociedad,2824,Levante UD,2849,upcoming,,
 16421080,La Liga,2026/27,10,2026-10-25,FC Barcelona,2817,Real Madrid,2829,upcoming,,
 16421085,La Liga,2026/27,10,2026-10-26,Sevilla,2833,Osasuna,2820,upcoming,,
+16421099,La Liga,2026/27,11,2026-10-30,Villarreal,2819,Espanyol,2814,upcoming,,
 16421096,La Liga,2026/27,11,2026-10-31,Levante UD,2849,Atlético Madrid,2836,upcoming,,
 16421100,La Liga,2026/27,11,2026-10-31,Rayo Vallecano,2818,Celta Vigo,2821,upcoming,,
 16421087,La Liga,2026/27,11,2026-10-31,Real Betis,2816,Málaga CF,2830,upcoming,,
@@ -487,19 +488,18 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16421093,La Liga,2026/27,11,2026-11-01,Getafe,2859,Sevilla,2833,upcoming,,
 16421098,La Liga,2026/27,11,2026-11-01,Real Racing Club,2835,Real Madrid,2829,upcoming,,
 16421092,La Liga,2026/27,11,2026-11-01,Elche,2846,Valencia,2828,upcoming,,
-16421099,La Liga,2026/27,11,2026-11-01,Villarreal,2819,Espanyol,2814,upcoming,,
 16421088,La Liga,2026/27,11,2026-11-01,Athletic Club,2825,Real Sociedad,2824,upcoming,,
 16421095,La Liga,2026/27,11,2026-11-02,Deportivo de A Coruña,2832,Osasuna,2820,upcoming,,
-16421101,La Liga,2026/27,12,2026-11-08,Atlético Madrid,2836,FC Barcelona,2817,upcoming,,
-16421104,La Liga,2026/27,12,2026-11-08,Celta Vigo,2821,Levante UD,2849,upcoming,,
+16421103,La Liga,2026/27,12,2026-11-07,Málaga CF,2830,Real Racing Club,2835,upcoming,,
+16421108,La Liga,2026/27,12,2026-11-07,Espanyol,2814,Deportivo de A Coruña,2832,upcoming,,
+16421106,La Liga,2026/27,12,2026-11-07,Osasuna,2820,Athletic Club,2825,upcoming,,
+16421105,La Liga,2026/27,12,2026-11-07,Valencia,2828,Real Madrid,2829,upcoming,,
 16421102,La Liga,2026/27,12,2026-11-08,Elche,2846,Real Betis,2816,upcoming,,
-16421108,La Liga,2026/27,12,2026-11-08,Espanyol,2814,Deportivo de A Coruña,2832,upcoming,,
-16421103,La Liga,2026/27,12,2026-11-08,Málaga CF,2830,Real Racing Club,2835,upcoming,,
-16421106,La Liga,2026/27,12,2026-11-08,Osasuna,2820,Athletic Club,2825,upcoming,,
 16421107,La Liga,2026/27,12,2026-11-08,Real Sociedad,2824,Rayo Vallecano,2818,upcoming,,
-16421109,La Liga,2026/27,12,2026-11-08,Sevilla,2833,Deportivo Alavés,2885,upcoming,,
-16421105,La Liga,2026/27,12,2026-11-08,Valencia,2828,Real Madrid,2829,upcoming,,
+16421104,La Liga,2026/27,12,2026-11-08,Celta Vigo,2821,Levante UD,2849,upcoming,,
 16421110,La Liga,2026/27,12,2026-11-08,Villarreal,2819,Getafe,2859,upcoming,,
+16421109,La Liga,2026/27,12,2026-11-08,Sevilla,2833,Deportivo Alavés,2885,upcoming,,
+16421101,La Liga,2026/27,12,2026-11-08,Atlético Madrid,2836,FC Barcelona,2817,upcoming,,
 16421112,La Liga,2026/27,13,2026-11-22,Athletic Club,2825,Espanyol,2814,upcoming,,
 16421111,La Liga,2026/27,13,2026-11-22,Deportivo Alavés,2885,Deportivo de A Coruña,2832,upcoming,,
 16421113,La Liga,2026/27,13,2026-11-22,FC Barcelona,2817,Villarreal,2819,upcoming,,
