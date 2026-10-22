@@ -150,7 +150,6 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16363712,Premier League,2026/27,15,2026-12-13,Coventry City,11,Aston Villa,40,upcoming,,
 16363713,Premier League,2026/27,15,2026-12-13,Crystal Palace,7,Manchester United,35,upcoming,,
 17371068,Premier League,2026/27,15,2026-12-14,Hull City,96,Tottenham Hotspur,33,upcoming,,
-16363726,Premier League,2026/27,16,2026-10-21,Chelsea,38,Aston Villa,40,upcoming,,
 16363723,Premier League,2026/27,16,2026-12-19,Brentford,50,Newcastle United,39,upcoming,,
 16363722,Premier League,2026/27,16,2026-12-19,Bournemouth,60,Coventry City,11,upcoming,,
 16363727,Premier League,2026/27,16,2026-12-19,Leeds United,34,Fulham,43,upcoming,,
@@ -160,6 +159,7 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16363724,Premier League,2026/27,16,2026-12-20,Brighton & Hove Albion,30,Ipswich Town,32,upcoming,,
 16363731,Premier League,2026/27,16,2026-12-20,Sunderland,41,Crystal Palace,7,upcoming,,
 16363721,Premier League,2026/27,16,2026-12-20,Arsenal,42,Manchester United,35,upcoming,,
+16363726,Premier League,2026/27,16,2026-12-21,Chelsea,38,Aston Villa,40,upcoming,,
 16363733,Premier League,2026/27,17,2026-12-26,Aston Villa,40,Leeds United,34,upcoming,,
 16363736,Premier League,2026/27,17,2026-12-26,Everton,48,Sunderland,41,upcoming,,
 16363737,Premier League,2026/27,17,2026-12-26,Fulham,43,Brighton & Hove Albion,30,upcoming,,
@@ -440,7 +440,7 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16416341,La Liga,2026/27,6,2026-09-16,Levante UD,2849,Athletic Club,2825,upcoming,,
 16416336,La Liga,2026/27,6,2026-09-17,Real Betis,2816,Getafe,2859,finished,1.0,0.0
 16416338,La Liga,2026/27,6,2026-09-17,Málaga CF,2830,Villarreal,2819,finished,1.0,3.0
-17122851,La Liga,2026/27,6,2026-10-21,Levante UD,2849,Athletic Club,2825,upcoming,,
+17122851,La Liga,2026/27,6,2026-10-21,Levante UD,2849,Athletic Club,2825,finished,3.0,1.0
 16416299,La Liga,2026/27,7,2026-09-18,Espanyol,2814,Elche,2846,finished,1.0,3.0
 16416305,La Liga,2026/27,7,2026-09-19,Osasuna,2820,Rayo Vallecano,2818,finished,1.0,1.0
 16416337,La Liga,2026/27,7,2026-09-19,Athletic Club,2825,Deportivo Alavés,2885,finished,0.0,0.0
@@ -501,16 +501,16 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16421104,La Liga,2026/27,12,2026-11-08,Celta Vigo,2821,Levante UD,2849,upcoming,,
 16421110,La Liga,2026/27,12,2026-11-08,Villarreal,2819,Getafe,2859,upcoming,,
 16421101,La Liga,2026/27,12,2026-11-08,Atlético Madrid,2836,FC Barcelona,2817,upcoming,,
-16421112,La Liga,2026/27,13,2026-11-22,Athletic Club,2825,Espanyol,2814,upcoming,,
-16421111,La Liga,2026/27,13,2026-11-22,Deportivo Alavés,2885,Deportivo de A Coruña,2832,upcoming,,
+16421112,La Liga,2026/27,13,2026-11-20,Athletic Club,2825,Espanyol,2814,upcoming,,
+16421111,La Liga,2026/27,13,2026-11-21,Deportivo Alavés,2885,Deportivo de A Coruña,2832,upcoming,,
+16421119,La Liga,2026/27,13,2026-11-21,Rayo Vallecano,2818,Valencia,2828,upcoming,,
+16421125,La Liga,2026/27,13,2026-11-21,Sevilla,2833,Real Betis,2816,upcoming,,
+16421116,La Liga,2026/27,13,2026-11-21,Real Madrid,2829,Celta Vigo,2821,upcoming,,
 16421113,La Liga,2026/27,13,2026-11-22,FC Barcelona,2817,Villarreal,2819,upcoming,,
-16421115,La Liga,2026/27,13,2026-11-22,Getafe,2859,Atlético Madrid,2836,upcoming,,
-16421118,La Liga,2026/27,13,2026-11-22,Levante UD,2849,Elche,2846,upcoming,,
-16421117,La Liga,2026/27,13,2026-11-22,Osasuna,2820,Málaga CF,2830,upcoming,,
-16421119,La Liga,2026/27,13,2026-11-22,Rayo Vallecano,2818,Valencia,2828,upcoming,,
-16421116,La Liga,2026/27,13,2026-11-22,Real Madrid,2829,Celta Vigo,2821,upcoming,,
 16421114,La Liga,2026/27,13,2026-11-22,Real Racing Club,2835,Real Sociedad,2824,upcoming,,
-16421125,La Liga,2026/27,13,2026-11-22,Sevilla,2833,Real Betis,2816,upcoming,,
+16421117,La Liga,2026/27,13,2026-11-22,Osasuna,2820,Málaga CF,2830,upcoming,,
+16421115,La Liga,2026/27,13,2026-11-22,Getafe,2859,Atlético Madrid,2836,upcoming,,
+16421118,La Liga,2026/27,13,2026-11-23,Levante UD,2849,Elche,2846,upcoming,,
 16421121,La Liga,2026/27,14,2026-11-29,Celta Vigo,2821,Villarreal,2819,upcoming,,
 16421123,La Liga,2026/27,14,2026-11-29,Deportivo de A Coruña,2832,FC Barcelona,2817,upcoming,,
 16421126,La Liga,2026/27,14,2026-11-29,Elche,2846,Atlético Madrid,2836,upcoming,,
@@ -874,15 +874,15 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16938793,Champions League,2026/27,3,2026-10-20,Paris Saint-Germain,1644,FC Barcelona,2817,finished,4.0,2.0
 16938987,Champions League,2026/27,3,2026-10-20,SSC Napoli,2714,Bodø/Glimt,656,finished,4.0,3.0
 16939025,Champions League,2026/27,3,2026-10-20,VfB Stuttgart,2677,Atlético Madrid,2836,finished,1.0,1.0
-16939033,Champions League,2026/27,3,2026-10-21,Como,2704,Manchester United,35,upcoming,,
-16938992,Champions League,2026/27,3,2026-10-21,Lille,1643,Galatasaray,3061,upcoming,,
-16938853,Champions League,2026/27,3,2026-10-21,Aston Villa,40,Viking FK,1164,upcoming,,
-16938843,Champions League,2026/27,3,2026-10-21,Club Brugge KV,2888,RC Lens,1648,upcoming,,
-16938859,Champions League,2026/27,3,2026-10-21,FC Bayern München,2672,Arsenal,42,upcoming,,
-16938778,Champions League,2026/27,3,2026-10-21,Inter,2697,Shakhtar Donetsk,3313,upcoming,,
-16938870,Champions League,2026/27,3,2026-10-21,Real Betis,2816,Feyenoord,2959,upcoming,,
-16938770,Champions League,2026/27,3,2026-10-21,Real Madrid,2829,RB Leipzig,36360,upcoming,,
-16938889,Champions League,2026/27,3,2026-10-21,Sporting CP,3001,LASK,2058,upcoming,,
+16939033,Champions League,2026/27,3,2026-10-21,Como,2704,Manchester United,35,finished,4.0,1.0
+16938992,Champions League,2026/27,3,2026-10-21,Lille,1643,Galatasaray,3061,finished,2.0,4.0
+16938853,Champions League,2026/27,3,2026-10-21,Aston Villa,40,Viking FK,1164,finished,3.0,1.0
+16938843,Champions League,2026/27,3,2026-10-21,Club Brugge KV,2888,RC Lens,1648,finished,3.0,0.0
+16938859,Champions League,2026/27,3,2026-10-21,FC Bayern München,2672,Arsenal,42,finished,2.0,2.0
+16938778,Champions League,2026/27,3,2026-10-21,Inter,2697,Shakhtar Donetsk,3313,finished,1.0,0.0
+16938870,Champions League,2026/27,3,2026-10-21,Real Betis,2816,Feyenoord,2959,finished,1.0,0.0
+16938770,Champions League,2026/27,3,2026-10-21,Real Madrid,2829,RB Leipzig,36360,finished,4.0,1.0
+16938889,Champions League,2026/27,3,2026-10-21,Sporting CP,3001,LASK,2058,finished,2.0,3.0
 16938982,Champions League,2026/27,4,2026-11-03,Galatasaray,3061,VfB Stuttgart,2677,upcoming,,
 16938916,Champions League,2026/27,4,2026-11-03,Shakhtar Donetsk,3313,Sporting CP,3001,upcoming,,
 16938788,Champions League,2026/27,4,2026-11-03,Atlético Madrid,2836,FC Bayern München,2672,upcoming,,
