@@ -480,7 +480,7 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16421079,La Liga,2026/27,10,2026-10-25,Celta Vigo,2821,Real Betis,2816,finished,0.0,0.0
 16421086,La Liga,2026/27,10,2026-10-25,Real Sociedad,2824,Levante UD,2849,finished,2.0,1.0
 16421080,La Liga,2026/27,10,2026-10-25,FC Barcelona,2817,Real Madrid,2829,finished,1.0,2.0
-16421085,La Liga,2026/27,10,2026-10-26,Sevilla,2833,Osasuna,2820,upcoming,,
+16421085,La Liga,2026/27,10,2026-10-26,Sevilla,2833,Osasuna,2820,finished,2.0,0.0
 16421099,La Liga,2026/27,11,2026-10-30,Villarreal,2819,Espanyol,2814,upcoming,,
 16421096,La Liga,2026/27,11,2026-10-31,Levante UD,2849,Atlético Madrid,2836,upcoming,,
 16421100,La Liga,2026/27,11,2026-10-31,Rayo Vallecano,2818,Celta Vigo,2821,upcoming,,
@@ -768,7 +768,7 @@ event_id,league,season,round,date,home,home_id,away,away_id,status,home_goals,aw
 16310960,Ligue 1,2026/27,5,2026-09-20,Olympique de Marseille,1641,Paris Saint-Germain,1644,finished,1.0,2.0
 16310972,Ligue 1,2026/27,6,2026-10-10,Paris Saint-Germain,1644,Le Mans,1672,finished,3.0,1.0
 16310982,Ligue 1,2026/27,7,2026-10-17,RC Strasbourg,1659,Paris Saint-Germain,1644,finished,1.0,3.0
-16310990,Ligue 1,2026/27,8,2026-10-26,Paris Saint-Germain,1644,Olympique Lyonnais,1649,upcoming,,
+16310990,Ligue 1,2026/27,8,2026-10-26,Paris Saint-Germain,1644,Olympique Lyonnais,1649,finished,2.0,0.0
 16310993,Ligue 1,2026/27,9,2026-10-30,Le Havre,1662,Paris Saint-Germain,1644,upcoming,,
 16311008,Ligue 1,2026/27,10,2026-11-07,Paris Saint-Germain,1644,Troyes,1652,upcoming,,
 16311016,Ligue 1,2026/27,11,2026-11-21,Nice,1661,Paris Saint-Germain,1644,upcoming,,
